@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.view.ChefViewController"
+            prefWidth="1200" prefHeight="700"
+            stylesheets="@../css/chef-view.css">
+
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="10" bottom="10" left="15" right="15"/>
+            </padding>
+            
+            <!-- Logo -->
+            <ImageView fitWidth="50" fitHeight="50" preserveRatio="true">
+                <image>
+                    <Image url="@../img/logo.png"/>
+                </image>
+            </ImageView>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Buscador -->
+            <TextField fx:id="searchField" promptText="🔍 Buscar recetas..." 
+                       prefWidth="300" styleClass="search-field"/>
+        </HBox>
+    </top>
+
+    <!-- Panel Lateral Izquierdo (Sidebar) -->
+    <left>
+        <VBox style="-fx-background-color: #8B7355; -fx-padding: 20; -fx-spacing: 15;" 
+              prefWidth="200">
+            <Label text="MENÚ" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Button text="➕ Nueva Receta" maxWidth="Infinity" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Separator/>
+            <Button text="📚 Libros de cocina" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="📋 Lista de Comandas" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+        </VBox>
+    </left>
+
+    <!-- Área Central -->
+    <center>
+        <VBox styleClass="center-area" spacing="15">
+            <padding>
+                <Insets top="20" bottom="20" left="20" right="20"/>
+            </padding>
+            
+            <!-- Título -->
+            <Label text="Todas las recetas (300)" styleClass="content-title"/>
+            
+            <!-- Pestañas de filtro -->
+            <HBox spacing="20" styleClass="tab-bar">
+                <Button fx:id="tabPlatos" text="Platos" styleClass="tab-button,active"/>
+                <Button fx:id="tabCategorias" text="Categorías" styleClass="tab-button"/>
+                <Button fx:id="tabFavoritos" text="Favoritos" styleClass="tab-button"/>
+            </HBox>
+            
+            <!-- Grid de categorías con scroll -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
+                       styleClass="scroll-pane" hbarPolicy="NEVER">
+                <GridPane fx:id="categoryGrid" styleClass="category-grid" 
+                         hgap="15" vgap="15">
+                    <padding>
+                        <Insets top="10" bottom="10"/>
+                    </padding>
+                </GridPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- Panel Derecho -->
+    <right>
+        <VBox style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-spacing: 10;" 
+              prefWidth="250">
+            <Label text="Vistos recientemente" 
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            <Label text="[Aquí irán las recetas recientes]" 
+                   style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+        </VBox>
+    </right>
+
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Label text="Sistema de gestión de recetas - Il Camino Della Mamma" styleClass="bottom-text"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
