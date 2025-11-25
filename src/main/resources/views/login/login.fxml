@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="views.login.Login"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="550.0" prefWidth="900.0"
+            style="-fx-background-color: #FDE8C9;">
+
+    <StackPane layoutX="250" layoutY="80" prefWidth="400" prefHeight="390"
+               style="-fx-background-color: #DDAA68; -fx-background-radius: 15;">
+
+        <VBox alignment="TOP_CENTER" spacing="25">
+
+            <!-- Logo -->
+            <ImageView fitWidth="90" preserveRatio="true">
+                <image>
+                    <!-- Debes colocar el logo en src/main/resources/img/logo.png -->
+                    <Image url="@img/logo.png"/>
+                </image>
+            </ImageView>
+
+            <!-- Título -->
+            <Label text="INICIAR SESIÓN"
+                   style="-fx-font-size: 22px; -fx-text-fill: #000000;"/>
+
+            <VBox spacing="15" padding="20">
+
+                <VBox spacing="5">
+                    <Label text="Nombre Usuario:"
+                           style="-fx-text-fill: #000000;"/>
+                    <TextField fx:id="txtUsuario" prefWidth="200"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Contraseña:"
+                           style="-fx-text-fill: #000000;"/>
+                    <PasswordField fx:id="txtPassword" prefWidth="200"/>
+                </VBox>
+
+            </VBox>
+
+            <!-- Botón -->
+            <Button text="INICIAR SESIÓN"
+                    fx:id="btnLogin"
+                    prefWidth="200"
+                    style="-fx-background-color: #4B311F;
+                           -fx-text-fill: #FFFFFF;
+                           -fx-background-radius: 8;
+                           -fx-font-size: 14px;"/>
+
+        </VBox>
+
+    </StackPane>
 
 </AnchorPane>
