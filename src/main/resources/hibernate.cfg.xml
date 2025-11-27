@@ -14,8 +14,15 @@
         <property name="hbm2ddl.auto">update</property>
 
         <!-- Entitites -->
-        <mapping class="ilcaminodelamamma.model.Rol"/>
         <mapping class="ilcaminodelamamma.model.Usuario"/>
+        <mapping class="ilcaminodelamamma.model.Rol"/>
+        <mapping class="ilcaminodelamamma.model.Mesa"/>
+        <mapping class="ilcaminodelamamma.model.Comanda"/>
+        <mapping class="ilcaminodelamamma.model.DetalleComanda"/>
+        <mapping class="ilcaminodelamamma.model.Receta"/>
+        <mapping class="ilcaminodelamamma.model.RecetaIngrediente"/>
+        <mapping class="ilcaminodelamamma.model.Ingrediente"/>
+        <mapping class="ilcaminodelamamma.model.EstadoMesa"/>
 
     </session-factory>
 </hibernate-configuration>
