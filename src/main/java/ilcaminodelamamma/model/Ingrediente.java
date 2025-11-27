@@ -1,6 +1,8 @@
 package ilcaminodelamamma.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ingredientes")
@@ -12,6 +14,10 @@ public class Ingrediente {
     private String nombre;
     private String unidad_medida;
     private Integer cantidad_stock;
+
+    // RELACIÓN ONE-TO-MANY con la tabla intermedia
+    @OneToMany(mappedBy = "ingrediente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RecetaIngrediente> recetaIngredientes = new HashSet<>();
 
     public Ingrediente() {}
 
@@ -51,5 +57,13 @@ public class Ingrediente {
 
     public void setCantidad_stock(Integer cantidad_stock) {
         this.cantidad_stock = cantidad_stock;
+    }
+
+    public Set<RecetaIngrediente> getRecetaIngredientes() {
+        return recetaIngredientes;
+    }
+
+    public void setRecetaIngredientes(Set<RecetaIngrediente> recetaIngredientes) {
+        this.recetaIngredientes = recetaIngredientes;
     }
 }
