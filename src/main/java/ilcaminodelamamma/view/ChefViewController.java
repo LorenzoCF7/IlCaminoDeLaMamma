@@ -26,6 +26,7 @@ public class ChefViewController implements Initializable {
     @FXML private Button tabCategorias;
     @FXML private Button tabFavoritos;
     @FXML private GridPane categoryGrid;
+    @FXML private VBox recentRecipesPanel;
 
     // Lista de categorías con sus imágenes
     private final List<CategoryItem> categories = Arrays.asList(
@@ -42,6 +43,8 @@ public class ChefViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista del Chef inicializada correctamente");
         loadCategoryGrid();
+        loadRecentRecipes();
+        setupTabButtons();
     }
 
     /**
@@ -77,7 +80,20 @@ public class ChefViewController implements Initializable {
         try {
             // Cargar imagen
             String imagePath = "/img/" + category.imageName;
-            Image image = new Image(getClass().getResourceAsStream(imagePath));
+            var inputStream = getClass().getResourceAsStream(imagePath);
+            
+            if (inputStream == null) {
+                System.err.println("No se pudo cargar la imagen: " + imagePath);
+                throw new RuntimeException("Imagen no encontrada: " + imagePath);
+            }
+            
+            Image image = new Image(inputStream);
+            
+            if (image.isError()) {
+                System.err.println("Error al cargar imagen: " + imagePath);
+                throw new RuntimeException("Error en la imagen: " + imagePath);
+            }
+            
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(180);
             imageView.setFitHeight(120);
@@ -85,10 +101,12 @@ public class ChefViewController implements Initializable {
             imageView.getStyleClass().add("category-image");
             
             card.getChildren().add(imageView);
+            System.out.println("Imagen cargada correctamente: " + imagePath);
         } catch (Exception e) {
             // Si no se puede cargar la imagen, mostrar placeholder
-            Label placeholder = new Label("📷");
-            placeholder.setStyle("-fx-font-size: 40px; -fx-padding: 40;");
+            System.err.println("Error cargando " + category.imageName + ": " + e.getMessage());
+            Label placeholder = new Label("📷\n" + category.name);
+            placeholder.setStyle("-fx-font-size: 30px; -fx-padding: 40; -fx-text-alignment: center;");
             card.getChildren().add(placeholder);
         }
 
@@ -109,6 +127,91 @@ public class ChefViewController implements Initializable {
     }
 
     /**
+     * Carga las recetas recientes de ejemplo
+     */
+    private void loadRecentRecipes() {
+        String[] recentRecipes = {
+            "🍝 Carbonara Clásica",
+            "🍕 Pizza Margherita",
+            "🥗 Ensalada César",
+            "🍰 Tiramisú Italiano",
+            "🦐 Gambas al Ajillo"
+        };
+
+        for (String recipe : recentRecipes) {
+            VBox recipeCard = createRecentRecipeCard(recipe);
+            recentRecipesPanel.getChildren().add(recipeCard);
+        }
+    }
+
+    /**
+     * Crea una tarjeta de receta reciente
+     */
+    private VBox createRecentRecipeCard(String recipeName) {
+        VBox card = new VBox();
+        card.setStyle("-fx-background-color: white; " +
+                     "-fx-background-radius: 8; " +
+                     "-fx-padding: 10; " +
+                     "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2); " +
+                     "-fx-cursor: hand;");
+        card.setAlignment(Pos.CENTER_LEFT);
+
+        Label nameLabel = new Label(recipeName);
+        nameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #2C1810; -fx-font-weight: bold;");
+        nameLabel.setWrapText(true);
+
+        Label timeLabel = new Label("⏱ 15 min");
+        timeLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
+
+        card.getChildren().addAll(nameLabel, timeLabel);
+
+        // Efecto hover
+        card.setOnMouseEntered(e -> 
+            card.setStyle(card.getStyle() + "-fx-background-color: #F5E6D3;"));
+        card.setOnMouseExited(e -> 
+            card.setStyle(card.getStyle().replace("-fx-background-color: #F5E6D3;", 
+                                                 "-fx-background-color: white;")));
+        
+        card.setOnMouseClicked(e -> 
+            System.out.println("Receta seleccionada: " + recipeName));
+
+        return card;
+    }
+
+    /**
+     * Configura los botones de pestañas
+     */
+    private void setupTabButtons() {
+        tabPlatos.setOnAction(e -> {
+            System.out.println("Pestaña Platos seleccionada");
+            setActiveTab(tabPlatos);
+        });
+
+        tabCategorias.setOnAction(e -> {
+            System.out.println("Pestaña Categorías seleccionada");
+            setActiveTab(tabCategorias);
+        });
+
+        tabFavoritos.setOnAction(e -> {
+            System.out.println("Pestaña Favoritos seleccionada");
+            setActiveTab(tabFavoritos);
+        });
+    }
+
+    /**
+     * Marca una pestaña como activa
+     */
+    private void setActiveTab(Button activeButton) {
+        tabPlatos.getStyleClass().remove("active");
+        tabCategorias.getStyleClass().remove("active");
+        tabFavoritos.getStyleClass().remove("active");
+        
+        if (!activeButton.getStyleClass().contains("active")) {
+            activeButton.getStyleClass().add("active");
+        }
+    }
+
+    /**
      * Clase interna para representar una categoría
      */
     private static class CategoryItem {
@@ -121,3 +224,4 @@ public class ChefViewController implements Initializable {
         }
     }
 }
+

@@ -80,12 +80,18 @@
 
     <!-- Panel Derecho -->
     <right>
-        <VBox style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-spacing: 10;" 
+        <VBox style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-spacing: 15;" 
               prefWidth="250">
             <Label text="Vistos recientemente" 
                    style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
-            <Label text="[Aquí irán las recetas recientes]" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+            
+            <!-- Scroll para recetas recientes -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                       style="-fx-background-color: transparent; -fx-background: transparent;"
+                       hbarPolicy="NEVER">
+                <VBox fx:id="recentRecipesPanel" spacing="10" 
+                      style="-fx-background-color: transparent;"/>
+            </ScrollPane>
         </VBox>
     </right>
 
