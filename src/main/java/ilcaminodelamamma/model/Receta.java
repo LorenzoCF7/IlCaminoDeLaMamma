@@ -121,4 +121,7 @@ public class Receta {
     public void setDetalleComandas(Set<DetalleComanda> detalleComandas) {
         this.detalleComandas = detalleComandas;
     }
+
+    
+
 }

@@ -1,37 +1,38 @@
 package ilcaminodelamamma.DAO;
 
-import ilcaminodelamamma.config.HibernateUtil;
-import ilcaminodelamamma.model.Usuario;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.List;
+import ilcaminodelamamma.config.HibernateUtil;
+import ilcaminodelamamma.model.Ingrediente;
 
-public class UsuarioDAO {
-    public Usuario create(Usuario usuario) {
+public class IngredienteDAO {
+    public Ingrediente create(Ingrediente ingrediente) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        session.persist(usuario);
+        session.persist(ingrediente);
         tx.commit();
         session.close();
-        return usuario;
+        return ingrediente;
     }
 
-    public Usuario update(Usuario usuario) {
+    public Ingrediente update(Ingrediente ingrediente) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        session.merge(usuario);
+        session.merge(ingrediente);
         tx.commit();
         session.close();
-        return usuario;
+        return ingrediente;
     }
 
     public boolean deleteById(Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        Usuario usuario = session.get(Usuario.class, id);
-        if (usuario != null) {
-            session.delete(usuario);
+        Ingrediente ingrediente = session.get(Ingrediente.class, id);
+        if (ingrediente != null) {
+            session.delete(ingrediente);
             tx.commit();
             session.close();
             return true;
@@ -40,26 +41,26 @@ public class UsuarioDAO {
         return false;
     }
 
-    public List<Usuario> findByNombre(String nombre) {
+    public List<Ingrediente> findByNombre(String nombre) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Usuario> usuarios = session.createQuery("from Usuario where nombre = :nombre", Usuario.class)
+        List<Ingrediente> ingredientes = session.createQuery("from Ingrediente where nombre = :nombre", Ingrediente.class)
                 .setParameter("nombre", nombre)
                 .list();
         session.close();
-        return usuarios;
+        return ingredientes;
     }
 
-    public List<Usuario> findAll() {
+    public List<Ingrediente> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Usuario> usuarios = session.createQuery("from Usuario", Usuario.class).list();
+        List<Ingrediente> ingredientes = session.createQuery("from Ingrediente", Ingrediente.class).list();
         session.close();
-        return usuarios;
+        return ingredientes;
     }
 
-    public Usuario findById(Integer id) {
+    public Ingrediente findById(Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Usuario usuario = session.get(Usuario.class, id);
+        Ingrediente ingrediente = session.get(Ingrediente.class, id);
         session.close();
-        return usuario;
+        return ingrediente;
     }
 }
