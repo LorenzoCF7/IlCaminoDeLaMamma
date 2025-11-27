@@ -4,8 +4,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ilcaminodelamamma.controller.LoginController"
             prefWidth="900.0" prefHeight="550.0"
             style="-fx-background-color: #FDE8C9;">
@@ -16,8 +16,10 @@
 
         <!-- Card central -->
         <StackPane prefWidth="450" prefHeight="380" maxWidth="450" maxHeight="380"
-                   style="-fx-background-color: #DDAA68; -fx-background-radius: 12;"
-                   padding="30">
+                   style="-fx-background-color: #DDAA68; -fx-background-radius: 12;">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
 
             <VBox alignment="TOP_CENTER" spacing="20" prefWidth="380">
 
@@ -26,7 +28,7 @@
                     <ImageView fitWidth="48" fitHeight="48" preserveRatio="true">
                         <image>
                             <!-- Pon tu logo en: src/main/resources/img/logo.png -->
-                            <Image url="@/img/logo.png"/>
+                            <Image url="@../../img/logo.png"/>
                         </image>
                     </ImageView>
                     <Label text="INICIAR SESIÓN"

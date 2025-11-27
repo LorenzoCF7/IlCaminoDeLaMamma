@@ -74,8 +74,8 @@ public class ChefViewController implements Initializable {
         VBox card = new VBox();
         card.getStyleClass().add("category-card");
         card.setAlignment(Pos.TOP_CENTER);
-        card.setPrefWidth(180);
-        card.setPrefHeight(160);
+        card.setPrefWidth(240);
+        card.setPrefHeight(200);
 
         try {
             // Cargar imagen
@@ -95,8 +95,8 @@ public class ChefViewController implements Initializable {
             }
             
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(180);
-            imageView.setFitHeight(120);
+            imageView.setFitWidth(240);
+            imageView.setFitHeight(150);
             imageView.setPreserveRatio(false);
             imageView.getStyleClass().add("category-image");
             

@@ -19,13 +19,13 @@ public class ChefApp extends Application {
             Parent root = loader.load();
 
             // Crear la escena
-            Scene scene = new Scene(root, 1200, 700);
+            Scene scene = new Scene(root, 1600, 900);
 
             // Configurar la ventana principal
             primaryStage.setTitle("Il Camino Della Mamma - Jefe de Cocina");
             primaryStage.setScene(scene);
-            primaryStage.setMinWidth(1000);
-            primaryStage.setMinHeight(600);
+            primaryStage.setMinWidth(1400);
+            primaryStage.setMinHeight(800);
             primaryStage.show();
             
             System.out.println("Aplicación iniciada correctamente");
