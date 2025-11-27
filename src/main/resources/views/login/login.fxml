@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="views.login.Login"
-            prefHeight="550.0" prefWidth="900.0"
+            fx:controller="ilcaminodelamamma.controller.LoginController"
+            prefWidth="900.0" prefHeight="550.0"
             style="-fx-background-color: #FDE8C9;">
 
-    <StackPane layoutX="250" layoutY="80" prefWidth="400" prefHeight="390"
-               style="-fx-background-color: #DDAA68; -fx-background-radius: 15;">
+    <!-- Caja que centra el card -->
+    <VBox alignment="CENTER" spacing="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
-        <VBox alignment="TOP_CENTER" spacing="25">
+        <!-- Card central -->
+        <StackPane prefWidth="450" prefHeight="380" maxWidth="450" maxHeight="380"
+                   style="-fx-background-color: #DDAA68; -fx-background-radius: 12;"
+                   padding="30">
 
-            <!-- Logo -->
-            <ImageView fitWidth="90" preserveRatio="true">
-                <image>
-                    <!-- Debes colocar el logo en src/main/resources/img/logo.png -->
-                    <Image url="@img/logo.png"/>
-                </image>
-            </ImageView>
+            <VBox alignment="TOP_CENTER" spacing="20" prefWidth="380">
 
-            <!-- Título -->
-            <Label text="INICIAR SESIÓN"
-                   style="-fx-font-size: 22px; -fx-text-fill: #000000;"/>
+                <!-- fila logo + titulo -->
+                <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="360">
+                    <ImageView fitWidth="48" fitHeight="48" preserveRatio="true">
+                        <image>
+                            <!-- Pon tu logo en: src/main/resources/img/logo.png -->
+                            <Image url="@/img/logo.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="INICIAR SESIÓN"
+                           style="-fx-font-size: 20px; -fx-text-fill: #000000; -fx-font-weight: 500;"
+                           alignment="CENTER"/>
+                </HBox>
 
-            <VBox spacing="15" padding="20">
+                <!-- Formulario -->
+                <GridPane hgap="10" vgap="18" prefWidth="360">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120" halignment="RIGHT"/>
+                        <ColumnConstraints halignment="LEFT" percentWidth="100"/>
+                    </columnConstraints>
 
-                <VBox spacing="5">
-                    <Label text="Nombre Usuario:"
+                    <Label text="Nombre Usuario:" GridPane.rowIndex="0" GridPane.columnIndex="0"
                            style="-fx-text-fill: #000000;"/>
-                    <TextField fx:id="txtUsuario" prefWidth="200"/>
-                </VBox>
+                    <TextField fx:id="txtUsuario" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                               prefWidth="200"
+                               style="-fx-background-radius: 20; -fx-background-color: white; -fx-padding: 6 10;"/>
 
-                <VBox spacing="5">
-                    <Label text="Contraseña:"
+                    <Label text="Contraseña:" GridPane.rowIndex="1" GridPane.columnIndex="0"
                            style="-fx-text-fill: #000000;"/>
-                    <PasswordField fx:id="txtPassword" prefWidth="200"/>
-                </VBox>
+                    <PasswordField fx:id="txtPassword" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   prefWidth="200"
+                                   style="-fx-background-radius: 20; -fx-background-color: white; -fx-padding: 6 10;"/>
+                </GridPane>
+
+                <!-- Botón -->
+                <HBox alignment="CENTER" prefWidth="360">
+                    <Button text="INICIAR SESIÓN" fx:id="btnLogin"
+                            prefWidth="220" prefHeight="42"
+                            style="-fx-background-color: #4B311F; -fx-text-fill: #FFFFFF;
+                                   -fx-background-radius: 12; -fx-font-size: 13px; -fx-font-weight: 500;"/>
+                </HBox>
 
             </VBox>
 
-            <!-- Botón -->
-            <Button text="INICIAR SESIÓN"
-                    fx:id="btnLogin"
-                    prefWidth="200"
-                    style="-fx-background-color: #4B311F;
-                           -fx-text-fill: #FFFFFF;
-                           -fx-background-radius: 8;
-                           -fx-font-size: 14px;"/>
+        </StackPane>
 
-        </VBox>
-
-    </StackPane>
+    </VBox>
 
 </AnchorPane>
