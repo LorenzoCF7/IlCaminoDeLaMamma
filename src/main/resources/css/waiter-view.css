@@ -54,7 +54,12 @@
     -fx-scale-y: 0.98;
 }
 
-/* Botón primario (Nueva Receta) */
+.sidebar-button.active {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Botón primario (Nueva Comanda) */
 .primary-button {
     -fx-background-color: #D4A574;
     -fx-font-weight: bold;
@@ -64,16 +69,6 @@
 .primary-button:hover {
     -fx-background-color: #E5B685;
     -fx-effect: dropshadow(gaussian, rgba(212, 165, 116, 0.6), 12, 0, 0, 3);
-}
-
-/* Botón de cerrar sesión */
-.logout-button {
-    -fx-background-color: rgba(220, 53, 69, 0.8);
-}
-
-.logout-button:hover {
-    -fx-background-color: rgba(220, 53, 69, 1);
-    -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.5), 10, 0, 0, 2);
 }
 
 /* === Barra superior === */
@@ -131,47 +126,59 @@
     -fx-font-weight: bold;
 }
 
-/* === Grid de categorías === */
-.category-grid {
-    -fx-alignment: center;
+/* === Contenedor de comandas === */
+.comandas-container {
+    -fx-background-color: transparent;
 }
 
-.category-card {
-    -fx-background-color: white;
+/* === Box de comanda individual === */
+.comanda-box {
+    -fx-background-color: #E8D4B8;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
     -fx-cursor: hand;
-    -fx-alignment: top-center;
 }
 
-.category-card:hover {
+.comanda-box:hover {
+    -fx-background-color: #EFE0CD;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 3);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-scale-x: 1.01;
+    -fx-scale-y: 1.01;
 }
 
-.category-image {
-    -fx-background-radius: 10 10 0 0;
+.comanda-image {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-background-radius: 8;
 }
 
-.category-label {
-    -fx-font-size: 14px;
+.mesa-label {
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #2C1810;
-    -fx-padding: 12;
-    -fx-alignment: center;
+}
+
+.arrow-button {
     -fx-background-color: white;
-}
-
-/* === Panel derecho - Recientes === */
-.recent-panel {
-    -fx-background-color: #E8D4B8;
-}
-
-.recent-title {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
     -fx-text-fill: #2C1810;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: rgba(139, 115, 85, 0.3);
+    -fx-border-width: 1;
+}
+
+.arrow-button:hover {
+    -fx-background-color: #8B7355;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(139, 115, 85, 0.5), 8, 0, 0, 2);
+}
+
+.arrow-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }
 
 /* === Barra inferior === */

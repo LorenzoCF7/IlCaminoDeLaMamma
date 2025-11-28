@@ -54,7 +54,7 @@
     -fx-scale-y: 0.98;
 }
 
-/* Botón primario (Nueva Receta) */
+/* Botón primario (Ver Recetas) */
 .primary-button {
     -fx-background-color: #D4A574;
     -fx-font-weight: bold;
@@ -77,10 +77,10 @@
 }
 
 /* === Barra superior === */
+/* === Barra superior === */
 .top-bar {
     -fx-background-color: #D4A574;
 }
-
 .search-field {
     -fx-background-color: white;
     -fx-background-radius: 20;
