@@ -7,9 +7,9 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/20"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ilcaminodelamamma.view.ChefViewController"
+            fx:controller="ilcaminodelamamma.view.chef.ChefViewController"
             prefWidth="1200" prefHeight="700"
-            stylesheets="@../css/chef-view.css">
+            stylesheets="@../../css/chef-view.css">
 
     <!-- Barra Superior -->
     <top>

@@ -7,9 +7,9 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/20"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ilcaminodelamamma.view.ChefViewController"
+            fx:controller="ilcaminodelamamma.view.waiter.WaiterViewController"
             prefWidth="1200" prefHeight="700"
-            stylesheets="@../css/chef-view.css">
+            stylesheets="@../../css/waiter-view.css">
 
     <!-- Barra Superior -->
     <top>
@@ -21,14 +21,14 @@
             <!-- Logo -->
             <ImageView fitWidth="50" fitHeight="50" preserveRatio="true">
                 <image>
-                    <Image url="@../img/logo.png"/>
+                    <Image url="@../../img/logo.png"/>
                 </image>
             </ImageView>
             
             <Region HBox.hgrow="ALWAYS"/>
             
             <!-- Buscador -->
-            <TextField fx:id="searchField" promptText="🔍 Buscar recetas..." 
+            <TextField fx:id="searchField" promptText="🔍 Buscar comandas..." 
                        prefWidth="300" styleClass="search-field"/>
         </HBox>
     </top>
@@ -52,33 +52,24 @@
             
             <!-- Botones del menú -->
             <VBox spacing="8" VBox.vgrow="ALWAYS">
-                <Button fx:id="btnNuevaReceta" text="➕ Nueva Receta" maxWidth="Infinity" 
+                <Button fx:id="btnNuevaComanda" text="➕ Nueva Comanda" maxWidth="Infinity" 
                         styleClass="sidebar-button,primary-button"/>
                 
                 <Region prefHeight="10"/>
                 
-                <Button fx:id="btnLibros" text="📚 Libros de cocina" maxWidth="Infinity"
-                        styleClass="sidebar-button"/>
-                        
-                <Button fx:id="btnComandas" text="📋 Lista de Comandas" maxWidth="Infinity"
-                        styleClass="sidebar-button"/>
-                        
-                <Button fx:id="btnIngredientes" text="🥬 Ingredientes" maxWidth="Infinity"
-                        styleClass="sidebar-button"/>
-                        
-                <Button fx:id="btnReportes" text="📊 Reportes" maxWidth="Infinity"
-                        styleClass="sidebar-button"/>
+                <Button fx:id="btnListaComandas" text="📚 Lista de Comandas" maxWidth="Infinity"
+                        styleClass="sidebar-button,active"/>
                 
                 <Region VBox.vgrow="ALWAYS"/>
                 
                 <!-- Sección inferior -->
                 <Separator styleClass="menu-separator"/>
                 
-                <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
+                <Button fx:id="btnAyuda" text="❓ Ayuda" maxWidth="Infinity"
                         styleClass="sidebar-button"/>
                         
-                <Button fx:id="btnCerrarSesion" text="🚪 Cerrar Sesión" maxWidth="Infinity"
-                        styleClass="sidebar-button,logout-button"/>
+                <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
             </VBox>
         </VBox>
     </left>
@@ -91,44 +82,26 @@
             </padding>
             
             <!-- Título -->
-            <Label text="Todas las recetas (300)" styleClass="content-title"/>
+            <Label text="Todas las comandas (10)" styleClass="content-title"/>
             
             <!-- Pestañas de filtro -->
             <HBox spacing="20" styleClass="tab-bar">
-                <Button fx:id="tabPlatos" text="Platos" styleClass="tab-button,active"/>
-                <Button fx:id="tabCategorias" text="Categorías" styleClass="tab-button"/>
-                <Button fx:id="tabFavoritos" text="Favoritos" styleClass="tab-button"/>
+                <Button fx:id="tabTodas" text="Todas" styleClass="tab-button,active"/>
+                <Button fx:id="tabPreparacion" text="Preparación" styleClass="tab-button"/>
+                <Button fx:id="tabListas" text="Listas" styleClass="tab-button"/>
             </HBox>
             
-            <!-- Grid de categorías con scroll -->
+            <!-- Lista de comandas con scroll -->
             <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
                        styleClass="scroll-pane" hbarPolicy="NEVER">
-                <GridPane fx:id="categoryGrid" styleClass="category-grid" 
-                         hgap="15" vgap="15">
+                <VBox fx:id="comandasContainer" spacing="0" styleClass="comandas-container">
                     <padding>
                         <Insets top="10" bottom="10"/>
                     </padding>
-                </GridPane>
+                </VBox>
             </ScrollPane>
         </VBox>
     </center>
-
-    <!-- Panel Derecho -->
-    <right>
-        <VBox style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-spacing: 15;" 
-              prefWidth="250">
-            <Label text="Vistos recientemente" 
-                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
-            
-            <!-- Scroll para recetas recientes -->
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
-                       style="-fx-background-color: transparent; -fx-background: transparent;"
-                       hbarPolicy="NEVER">
-                <VBox fx:id="recentRecipesPanel" spacing="10" 
-                      style="-fx-background-color: transparent;"/>
-            </ScrollPane>
-        </VBox>
-    </right>
 
     <!-- Barra Inferior -->
     <bottom>
@@ -136,7 +109,7 @@
             <padding>
                 <Insets top="15" bottom="15" left="15" right="15"/>
             </padding>
-            <Label text="Sistema de gestión de recetas - Il Camino Della Mamma" styleClass="bottom-text"/>
+            <Label text="Sistema de gestión de comandas - Il Camino Della Mamma" styleClass="bottom-text"/>
         </HBox>
     </bottom>
 
