@@ -16,14 +16,14 @@ public class Usuario {
     private String contrasena;
     
     @Enumerated(EnumType.STRING)
-    private Rol rol;
+    private RolEnum rol;
     
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Comanda> comandas = new HashSet<>();
 
     public Usuario() {}
     
-    public Usuario(String nombre, String apellido, String correo, String contrasena, Rol rol) {
+    public Usuario(String nombre, String apellido, String correo, String contrasena, RolEnum rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
@@ -71,11 +71,11 @@ public class Usuario {
         this.contrasena = contrasena;
     }
     
-    public Rol getRol() {
+    public RolEnum getRol() {
         return rol;
     }
     
-    public void setRol(Rol rol) {
+    public void setRol(RolEnum rol) {
         this.rol = rol;
     }
     
