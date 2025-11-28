@@ -24,8 +24,8 @@
             <VBox alignment="TOP_CENTER" spacing="20" prefWidth="380">
 
                 <!-- fila logo + titulo -->
-                <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="360">
-                    <ImageView fitWidth="48" fitHeight="48" preserveRatio="true">
+                <HBox alignment="CENTER" spacing="10" prefWidth="360">
+                    <ImageView fitWidth="64" fitHeight="64" preserveRatio="true">
                         <image>
                             <!-- Pon tu logo en: src/main/resources/img/logo.png -->
                             <Image url="@../../img/logo.png"/>
@@ -37,24 +37,27 @@
                 </HBox>
 
                 <!-- Formulario -->
-                <GridPane hgap="10" vgap="18" prefWidth="360">
+                <GridPane hgap="10" vgap="30" prefWidth="360">
                     <columnConstraints>
-                        <ColumnConstraints minWidth="120" halignment="RIGHT"/>
-                        <ColumnConstraints halignment="LEFT" percentWidth="100"/>
+                        <ColumnConstraints minWidth="120" halignment="LEFT"/>
+                        <ColumnConstraints halignment="LEFT" percentWidth="100" maxWidth="200"/>
                     </columnConstraints>
 
                     <Label text="Nombre Usuario:" GridPane.rowIndex="0" GridPane.columnIndex="0"
                            style="-fx-text-fill: #000000;"/>
                     <TextField fx:id="txtUsuario" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                               prefWidth="200"
+                               prefWidth="200" maxWidth="200"
                                style="-fx-background-radius: 20; -fx-background-color: white; -fx-padding: 6 10;"/>
 
                     <Label text="Contraseña:" GridPane.rowIndex="1" GridPane.columnIndex="0"
                            style="-fx-text-fill: #000000;"/>
                     <PasswordField fx:id="txtPassword" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                   prefWidth="200"
+                                   prefWidth="200" maxWidth="200"
                                    style="-fx-background-radius: 20; -fx-background-color: white; -fx-padding: 6 10;"/>
                 </GridPane>
+
+                <!-- Espaciador para empujar el botón hacia abajo -->
+                <Region VBox.vgrow="ALWAYS" prefHeight="40"/>
 
                 <!-- Botón -->
                 <HBox alignment="CENTER" prefWidth="360">
