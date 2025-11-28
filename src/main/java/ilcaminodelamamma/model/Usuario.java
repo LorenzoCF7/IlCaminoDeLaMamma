@@ -11,8 +11,6 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_usuario;
     private String nombre;
-    private String apellido;
-    private String correo;
     private String contrasena;
     
     @Enumerated(EnumType.STRING)
@@ -23,10 +21,8 @@ public class Usuario {
 
     public Usuario() {}
     
-    public Usuario(String nombre, String apellido, String correo, String contrasena, RolEnum rol) {
+    public Usuario(String nombre, String contrasena, RolEnum rol) {
         this.nombre = nombre;
-        this.apellido = apellido;
-        this.correo = correo;
         this.contrasena = contrasena;
         this.rol = rol;
     }
@@ -45,22 +41,6 @@ public class Usuario {
     
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-    
-    public String getApellido() {
-        return apellido;
-    }
-    
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-    
-    public String getCorreo() {
-        return correo;
-    }
-    
-    public void setCorreo(String correo) {
-        this.correo = correo;
     }
     
     public String getContrasena() {
