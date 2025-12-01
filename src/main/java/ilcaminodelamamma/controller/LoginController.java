@@ -10,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import java.net.URL;
+
 public class LoginController {
 
     @FXML
@@ -77,16 +79,41 @@ public class LoginController {
 
     private void cargarVistaPorRol(String fxmlPath) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+            System.out.println("Intentando cargar vista: " + fxmlPath);
+
+            // Verificar que el recurso existe
+            URL recurso = getClass().getResource(fxmlPath);
+            if (recurso == null) {
+                throw new Exception("Archivo FXML no encontrado: " + fxmlPath);
+            }
+
+            System.out.println("Recurso encontrado en: " + recurso);
+
+            FXMLLoader loader = new FXMLLoader(recurso);
+            Parent root = loader.load();
+
+            System.out.println("FXML cargado exitosamente");
+            System.out.println("Controlador cargado: " + (loader.getController() != null ? loader.getController().getClass().getName() : "ninguno"));
 
             Stage stage = (Stage) btnLogin.getScene().getWindow();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1200, 700);
             stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma");
+            stage.setMaximized(true);
             stage.show();
 
+            System.out.println("Vista cargada y mostrada exitosamente");
+
         } catch (Exception e) {
+            System.err.println("Error al cargar la vista: " + fxmlPath);
+            System.err.println("Tipo de error: " + e.getClass().getName());
+            System.err.println("Mensaje: " + e.getMessage());
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la vista: " + fxmlPath);
+
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Carga de Vista",
+                "No se pudo cargar la vista.\n\n" +
+                "Ruta intentada: " + fxmlPath + "\n" +
+                "Error: " + e.getMessage());
         }
     }
 

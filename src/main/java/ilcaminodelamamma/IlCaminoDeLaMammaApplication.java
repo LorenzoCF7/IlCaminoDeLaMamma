@@ -1,13 +1,17 @@
 package ilcaminodelamamma;
 
-import org.springframework.boot.SpringApplication;
+import ilcaminodelamamma.view.LoginApp;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Aplicación principal que inicia la interfaz gráfica con el login
+ */
 @SpringBootApplication
 public class IlCaminoDeLaMammaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(IlCaminoDeLaMammaApplication.class, args);
+        // Inicia la aplicación JavaFX del login
+        LoginApp.main(args);
     }
 
 }
