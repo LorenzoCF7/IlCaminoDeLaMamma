@@ -28,12 +28,20 @@ module ilcaminodelamamma {
     opens ilcaminodelamamma to javafx.fxml;
     opens ilcaminodelamamma.controller to javafx.fxml;
     opens ilcaminodelamamma.view to javafx.fxml;
+    opens ilcaminodelamamma.view.chef to javafx.fxml;
+    opens ilcaminodelamamma.view.assistant to javafx.fxml;
+    opens ilcaminodelamamma.view.waiter to javafx.fxml;
+    opens ilcaminodelamamma.view.components to javafx.fxml;
 
     opens ilcaminodelamamma.model to org.hibernate.orm.core;
 
     exports ilcaminodelamamma;
     exports ilcaminodelamamma.controller;
     exports ilcaminodelamamma.view;
+    exports ilcaminodelamamma.view.chef;
+    exports ilcaminodelamamma.view.assistant;
+    exports ilcaminodelamamma.view.waiter;
+    exports ilcaminodelamamma.view.components;
     exports ilcaminodelamamma.model;
     exports ilcaminodelamamma.service;
     exports ilcaminodelamamma.repository;
