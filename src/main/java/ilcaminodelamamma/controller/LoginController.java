@@ -37,18 +37,47 @@ public class LoginController {
             return;
         }
 
-        // Aquí iría tu lógica real de autenticación
-        if (usuario.equals("admin") && password.equals("1234")) {
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Bienvenido", "Inicio de sesión exitoso.");
-            cargarVistaPrincipal();
-        } else {
-            mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
+        // Lógica de autenticación de ejemplo (reemplazar por autenticación real)
+        // Mapeamos usuarios de ejemplo a vistas por rol:
+        // - chef  -> chef-view.fxml
+        // - assistant -> assistant-view.fxml
+        // - waiter -> waiter-view.fxml
+        // Si quieres integrar con la base de datos, aquí debes consultar al servicio/DAO correspondiente.
+        String usuarioLower = usuario.toLowerCase();
+
+        try {
+            switch (usuarioLower) {
+                case "chef":
+                    if (!password.equals("1234")) {
+                        throw new Exception("Contraseña incorrecta");
+                    }
+                    cargarVistaPorRol("/fxml/chef/chef-view.fxml");
+                    break;
+                case "assistant":
+                case "admin": // opcional: permitir admin para vista assistant
+                    if (!password.equals("1234")) {
+                        throw new Exception("Contraseña incorrecta");
+                    }
+                    cargarVistaPorRol("/fxml/assistant/assistant-view.fxml");
+                    break;
+                case "waiter":
+                case "camarero":
+                    if (!password.equals("1234")) {
+                        throw new Exception("Contraseña incorrecta");
+                    }
+                    cargarVistaPorRol("/fxml/waiter/waiter-view.fxml");
+                    break;
+                default:
+                    mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
+            }
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de autenticación", e.getMessage());
         }
     }
 
-    private void cargarVistaPrincipal() {
+    private void cargarVistaPorRol(String fxmlPath) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/main/main.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
 
             Stage stage = (Stage) btnLogin.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -57,7 +86,7 @@ public class LoginController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la vista principal.");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la vista: " + fxmlPath);
         }
     }
 
