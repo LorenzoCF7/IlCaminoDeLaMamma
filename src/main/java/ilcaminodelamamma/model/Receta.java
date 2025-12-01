@@ -2,7 +2,6 @@ package ilcaminodelamamma.model;
 
 import jakarta.persistence.*;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ public class Receta {
     private Integer precio;
     private Integer tiempo_preparacion;
     private Boolean disponible;
-    private Byte[] imagen;
+    private byte[] imagen;
     private String categoria;
 
     // RELACIÓN ONE-TO-MANY con la tabla intermedia (que contiene cantidad_usada)
@@ -32,7 +31,7 @@ public class Receta {
 
     }
 
-    public Receta(String nombre, String descripcion, Integer precio, Integer tiempo_preparacion, Boolean disponible, Byte[] imagen, String categoria) {
+    public Receta(String nombre, String descripcion, Integer precio, Integer tiempo_preparacion, Boolean disponible, byte[] imagen, String categoria) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
@@ -90,11 +89,11 @@ public class Receta {
         this.disponible = disponible;
     }
 
-    public Byte[] getImagen() {
+    public byte[] getImagen() {
         return imagen;
     }
 
-    public void setImagen(Byte[] imagen) {
+    public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
 
