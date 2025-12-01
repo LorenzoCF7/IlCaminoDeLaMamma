@@ -15,7 +15,6 @@
 
         <!-- Entitites -->
         <mapping class="ilcaminodelamamma.model.Usuario"/>
-        <mapping class="ilcaminodelamamma.model.Rol"/>
         <mapping class="ilcaminodelamamma.model.Mesa"/>
         <mapping class="ilcaminodelamamma.model.Comanda"/>
         <mapping class="ilcaminodelamamma.model.DetalleComanda"/>
