@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="15" style="-fx-background-color: #ecf0f1;"
+    xmlns="http://javafx.com/javafx/21"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="ilcaminodelamamma.controller.IngredienteController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+
+    <VBox spacing="10">
+
+        <Label text="Nombre ingrediente:" style="-fx-font-size: 12;" minWidth="80" />
+        <TextField fx:id="tfNombre" promptText="Ingresa el nombre del ingrediente" HBox.hgrow="ALWAYS" />
+
+        <Label text="Unidad medida:" style="-fx-font-size: 12;" minWidth="80" />
+        <TextField fx:id="tfUnidadMedida" promptText="Ingresa la unidad de medida" HBox.hgrow="ALWAYS" />
+
+        <Label text="Stock:" style="-fx-font-size: 12;" minWidth="80" />
+        <TextField fx:id="tfStock" promptText="Ingresa el stock" HBox.hgrow="ALWAYS" />
+
+        <Label text="Buscar Ingrediente" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+        <TextField fx:id="tfBuscar" promptText="Ingresa el nombre del ingrediente a buscar" HBox.hgrow="ALWAYS" />
+        <Button fx:id="btnBuscar" text="Buscar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+        <Button fx:id="btnListarTodos" text="Listar Todos" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+
+        <Button fx:id="btnAgregar" text="Agregar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+        <Button fx:id="btnModificar" text="Modificar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+        <Button fx:id="btnLimpiar" text="Limpiar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+        <Button fx:id="btnEliminar" text="Eliminar Seleccionado"/>
+
+        <TableView fx:id="autorTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="50" text="ID" />
+                <TableColumn fx:id="colNombre" prefWidth="200" text="Nombre" />
+                <TableColumn fx:id="colStock" prefWidth="200" text="Stock" />
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>
