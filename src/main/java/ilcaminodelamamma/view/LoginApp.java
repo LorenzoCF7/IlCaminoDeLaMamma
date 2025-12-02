@@ -19,12 +19,14 @@ public class LoginApp extends Application {
             Parent root = loader.load();
 
             // Crear la escena
-            Scene scene = new Scene(root, 500, 400);
+            Scene scene = new Scene(root, 700, 550);
 
             // Configurar la ventana principal
             primaryStage.setTitle("Il Camino Della Mamma - Login");
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
+            primaryStage.setMinWidth(600);
+            primaryStage.setMinHeight(500);
+            primaryStage.setResizable(true);
             primaryStage.show();
 
             System.out.println("Pantalla de login iniciada correctamente");
