@@ -8,34 +8,37 @@
 <BorderPane xmlns="http://javafx.com/javafx/20"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ilcaminodelamamma.view.chef.ChefViewController"
-            prefWidth="1200" prefHeight="700"
+            minWidth="900" minHeight="600"
             stylesheets="@../../css/chef-view.css">
 
     <!-- Barra Superior -->
     <top>
         <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
             <padding>
-                <Insets top="10" bottom="10" left="15" right="15"/>
+                <Insets top="12" bottom="12" left="20" right="20"/>
             </padding>
             
-            <!-- Logo -->
-            <ImageView fitWidth="50" fitHeight="50" preserveRatio="true">
+            <!-- Logo más grande -->
+            <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
                 <image>
                     <Image url="@../../img/logo.png"/>
                 </image>
             </ImageView>
             
+            <Label text="Il Camino Della Mamma" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
             <Region HBox.hgrow="ALWAYS"/>
             
-            <!-- Buscador -->
+            <!-- Buscador responsive -->
             <TextField fx:id="searchField" promptText="🔍 Buscar recetas..." 
-                       prefWidth="300" styleClass="search-field"/>
+                       minWidth="200" prefWidth="350" maxWidth="450" styleClass="search-field"
+                       HBox.hgrow="SOMETIMES"/>
         </HBox>
     </top>
 
-    <!-- Panel Lateral Izquierdo (Sidebar) -->
+    <!-- Panel Lateral Izquierdo (Sidebar) - Responsive -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="220">
+        <VBox styleClass="sidebar" minWidth="180" prefWidth="220" maxWidth="280">
             <padding>
                 <Insets top="25" bottom="20" left="15" right="15"/>
             </padding>
@@ -85,13 +88,21 @@
 
     <!-- Área Central -->
     <center>
-        <VBox styleClass="center-area" spacing="15">
+        <VBox fx:id="centerArea" styleClass="center-area" spacing="15">
             <padding>
                 <Insets top="20" bottom="20" left="20" right="20"/>
             </padding>
             
+            <!-- Breadcrumb de navegación -->
+            <HBox fx:id="breadcrumbBox" spacing="5" alignment="CENTER_LEFT" 
+                  visible="false" managed="false">
+                <padding>
+                    <Insets bottom="5"/>
+                </padding>
+            </HBox>
+            
             <!-- Título -->
-            <Label text="Todas las recetas (300)" styleClass="content-title"/>
+            <Label fx:id="contentTitle" text="Todas las recetas (300)" styleClass="content-title"/>
             
             <!-- Pestañas de filtro -->
             <HBox spacing="20" styleClass="tab-bar">
@@ -100,23 +111,23 @@
                 <Button fx:id="tabFavoritos" text="Favoritos" styleClass="tab-button"/>
             </HBox>
             
-            <!-- Grid de categorías con scroll -->
-            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
+            <!-- Grid de categorías/platos con scroll -->
+            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
                        styleClass="scroll-pane" hbarPolicy="NEVER">
                 <GridPane fx:id="categoryGrid" styleClass="category-grid" 
-                         hgap="15" vgap="15">
+                         hgap="20" vgap="20" alignment="CENTER">
                     <padding>
-                        <Insets top="10" bottom="10"/>
+                        <Insets top="10" bottom="10" left="10" right="10"/>
                     </padding>
                 </GridPane>
             </ScrollPane>
         </VBox>
     </center>
 
-    <!-- Panel Derecho -->
+    <!-- Panel Derecho - Responsive -->
     <right>
         <VBox style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-spacing: 15;" 
-              prefWidth="250">
+              minWidth="180" prefWidth="250" maxWidth="300">
             <Label text="Vistos recientemente" 
                    style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
             

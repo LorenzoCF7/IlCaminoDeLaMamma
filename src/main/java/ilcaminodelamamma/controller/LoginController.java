@@ -1,16 +1,16 @@
 package ilcaminodelamamma.controller;
 
+import java.net.URL;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
-import java.net.URL;
 
 public class LoginController {
 
@@ -96,10 +96,15 @@ public class LoginController {
             System.out.println("Controlador cargado: " + (loader.getController() != null ? loader.getController().getClass().getName() : "ninguno"));
 
             Stage stage = (Stage) btnLogin.getScene().getWindow();
-            Scene scene = new Scene(root, 1200, 700);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Il Camino Della Mamma");
-            stage.setMaximized(true);
+            stage.setMinWidth(900);
+            stage.setMinHeight(600);
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.setResizable(true);
+            stage.centerOnScreen();
             stage.show();
 
             System.out.println("Vista cargada y mostrada exitosamente");

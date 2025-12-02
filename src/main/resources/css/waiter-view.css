@@ -74,19 +74,21 @@
 /* === Barra superior === */
 .top-bar {
     -fx-background-color: #D4A574;
+    -fx-min-height: 80;
 }
 
 .search-field {
     -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-padding: 8 15;
+    -fx-background-radius: 25;
+    -fx-padding: 10 20;
     -fx-font-size: 14px;
-    -fx-border-radius: 20;
+    -fx-border-radius: 25;
 }
 
 .search-field:focused {
     -fx-border-color: #8B7355;
     -fx-border-width: 2;
+    -fx-border-radius: 25;
 }
 
 /* === Área central === */

@@ -2,22 +2,30 @@ package ilcaminodelamamma.view.chef;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
  * Controlador para la vista principal del Jefe de Cocina
+ * Vista responsive con navegación entre categorías y platos
  */
 public class ChefViewController implements Initializable {
 
@@ -27,44 +35,304 @@ public class ChefViewController implements Initializable {
     @FXML private Button tabFavoritos;
     @FXML private GridPane categoryGrid;
     @FXML private VBox recentRecipesPanel;
+    @FXML private ScrollPane mainScrollPane;
+    @FXML private Label contentTitle;
+    @FXML private HBox breadcrumbBox;
+    @FXML private VBox centerArea;
 
-    // Lista de categorías con sus imágenes
+    // Estado actual de la vista
+    private String currentView = "categories";
+    private String currentCategory = null;
+    private int currentColumns = 3;
+
+    // Lista de categorías con sus imágenes (en carpeta categorias/)
     private final List<CategoryItem> categories = Arrays.asList(
-        new CategoryItem("Entrantes", "Entrantes.jpg"),
-        new CategoryItem("Postres", "Postres.jpg"),
-        new CategoryItem("Pasta", "Pasta.png"),
-        new CategoryItem("Pizza", "Pizza.jpg"),
-        new CategoryItem("Menú Infantil", "Menu_Infantil.png"),
-        new CategoryItem("Pescados", "Pescados.png"),
-        new CategoryItem("Carnes", "Carnes.jpg")
+        new CategoryItem("Entrantes", "categorias/Entrantes.jpg"),
+        new CategoryItem("Pasta", "categorias/Pasta.png"),
+        new CategoryItem("Pizza", "categorias/Pizza.jpg"),
+        new CategoryItem("Pescados", "categorias/Pescados.png"),
+        new CategoryItem("Carnes", "categorias/Carnes.jpg"),
+        new CategoryItem("Postres", "categorias/Postres.jpg"),
+        new CategoryItem("Vinos", "vino/rioja-vega-crianza.jpg"),
+        new CategoryItem("Menú Infantil", "categorias/Menu_Infantil.png")
     );
+
+    // Mapa de platos por categoría
+    private final Map<String, List<DishItem>> dishesByCategory = new HashMap<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista del Chef inicializada correctamente");
+        initializeDishes();
         loadCategoryGrid();
         loadRecentRecipes();
         setupTabButtons();
+        setupResponsiveLayout();
+        
+        // Ocultar breadcrumb inicialmente
+        if (breadcrumbBox != null) {
+            breadcrumbBox.setVisible(false);
+            breadcrumbBox.setManaged(false);
+        }
+    }
+
+    /**
+     * Inicializa los platos por categoría
+     */
+    private void initializeDishes() {
+        // ENTRANTES
+        dishesByCategory.put("Entrantes", Arrays.asList(
+            new DishItem("Bruschetta Clásica", "entrantes/bruschetta-clasica.jpg.jpg", "Tostadas con tomate fresco y albahaca", 6.50),
+            new DishItem("Ensalada Caprese", "entrantes/ensalada-caprese-receta-original-italiana.jpg", "Tomate, mozzarella y albahaca", 8.90),
+            new DishItem("Carpaccio de Ternera", "entrantes/carpaccio-de-ternera.jpg", "Finas láminas de ternera con rúcula", 12.00),
+            new DishItem("Tabla de Quesos Italianos", "entrantes/quesos-italianos.jpg", "Selección de quesos artesanos", 14.50),
+            new DishItem("Sopa Minestrone", "entrantes/sopas-minestrone.jpg", "Sopa tradicional italiana de verduras", 7.20),
+            new DishItem("Calamares Fritos", "entrantes/calamares-fritos.jpg", "Calamares crujientes con limón", 11.80),
+            new DishItem("Provolone al Horno", "entrantes/Provolone-al-horno-1-scaled.jpg", "Queso provolone gratinado con orégano", 9.50),
+            new DishItem("Tartar de Salmón", "entrantes/tartar-de-salmon-y-aguacate.jpg", "Salmón fresco con aguacate y sésamo", 13.90),
+            new DishItem("Antipasto Mixto", "entrantes/full.Mixed_Antipasto.jpg", "Selección de embutidos y quesos italianos", 15.00)
+        ));
+
+        // PASTA
+        dishesByCategory.put("Pasta", Arrays.asList(
+            new DishItem("Spaghetti Carbonara", "pasta/espaguetis-a-la-carbonara.jpg", "Pasta con huevo, pecorino y guanciale", 12.90),
+            new DishItem("Penne Arrabbiata", "pasta/Penne-all-Arrabbiata_EXPS_TOHD24_277252_KristinaVanni_6.jpg", "Pasta con salsa de tomate picante", 11.50),
+            new DishItem("Tagliatelle al Pesto", "pasta/tagliatelle-al-pesto.jpg", "Pasta fresca con pesto genovés", 13.20),
+            new DishItem("Lasagna Boloñesa", "pasta/lasagna-boloñesa.jpg", "Capas de pasta con ragú y bechamel", 14.50),
+            new DishItem("Ravioli Ricotta y Espinacas", "pasta/ravioli-ricotta-espinacas.jpg", "Pasta rellena con salsa de mantequilla", 13.80),
+            new DishItem("Gnocchi a la Sorrentina", "pasta/Noquis-a-la-sorrentina_650x433_wm.jpg", "Ñoquis con tomate y mozzarella", 12.00),
+            new DishItem("Fettuccine Alfredo", "pasta/one-pot-alfredo-recipe.jpg", "Pasta con crema de parmesano", 13.90),
+            new DishItem("Tortellini Panna e Prosciutto", "pasta/tortellini_pannaprosciuttopiselli.jpg", "Tortellini con nata y jamón", 14.00),
+            new DishItem("Spaghetti Marinara", "pasta/marinara-sauce-18.jpg", "Pasta con salsa de tomate y albahaca", 15.30)
+        ));
+
+        // PIZZA
+        dishesByCategory.put("Pizza", Arrays.asList(
+            new DishItem("Margherita", "pizza/margherita-1-scaled.jpg", "Tomate, mozzarella y albahaca fresca", 9.00),
+            new DishItem("Pepperoni", "pizza/pepperoni.jpg", "Con pepperoni picante", 11.50),
+            new DishItem("Cuatro Quesos", "pizza/pizza-4-quesos.jpg", "Mozzarella, gorgonzola, parmesano y fontina", 12.50),
+            new DishItem("Hawaiana", "pizza/hawaiana.jpg", "Jamón y piña", 11.00),
+            new DishItem("BBQ Pollo", "pizza/bbq-pollo.jpg", "Pollo con salsa barbacoa", 13.20),
+            new DishItem("Prosciutto e Funghi", "pizza/pizza-prosciutto-e-funghi-1.jpg", "Jamón y champiñones", 12.80),
+            new DishItem("Vegetariana", "pizza/pizza-vegetariana.jpg", "Verduras variadas de temporada", 11.90),
+            new DishItem("Diavola", "pizza/Pizza-alla-diavola_650x433_wm.jpg", "Con salame picante calabrés", 12.20),
+            new DishItem("Calzone Clásico", "pizza/pizza calzone ab.jpg", "Pizza cerrada rellena", 13.50)
+        ));
+
+        // PESCADOS
+        dishesByCategory.put("Pescados", Arrays.asList(
+            new DishItem("Salmón a la Plancha", "pescados/salmon-en-salsa-de-limon.jpg", "Salmón con limón y hierbas", 17.90),
+            new DishItem("Lubina al Horno", "pescados/lubina-al-horno-con-patatas.jpg", "Lubina con patatas y verduras", 19.50),
+            new DishItem("Bacalao con Tomate", "pescados/bacalao-con-tomate.jpg", "Bacalao en salsa de tomate casera", 16.80),
+            new DishItem("Atún a la Parrilla", "pescados/atun_a_la_parrilla_31410_orig.jpg", "Atún sellado con especias", 21.00),
+            new DishItem("Merluza en Salsa Verde", "pescados/merluza-salsa-verde-receta.jpg", "Merluza con perejil y almejas", 15.90),
+            new DishItem("Dorada a la Espalda", "pescados/dorada-a-la-espalda-receta.jpg", "Dorada abierta al horno", 18.20),
+            new DishItem("Pulpo a la Brasa", "pescados/pulpo-brasa.jpg", "Pulpo con pimentón y aceite", 22.50),
+            new DishItem("Calamares en su Tinta", "pescados/calamares-tinta-1-scaled.jpg", "Calamares en salsa de tinta", 15.80),
+            new DishItem("Fritura Mixta de Mar", "pescados/fritura-mixata.jpg", "Variedad de pescados y mariscos fritos", 17.50)
+        ));
+
+        // CARNES
+        dishesByCategory.put("Carnes", Arrays.asList(
+            new DishItem("Pollo a la Parrilla", "carnes/PechugaParrillaHierbasLimon.jpg", "Pollo con hierbas mediterráneas", 14.50),
+            new DishItem("Solomillo de Cerdo", "carnes/solomillo-de-cerdo.jpg", "Solomillo con salsa de mostaza", 16.90),
+            new DishItem("Entrecot de Ternera", "carnes/Entrecot-de-ternera-con-patatas-al-ajo-y-tomillo-y-espírragos-blancos.jpg", "Entrecot con guarnición", 22.00),
+            new DishItem("Costillas BBQ", "carnes/costillas-bbq.jpg", "Costillas con salsa barbacoa", 18.50),
+            new DishItem("Carrillera de Ternera", "carnes/carrilleras-de-ternera-receta.jpg", "Carrillera estofada al vino", 19.20),
+            new DishItem("Albóndigas en Salsa", "carnes/Albondigas-de-carne-picada-en-salsa-de-tomate.jpg", "Albóndigas caseras con tomate", 13.50),
+            new DishItem("Filete de Pollo Empanado", "carnes/Pollo-empanado-air-fryer.jpg", "Pollo crujiente empanado", 12.80),
+            new DishItem("Hamburguesa Gourmet", "carnes/hamburguesa-con-queso-cabra.jpg.jpg", "Hamburguesa con queso de cabra", 15.90),
+            new DishItem("Cordero Asado", "carnes/cordero-asado.jpg", "Cordero al horno con romero", 23.00)
+        ));
+
+        // POSTRES
+        dishesByCategory.put("Postres", Arrays.asList(
+            new DishItem("Tiramisú Clásico", "postres/Tiramisu-clasico.jpg", "Postre italiano con café y mascarpone", 6.50),
+            new DishItem("Panna Cotta", "postres/PANACOTTA-CON-FRUTOS-ROJOS.jpg", "Crema italiana con frutos rojos", 6.80),
+            new DishItem("Helado Artesanal", "postres/helado-artesanal.jpg", "2 bolas de helado a elegir", 4.80),
+            new DishItem("Brownie con Helado", "postres/brownie-con-helado-destacada.jpg", "Brownie caliente con helado", 6.90),
+            new DishItem("Tarta de Queso", "postres/tarta-queso-horno-receta.jpg", "Tarta de queso al horno", 6.70),
+            new DishItem("Coulant de Chocolate", "postres/coulant-de-chocolate_515_1.jpg", "Bizcocho con corazón fundido", 7.20),
+            new DishItem("Fruta Fresca", "postres/fruta-fresca.jpg", "Fruta fresca de temporada", 4.50),
+            new DishItem("Cannoli Sicilianos", "postres/Cannoli-siciliani_1200x800.jpg", "Cannoli rellenos de ricotta", 5.80),
+            new DishItem("Gelato Affogato", "postres/gelato-affogato.jpg", "Helado con espresso caliente", 5.90)
+        ));
+
+        // VINOS
+        dishesByCategory.put("Vinos", Arrays.asList(
+            new DishItem("Rioja Crianza", "vino/rioja-vega-crianza.jpg", "Vino tinto español con crianza en barrica", 18.00),
+            new DishItem("Albariño Rías Baixas", "vino/albariño rias baixas.jpg", "Vino blanco gallego fresco y afrutado", 17.80),
+            new DishItem("Chianti DOCG", "vino/chianti-docg.jpg", "Vino tinto italiano de la Toscana", 18.90),
+            new DishItem("Ribera del Duero Crianza", "vino/ribera-duero-crianza.jpg", "Vino tinto castellano con cuerpo", 26.00),
+            new DishItem("Godello sobre Lías", "vino/valdeorras-o-luar-do-sil-godello-sobre-lias-75-cl.jpg", "Vino blanco de Valdeorras con crianza", 24.50),
+            new DishItem("Barolo Joven", "vino/barolo-joven.jpg", "Vino tinto italiano del Piamonte", 32.00),
+            new DishItem("Ribera del Duero Reserva", "vino/rivera-duero.jpg", "Vino tinto reserva de alta calidad", 45.00),
+            new DishItem("Chablis Premier Cru", "vino/chablis-premier-cru-montmains-simonnet-febvre.jpg", "Vino blanco francés de Borgoña", 48.00),
+            new DishItem("Brunello di Montalcino", "vino/brunello.jpg", "Vino tinto italiano premium de la Toscana", 62.00)
+        ));
+
+        // MENÚ INFANTIL
+        dishesByCategory.put("Menú Infantil", Arrays.asList(
+            new DishItem("Menú Pizza", "menu-infantil/MENU-INFANTIL.jpeg", "Pizza infantil con bebida y postre", 8.50),
+            new DishItem("Menú Hamburguesa", "menu-infantil/menu-infantil2.jpg", "Hamburguesa infantil con patatas y bebida", 8.50)
+        ));
+    }
+
+    /**
+     * Configura el layout responsive
+     */
+    private void setupResponsiveLayout() {
+        if (mainScrollPane != null && categoryGrid != null) {
+            ChangeListener<Number> sizeListener = (obs, oldVal, newVal) -> {
+                adjustGridColumns();
+            };
+            
+            mainScrollPane.widthProperty().addListener(sizeListener);
+            
+            // Ajuste inicial después de que se renderice
+            javafx.application.Platform.runLater(this::adjustGridColumns);
+        }
+    }
+
+    /**
+     * Ajusta el número de columnas según el ancho disponible
+     */
+    private void adjustGridColumns() {
+        if (mainScrollPane == null || categoryGrid == null) return;
+        
+        double availableWidth = mainScrollPane.getWidth() - 40;
+        if (availableWidth <= 0) availableWidth = 600;
+        
+        int cardWidth = 200;
+        int newColumns = Math.max(2, Math.min(5, (int) (availableWidth / cardWidth)));
+        
+        if (newColumns != currentColumns) {
+            currentColumns = newColumns;
+            if (currentView.equals("categories")) {
+                reloadCategoryGrid();
+            } else {
+                reloadDishGrid();
+            }
+        }
     }
 
     /**
      * Carga el grid de categorías con las imágenes
      */
     private void loadCategoryGrid() {
+        currentView = "categories";
+        currentCategory = null;
+        reloadCategoryGrid();
+    }
+
+    /**
+     * Recarga el grid de categorías
+     */
+    private void reloadCategoryGrid() {
+        categoryGrid.getChildren().clear();
+        
         int column = 0;
         int row = 0;
-        final int COLUMNS = 3; // 3 columnas
 
         for (CategoryItem category : categories) {
             VBox categoryCard = createCategoryCard(category);
             categoryGrid.add(categoryCard, column, row);
             
             column++;
-            if (column >= COLUMNS) {
+            if (column >= currentColumns) {
                 column = 0;
                 row++;
             }
         }
+    }
+
+    /**
+     * Carga los platos de una categoría específica
+     */
+    private void loadDishesForCategory(String categoryName) {
+        currentView = "dishes";
+        currentCategory = categoryName;
+        
+        // Actualizar título
+        if (contentTitle != null) {
+            contentTitle.setText(categoryName + " (" + 
+                (dishesByCategory.get(categoryName) != null ? 
+                 dishesByCategory.get(categoryName).size() : 0) + " platos)");
+        }
+        
+        // Mostrar breadcrumb
+        showBreadcrumb(categoryName);
+        
+        // Cargar platos
+        reloadDishGrid();
+    }
+
+    /**
+     * Recarga el grid de platos
+     */
+    private void reloadDishGrid() {
+        if (currentCategory == null) return;
+        
+        categoryGrid.getChildren().clear();
+        
+        List<DishItem> dishes = dishesByCategory.get(currentCategory);
+        if (dishes == null) return;
+        
+        int column = 0;
+        int row = 0;
+
+        for (DishItem dish : dishes) {
+            VBox dishCard = createDishCard(dish);
+            categoryGrid.add(dishCard, column, row);
+            
+            column++;
+            if (column >= currentColumns) {
+                column = 0;
+                row++;
+            }
+        }
+    }
+
+    /**
+     * Muestra el breadcrumb de navegación
+     */
+    private void showBreadcrumb(String categoryName) {
+        if (breadcrumbBox != null) {
+            breadcrumbBox.getChildren().clear();
+            breadcrumbBox.setVisible(true);
+            breadcrumbBox.setManaged(true);
+            
+            Button backButton = new Button("← Volver a Categorías");
+            backButton.getStyleClass().add("breadcrumb-button");
+            backButton.setOnAction(e -> goBackToCategories());
+            
+            Label separator = new Label("  /  ");
+            separator.setStyle("-fx-text-fill: #666; -fx-font-size: 14px;");
+            
+            Label currentLabel = new Label(categoryName);
+            currentLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2C1810; -fx-font-size: 14px;");
+            
+            breadcrumbBox.getChildren().addAll(backButton, separator, currentLabel);
+        }
+    }
+
+    /**
+     * Vuelve a la vista de categorías
+     */
+    private void goBackToCategories() {
+        currentView = "categories";
+        currentCategory = null;
+        
+        if (contentTitle != null) {
+            contentTitle.setText("Todas las recetas (300)");
+        }
+        
+        if (breadcrumbBox != null) {
+            breadcrumbBox.setVisible(false);
+            breadcrumbBox.setManaged(false);
+        }
+        
+        reloadCategoryGrid();
     }
 
     /**
@@ -74,53 +342,112 @@ public class ChefViewController implements Initializable {
         VBox card = new VBox();
         card.getStyleClass().add("category-card");
         card.setAlignment(Pos.TOP_CENTER);
+        card.setMinWidth(160);
         card.setPrefWidth(180);
-        card.setPrefHeight(160);
+        card.setMaxWidth(220);
+        card.setPrefHeight(180);
+
+        StackPane imageContainer = new StackPane();
+        imageContainer.setMinHeight(120);
+        imageContainer.setPrefHeight(130);
+        imageContainer.setStyle("-fx-background-radius: 10 10 0 0;");
 
         try {
-            // Cargar imagen
             String imagePath = "/img/" + category.imageName;
             var inputStream = getClass().getResourceAsStream(imagePath);
             
             if (inputStream == null) {
-                System.err.println("No se pudo cargar la imagen: " + imagePath);
                 throw new RuntimeException("Imagen no encontrada: " + imagePath);
             }
             
             Image image = new Image(inputStream);
-            
-            if (image.isError()) {
-                System.err.println("Error al cargar imagen: " + imagePath);
-                throw new RuntimeException("Error en la imagen: " + imagePath);
-            }
-            
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(180);
-            imageView.setFitHeight(120);
+            imageView.setFitHeight(130);
             imageView.setPreserveRatio(false);
             imageView.getStyleClass().add("category-image");
             
-            card.getChildren().add(imageView);
-            System.out.println("Imagen cargada correctamente: " + imagePath);
+            imageContainer.getChildren().add(imageView);
         } catch (Exception e) {
-            // Si no se puede cargar la imagen, mostrar placeholder
-            System.err.println("Error cargando " + category.imageName + ": " + e.getMessage());
-            Label placeholder = new Label("📷\n" + category.name);
-            placeholder.setStyle("-fx-font-size: 30px; -fx-padding: 40; -fx-text-alignment: center;");
-            card.getChildren().add(placeholder);
+            Label placeholder = new Label("📷");
+            placeholder.setStyle("-fx-font-size: 40px;");
+            imageContainer.getChildren().add(placeholder);
         }
 
-        // Etiqueta de categoría
         Label label = new Label(category.name);
         label.getStyleClass().add("category-label");
         label.setMaxWidth(Double.MAX_VALUE);
         label.setAlignment(Pos.CENTER);
+        label.setWrapText(true);
         
-        card.getChildren().add(label);
+        card.getChildren().addAll(imageContainer, label);
 
-        // Evento de clic
         card.setOnMouseClicked(event -> {
             System.out.println("Categoría seleccionada: " + category.name);
+            loadDishesForCategory(category.name);
+        });
+
+        return card;
+    }
+
+    /**
+     * Crea una tarjeta de plato
+     */
+    private VBox createDishCard(DishItem dish) {
+        VBox card = new VBox(5);
+        card.getStyleClass().add("dish-card");
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setMinWidth(160);
+        card.setPrefWidth(180);
+        card.setMaxWidth(220);
+        card.setPrefHeight(260);
+        card.setPadding(new Insets(0, 0, 10, 0));
+
+        StackPane imageContainer = new StackPane();
+        imageContainer.setMinHeight(130);
+        imageContainer.setPrefHeight(140);
+        imageContainer.setStyle("-fx-background-radius: 10 10 0 0;");
+
+        try {
+            String imagePath = "/img/" + dish.imageName;
+            var inputStream = getClass().getResourceAsStream(imagePath);
+            
+            if (inputStream == null) {
+                throw new RuntimeException("Imagen no encontrada: " + imagePath);
+            }
+            
+            Image image = new Image(inputStream);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(180);
+            imageView.setFitHeight(140);
+            imageView.setPreserveRatio(false);
+            imageView.getStyleClass().add("dish-image");
+            
+            imageContainer.getChildren().add(imageView);
+        } catch (Exception e) {
+            Label placeholder = new Label("🍽️");
+            placeholder.setStyle("-fx-font-size: 50px;");
+            imageContainer.getChildren().add(placeholder);
+        }
+
+        Label nameLabel = new Label(dish.name);
+        nameLabel.getStyleClass().add("dish-name");
+        nameLabel.setMaxWidth(Double.MAX_VALUE);
+        nameLabel.setAlignment(Pos.CENTER);
+        nameLabel.setWrapText(true);
+        VBox.setMargin(nameLabel, new Insets(8, 8, 0, 8));
+
+        Label descLabel = new Label(dish.description);
+        descLabel.getStyleClass().add("dish-description");
+        descLabel.setMaxWidth(Double.MAX_VALUE);
+        descLabel.setAlignment(Pos.CENTER);
+        descLabel.setWrapText(true);
+        VBox.setMargin(descLabel, new Insets(0, 8, 8, 8));
+
+        card.getChildren().addAll(imageContainer, nameLabel, descLabel);
+
+        card.setOnMouseClicked(event -> {
+            System.out.println("Plato seleccionado: " + dish.name);
         });
 
         return card;
@@ -148,30 +475,20 @@ public class ChefViewController implements Initializable {
      * Crea una tarjeta de receta reciente
      */
     private VBox createRecentRecipeCard(String recipeName) {
-        VBox card = new VBox();
-        card.setStyle("-fx-background-color: white; " +
-                     "-fx-background-radius: 8; " +
-                     "-fx-padding: 10; " +
-                     "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2); " +
-                     "-fx-cursor: hand;");
+        VBox card = new VBox(3);
+        card.getStyleClass().add("recent-recipe-card");
         card.setAlignment(Pos.CENTER_LEFT);
+        card.setPadding(new Insets(10));
 
         Label nameLabel = new Label(recipeName);
-        nameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #2C1810; -fx-font-weight: bold;");
+        nameLabel.getStyleClass().add("recent-recipe-name");
         nameLabel.setWrapText(true);
 
         Label timeLabel = new Label("⏱ 15 min");
-        timeLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
+        timeLabel.getStyleClass().add("recent-recipe-time");
 
         card.getChildren().addAll(nameLabel, timeLabel);
 
-        // Efecto hover
-        card.setOnMouseEntered(e -> 
-            card.setStyle(card.getStyle() + "-fx-background-color: #F5E6D3;"));
-        card.setOnMouseExited(e -> 
-            card.setStyle(card.getStyle().replace("-fx-background-color: #F5E6D3;", 
-                                                 "-fx-background-color: white;")));
-        
         card.setOnMouseClicked(e -> 
             System.out.println("Receta seleccionada: " + recipeName));
 
@@ -190,6 +507,7 @@ public class ChefViewController implements Initializable {
         tabCategorias.setOnAction(e -> {
             System.out.println("Pestaña Categorías seleccionada");
             setActiveTab(tabCategorias);
+            goBackToCategories();
         });
 
         tabFavoritos.setOnAction(e -> {
@@ -221,6 +539,23 @@ public class ChefViewController implements Initializable {
         CategoryItem(String name, String imageName) {
             this.name = name;
             this.imageName = imageName;
+        }
+    }
+
+    /**
+     * Clase interna para representar un plato
+     */
+    private static class DishItem {
+        String name;
+        String imageName;
+        String description;
+        double price;
+
+        DishItem(String name, String imageName, String description, double price) {
+            this.name = name;
+            this.imageName = imageName;
+            this.description = description;
+            this.price = price;
         }
     }
 }

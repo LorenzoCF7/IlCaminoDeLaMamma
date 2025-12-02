@@ -79,19 +79,21 @@
 /* === Barra superior === */
 .top-bar {
     -fx-background-color: #D4A574;
+    -fx-min-height: 80;
 }
 
 .search-field {
     -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-padding: 8 15;
+    -fx-background-radius: 25;
+    -fx-padding: 10 20;
     -fx-font-size: 14px;
-    -fx-border-radius: 20;
+    -fx-border-radius: 25;
 }
 
 .search-field:focused {
     -fx-border-color: #8B7355;
     -fx-border-width: 2;
+    -fx-border-radius: 25;
 }
 
 /* === Área central === */
@@ -203,4 +205,97 @@
 .scroll-bar:vertical .track {
     -fx-background-color: rgba(139, 115, 85, 0.2);
     -fx-background-radius: 5;
+}
+
+/* === Tarjetas de Platos === */
+.dish-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-alignment: top-center;
+}
+
+.dish-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139, 115, 85, 0.4), 15, 0, 0, 5);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.dish-image {
+    -fx-background-radius: 12 12 0 0;
+}
+
+.dish-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+    -fx-alignment: center;
+}
+
+.dish-description {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666;
+    -fx-alignment: center;
+}
+
+.dish-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+    -fx-alignment: center;
+    -fx-padding: 5 0 0 0;
+}
+
+/* === Breadcrumb === */
+.breadcrumb-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B7355;
+    -fx-font-size: 13px;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-underline: false;
+}
+
+.breadcrumb-button:hover {
+    -fx-text-fill: #5C4033;
+    -fx-underline: true;
+}
+
+/* === Recetas Recientes === */
+.recent-recipe-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.recent-recipe-card:hover {
+    -fx-background-color: #F5E6D3;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 3);
+}
+
+.recent-recipe-name {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2C1810;
+    -fx-font-weight: bold;
+}
+
+.recent-recipe-time {
+    -fx-font-size: 10px;
+    -fx-text-fill: #666;
+}
+
+/* === Responsive Adjustments === */
+.category-card {
+    -fx-min-width: 160;
+    -fx-pref-width: 180;
+    -fx-max-width: 220;
+}
+
+.dish-card {
+    -fx-min-width: 160;
+    -fx-pref-width: 180;
+    -fx-max-width: 220;
 }
