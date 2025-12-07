@@ -5,13 +5,14 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/IlCaminoDeLaMamma</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/IlCaminoDeLaMamma?createDatabaseIfNotExist=true&amp;serverTimezone=UTC</property>
         <property name="connection.username">root</property>
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="connection.password"></property>
+        <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
         <property name="show_sql">true</property>
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
 
         <!-- Entitites -->
         <mapping class="ilcaminodelamamma.model.Usuario"/>
@@ -21,7 +22,6 @@
         <mapping class="ilcaminodelamamma.model.Receta"/>
         <mapping class="ilcaminodelamamma.model.RecetaIngrediente"/>
         <mapping class="ilcaminodelamamma.model.Ingrediente"/>
-        <mapping class="ilcaminodelamamma.model.EstadoMesa"/>
 
     </session-factory>
 </hibernate-configuration>
