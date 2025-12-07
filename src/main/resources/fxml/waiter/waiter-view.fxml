@@ -73,6 +73,9 @@
                         
                 <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
                         styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnCerrarSesion" text="🚪 Cerrar Sesión" maxWidth="Infinity"
+                        styleClass="sidebar-button,logout-button"/>
             </VBox>
         </VBox>
     </left>

@@ -80,13 +80,21 @@
 
     <!-- Área Central -->
     <center>
-        <VBox styleClass="center-area" spacing="15">
+        <VBox fx:id="centerArea" styleClass="center-area" spacing="15">
             <padding>
                 <Insets top="20" bottom="20" left="20" right="20"/>
             </padding>
             
+            <!-- Breadcrumb de navegación -->
+            <HBox fx:id="breadcrumbBox" spacing="5" alignment="CENTER_LEFT" 
+                  visible="false" managed="false">
+                <padding>
+                    <Insets bottom="5"/>
+                </padding>
+            </HBox>
+            
             <!-- Título -->
-            <Label text="Todas las recetas (300)" styleClass="content-title"/>
+            <Label fx:id="contentTitle" text="Todas las recetas (300)" styleClass="content-title"/>
             
             <!-- Pestañas de filtro -->
             <HBox spacing="20" styleClass="tab-bar">
@@ -95,13 +103,13 @@
                 <Button fx:id="tabFavoritos" text="Favoritos" styleClass="tab-button"/>
             </HBox>
             
-            <!-- Grid de categorías con scroll -->
-            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
+            <!-- Grid de categorías/platos con scroll -->
+            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
                        styleClass="scroll-pane" hbarPolicy="NEVER">
                 <GridPane fx:id="categoryGrid" styleClass="category-grid" 
-                         hgap="15" vgap="15">
+                         hgap="20" vgap="20" alignment="CENTER">
                     <padding>
-                        <Insets top="10" bottom="10"/>
+                        <Insets top="10" bottom="10" left="10" right="10"/>
                     </padding>
                 </GridPane>
             </ScrollPane>

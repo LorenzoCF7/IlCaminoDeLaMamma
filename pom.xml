@@ -126,12 +126,20 @@
 </dependencies>
 
 <profiles>
-    <!-- Perfil para ejecutar la vista del Chef -->
+    <!-- Perfil por defecto para ejecutar la aplicación principal con Login -->
     <profile>
-        <id>chef</id>
+        <id>login</id>
         <activation>
             <activeByDefault>true</activeByDefault>
         </activation>
+        <properties>
+            <mainClass>ilcaminodelamamma.IlCaminoDeLaMammaApplication</mainClass>
+        </properties>
+    </profile>
+    
+    <!-- Perfil para ejecutar la vista del Chef -->
+    <profile>
+        <id>chef</id>
         <properties>
             <mainClass>ilcaminodelamamma.view.chef.ChefApp</mainClass>
         </properties>

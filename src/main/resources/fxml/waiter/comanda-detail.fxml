@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.view.waiter.ComandaDetailController"
+            minWidth="1100" minHeight="700"
+            stylesheets="@../../css/waiter-view.css">
+
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" bottom="12" left="20" right="20"/>
+            </padding>
+            
+            <!-- Botón Volver -->
+            <Button fx:id="btnVolver" text="← Volver" styleClass="back-button" 
+                    onAction="#volverALista"/>
+            
+            <Label fx:id="lblComandaTitle" text="Comanda - Mesa #5" 
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Estado de la mesa -->
+            <Label fx:id="lblEstadoMesa" text="●" styleClass="estado-label,estado-ocupada"/>
+        </HBox>
+    </top>
+
+    <!-- Contenido Principal -->
+    <center>
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="20" bottom="20" left="20" right="20"/>
+            </padding>
+            
+            <!-- Panel Izquierdo: Menú de Platos -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="menu-panel">
+                <Label text="MENÚ DE PLATOS" styleClass="section-title"/>
+                
+                <!-- Barra de búsqueda -->
+                <TextField fx:id="searchField" promptText="🔍 Buscar plato..." 
+                          styleClass="search-field"/>
+                
+                <!-- Pestañas de categorías -->
+                <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" 
+                           styleClass="categories-scroll" prefHeight="50">
+                    <HBox fx:id="categoriesBox" spacing="10" alignment="CENTER_LEFT">
+                        <padding><Insets top="5" bottom="5"/></padding>
+                    </HBox>
+                </ScrollPane>
+                
+                <!-- Lista de platos -->
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                    <VBox fx:id="platosContainer" spacing="8">
+                        <padding><Insets top="10" bottom="10"/></padding>
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+            
+            <!-- Panel Derecho: Resumen de Comanda -->
+            <VBox spacing="15" prefWidth="400" minWidth="400" maxWidth="400" 
+                  styleClass="comanda-panel">
+                
+                <!-- Info de mesa -->
+                <VBox spacing="8" styleClass="mesa-info-box">
+                    <Label text="INFORMACIÓN DE MESA" styleClass="section-title"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Mesa:" styleClass="info-label"/>
+                        <ComboBox fx:id="comboMesa" prefWidth="100" promptText="Nº"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Estado:" styleClass="info-label"/>
+                        <ComboBox fx:id="comboEstado" prefWidth="150" promptText="Estado"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Línea separadora -->
+                <Separator/>
+                
+                <!-- Platos añadidos -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Label text="PLATOS AÑADIDOS" styleClass="section-title"/>
+                    
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                               styleClass="scroll-pane" hbarPolicy="NEVER">
+                        <VBox fx:id="platosComandaContainer" spacing="5">
+                            <padding><Insets top="5" bottom="5"/></padding>
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+                
+                <!-- Línea separadora -->
+                <Separator/>
+                
+                <!-- Resumen de totales -->
+                <VBox spacing="8" styleClass="totales-box">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Subtotal:" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblSubtotal" text="0,00 €" styleClass="total-value"/>
+                    </HBox>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="IVA (10%):" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblIVA" text="0,00 €" styleClass="total-value"/>
+                    </HBox>
+                    
+                    <Separator/>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="TOTAL:" styleClass="total-label-final"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTotal" text="0,00 €" styleClass="total-value-final"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Botones de acción -->
+                <HBox spacing="10">
+                    <Button fx:id="btnGuardar" text="💾 Guardar" maxWidth="Infinity" 
+                            HBox.hgrow="ALWAYS" styleClass="btn-success" onAction="#guardarComanda"/>
+                    <Button fx:id="btnCancelar" text="✖ Cancelar" maxWidth="Infinity" 
+                            HBox.hgrow="ALWAYS" styleClass="btn-danger" onAction="#volverALista"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

@@ -13,5 +13,6 @@ java --module-path "%JAVAFX_PATH%\javafx-controls\21\javafx-controls-21.jar;%JAV
      --add-opens javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED ^
      -cp "target\classes" ^
      ilcaminodelamamma.view.waiter.WaiterApp
+     
 
 pause
