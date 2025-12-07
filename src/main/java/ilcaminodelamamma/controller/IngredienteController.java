@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class IngredienteController {
     private TableColumn<Ingrediente, String> colStock;
     
     @FXML
+    private TableColumn<Ingrediente, String> colAcciones;
+    
+    @FXML
     private TextField tfNombre;
 
     @FXML
@@ -42,25 +46,17 @@ public class IngredienteController {
     private TextField tfBuscar;
     
     @FXML
-    private Button btnAgregar;
-    
-    @FXML
-    private Button btnModificar;
-    
-    @FXML
-    private Button btnEliminar;
+    private Button btnGuardar;
     
     @FXML
     private Button btnBuscar;
-    
-    @FXML
-    private Button btnLimpiar;
     
     @FXML
     private Button btnListarTodos;
     
     private IngredienteDAO ingredienteDAO;
     private ObservableList<Ingrediente> ingredientesObservable;
+    private Ingrediente ingredienteActual;
 
     @FXML
     public void initialize() {
@@ -71,15 +67,44 @@ public class IngredienteController {
     }
 
     private void setupTableColumns() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colId.setCellValueFactory(new PropertyValueFactory<>("id_ingrediente"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colUnidadMedida.setCellValueFactory(new PropertyValueFactory<>("unidad_medida"));
-        colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        
-        // Agregar listener para cargar datos cuando se selecciona un ingrediente
-        ingredienteTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                cargarDatosSeleccionados();
+        colStock.setCellValueFactory(new PropertyValueFactory<>("cantidad_stock"));
+        configureTablaAcciones();
+    }
+    
+    private void configureTablaAcciones() {
+        colAcciones.setCellFactory(column -> new TableCell<Ingrediente, String>() {
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnEliminar = new Button("Eliminar");
+            
+            {
+                btnEditar.setStyle("-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 5 10; -fx-border-radius: 3; -fx-background-radius: 3;");
+                btnEliminar.setStyle("-fx-background-color: #DC5757; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 5 10; -fx-border-radius: 3; -fx-background-radius: 3;");
+                
+                btnEditar.setOnAction(e -> {
+                    Ingrediente ingrediente = getTableView().getItems().get(getIndex());
+                    cargarIngredienteParaEditar(ingrediente);
+                });
+                
+                btnEliminar.setOnAction(e -> {
+                    Ingrediente ingrediente = getTableView().getItems().get(getIndex());
+                    eliminarIngredienteDirecto(ingrediente);
+                });
+            }
+            
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox hbox = new HBox(5);
+                    hbox.setStyle("-fx-alignment: center;");
+                    hbox.getChildren().addAll(btnEditar, btnEliminar);
+                    setGraphic(hbox);
+                }
             }
         });
     }
@@ -91,16 +116,12 @@ public class IngredienteController {
     }
 
     private void setupButtonHandlers() {
-        btnAgregar.setOnAction(e -> agregarIngrediente());
-        btnModificar.setOnAction(e -> modificarIngrediente());
-        btnEliminar.setOnAction(e -> eliminarIngrediente());
+        btnGuardar.setOnAction(e -> guardarIngrediente());
         btnBuscar.setOnAction(e -> buscarIngrediente());
-        btnLimpiar.setOnAction(e -> limpiarFormulario());
         btnListarTodos.setOnAction(e -> loadAllIngredientes());
     }
 
-    @FXML
-    private void agregarIngrediente() {
+    private void guardarIngrediente() {
         String nombre = tfNombre.getText().trim();
         String unidadMedida = tfUnidadMedida.getText().trim();
         String stock = tfStock.getText().trim();
@@ -112,67 +133,55 @@ public class IngredienteController {
 
         try {
             int stockValue = Integer.parseInt(stock);
-            Ingrediente nuevoIngrediente = new Ingrediente(nombre, unidadMedida, stockValue);
-            ingredienteDAO.create(nuevoIngrediente);
-            mostrarAlerta("Éxito", "Ingrediente agregado correctamente", Alert.AlertType.INFORMATION);
+            
+            // Si es edición (ingredienteActual != null)
+            if (ingredienteActual != null) {
+                ingredienteActual.setNombre(nombre);
+                ingredienteActual.setUnidad_medida(unidadMedida);
+                ingredienteActual.setCantidad_stock(stockValue);
+                ingredienteDAO.update(ingredienteActual);
+                mostrarAlerta("Éxito", "Ingrediente actualizado correctamente", Alert.AlertType.INFORMATION);
+            } else {
+                // Si es creación (ingredienteActual == null)
+                Ingrediente nuevoIngrediente = new Ingrediente(nombre, unidadMedida, stockValue);
+                ingredienteDAO.create(nuevoIngrediente);
+                mostrarAlerta("Éxito", "Ingrediente agregado correctamente", Alert.AlertType.INFORMATION);
+            }
+            
             limpiarFormulario();
+            ingredienteActual = null;
             loadAllIngredientes();
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error", "El stock debe ser un número válido", Alert.AlertType.ERROR);
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo agregar el ingrediente: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
-    @FXML
-    private void modificarIngrediente() {
-        Ingrediente ingredienteSeleccionado = ingredienteTable.getSelectionModel().getSelectedItem();
-
-        if (ingredienteSeleccionado == null) {
-            mostrarAlerta("Error", "Por favor selecciona un ingrediente de la tabla", Alert.AlertType.ERROR);
-            return;
-        }
-
-        String nombre = tfNombre.getText().trim();
-        String unidadMedida = tfUnidadMedida.getText().trim();
-        String stock = tfStock.getText().trim();
-
-        if (nombre.isEmpty() || unidadMedida.isEmpty() || stock.isEmpty()) {
-            mostrarAlerta("Error", "Por favor completa todos los campos", Alert.AlertType.ERROR);
-            return;
-        }
-
-        try {
-            ingredienteSeleccionado.setNombre(nombre);
-            ingredienteSeleccionado.setUnidad_medida(unidadMedida);
-            ingredienteSeleccionado.setCantidad_stock(Integer.parseInt(stock));
-            ingredienteDAO.update(ingredienteSeleccionado);
-            mostrarAlerta("Éxito", "Ingrediente modificado correctamente", Alert.AlertType.INFORMATION);
-            limpiarFormulario();
-            loadAllIngredientes();
-        } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo modificar el ingrediente: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo guardar el ingrediente: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void eliminarIngrediente() {
-        Ingrediente ingredienteSeleccionado = ingredienteTable.getSelectionModel().getSelectedItem();
-
-        if (ingredienteSeleccionado == null) {
+        if (ingredienteActual == null) {
             mostrarAlerta("Error", "Por favor selecciona un ingrediente de la tabla", Alert.AlertType.ERROR);
             return;
         }
 
+        eliminarIngredienteDirecto(ingredienteActual);
+    }
+    
+    private void eliminarIngredienteDirecto(Ingrediente ingrediente) {
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar eliminación");
         confirmacion.setHeaderText("¿Deseas eliminar este ingrediente?");
-        confirmacion.setContentText("Se eliminará: " + ingredienteSeleccionado.getNombre());
+        confirmacion.setContentText("Se eliminará: " + ingrediente.getNombre());
 
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                ingredienteDAO.deleteById(ingredienteSeleccionado.getId_ingrediente());
+                ingredienteDAO.deleteById(ingrediente.getId_ingrediente());
                 mostrarAlerta("Éxito", "Ingrediente eliminado correctamente", Alert.AlertType.INFORMATION);
-                limpiarFormulario();
+                if (ingredienteActual != null && ingrediente.getId_ingrediente().equals(ingredienteActual.getId_ingrediente())) {
+                    limpiarFormulario();
+                }
                 loadAllIngredientes();
             } catch (Exception e) {
                 mostrarAlerta("Error", "No se pudo eliminar el ingrediente: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -209,6 +218,8 @@ public class IngredienteController {
         tfStock.clear();
         tfBuscar.clear();
         ingredienteTable.getSelectionModel().clearSelection();
+        btnGuardar.setText("Guardar");
+        ingredienteActual = null;
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
@@ -219,13 +230,20 @@ public class IngredienteController {
         alerta.showAndWait();
     }
 
+    private void cargarIngredienteParaEditar(Ingrediente ingrediente) {
+        ingredienteActual = ingrediente;
+        tfNombre.setText(ingrediente.getNombre());
+        tfUnidadMedida.setText(ingrediente.getUnidad_medida());
+        tfStock.setText(String.valueOf(ingrediente.getCantidad_stock()));
+        ingredienteTable.getSelectionModel().select(ingrediente);
+        btnGuardar.setText("Actualizar");
+    }
+    
     @FXML
     private void cargarDatosSeleccionados() {
         Ingrediente ingredienteSeleccionado = ingredienteTable.getSelectionModel().getSelectedItem();
         if (ingredienteSeleccionado != null) {
-            tfNombre.setText(ingredienteSeleccionado.getNombre());
-            tfUnidadMedida.setText(ingredienteSeleccionado.getUnidad_medida());
-            tfStock.setText(String.valueOf(ingredienteSeleccionado.getCantidad_stock()));
+            cargarIngredienteParaEditar(ingredienteSeleccionado);
         }
     }
 }

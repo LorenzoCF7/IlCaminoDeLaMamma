@@ -8,41 +8,78 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 
-<VBox spacing="15" style="-fx-background-color: #ecf0f1;"
+<VBox spacing="0" style="-fx-background-color: #D4A574;" 
     xmlns="http://javafx.com/javafx/21"
     xmlns:fx="http://javafx.com/fxml/1" fx:controller="ilcaminodelamamma.controller.IngredienteController">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20" />
-    </padding>
+    
+    <!-- Header con logo -->
+    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #D4A574; -fx-padding: 10;">
+        <padding>
+            <Insets top="10" right="20" bottom="10" left="20" />
+        </padding>
+        <Label text="🍕" style="-fx-font-size: 32; -fx-text-fill: #8B4513;" />
+    </HBox>
 
-    <VBox spacing="10">
+    <!-- Contenedor principal con padding -->
+    <VBox spacing="15" style="-fx-background-color: #F5E6D3; -fx-background-radius: 15 15 0 0;">
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40" />
+        </padding>
 
-        <Label text="Nombre ingrediente:" style="-fx-font-size: 12;" minWidth="80" />
-        <TextField fx:id="tfNombre" promptText="Ingresa el nombre del ingrediente" HBox.hgrow="ALWAYS" />
+        <!-- Formulario de entrada -->
+        <VBox spacing="10" style="-fx-background-color: #FFE4B5; -fx-padding: 20; -fx-background-radius: 10;">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Nombre Ingrediente:" style="-fx-font-size: 13;" minWidth="130" />
+                <TextField fx:id="tfNombre" promptText="" style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
+            </HBox>
 
-        <Label text="Unidad medida:" style="-fx-font-size: 12;" minWidth="80" />
-        <TextField fx:id="tfUnidadMedida" promptText="Ingresa la unidad de medida" HBox.hgrow="ALWAYS" />
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Unidad medida:" style="-fx-font-size: 13;" minWidth="130" />
+                <TextField fx:id="tfUnidadMedida" promptText="" style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
+            </HBox>
 
-        <Label text="Stock:" style="-fx-font-size: 12;" minWidth="80" />
-        <TextField fx:id="tfStock" promptText="Ingresa el stock" HBox.hgrow="ALWAYS" />
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="Stock:" style="-fx-font-size: 13;" minWidth="130" />
+                <TextField fx:id="tfStock" promptText="" style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
+            </HBox>
+        </VBox>
 
-        <Label text="Buscar Ingrediente" style="-fx-font-size: 14; -fx-font-weight: bold;" />
-        <TextField fx:id="tfBuscar" promptText="Ingresa el nombre del ingrediente a buscar" HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnBuscar" text="Buscar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
-        <Button fx:id="btnListarTodos" text="Listar Todos" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
+        <!-- Sección de búsqueda -->
+        <VBox spacing="10" style="-fx-background-color: #FFE4B5; -fx-padding: 20; -fx-background-radius: 10;">
+            <Label text="Buscar Ingrediente" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="tfBuscar" promptText="" style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnBuscar" text="Buscar" style="-fx-background-color: white; -fx-text-fill: black; -fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-color: #D4A574; -fx-border-radius: 5;" />
+                <Button fx:id="btnListarTodos" text="Listar todos" style="-fx-background-color: white; -fx-text-fill: black; -fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-color: #D4A574; -fx-border-radius: 5;" />
+            </HBox>
+        </VBox>
 
-        <Button fx:id="btnAgregar" text="Agregar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
-        <Button fx:id="btnModificar" text="Modificar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
-        <Button fx:id="btnLimpiar" text="Limpiar" style="-fx-padding: 8 20; -fx-font-size: 12; -fx-cursor: hand;" />
-        <Button fx:id="btnEliminar" text="Eliminar Seleccionado"/>
+        <!-- Botones de acción -->
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="btnGuardar" text="Agregar" style="-fx-background-color: #FFD580; -fx-text-fill: black; -fx-padding: 10 30; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;" />
+        </HBox>
 
-        <TableView fx:id="autorTable" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="colId" prefWidth="50" text="ID" />
-                <TableColumn fx:id="colNombre" prefWidth="200" text="Nombre" />
-                <TableColumn fx:id="colStock" prefWidth="200" text="Stock" />
-            </columns>
-        </TableView>
+        <!-- Tabla -->
+        <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-background-radius: 10;">
+            <Label text="Tabla" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-alignment: center;" />
+            <TableView fx:id="ingredienteTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 5;">
+                <columns>
+                    <TableColumn fx:id="colId" prefWidth="80" text="ID" />
+                    <TableColumn fx:id="colNombre" prefWidth="250" text="Nombre" />
+                    <TableColumn fx:id="colUnidadMedida" prefWidth="150" text="Unidad Medida" />
+                    <TableColumn fx:id="colStock" prefWidth="120" text="Stock" />
+                    <TableColumn fx:id="colAcciones" prefWidth="250" text="Acciones" />
+                </columns>
+            </TableView>
+        </VBox>
     </VBox>
+
+    <!-- Footer con botones de navegación -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #4A2511; -fx-padding: 15;">
+        <Button text="← Atrás" style="-fx-background-color: #DC5757; -fx-text-fill: white; -fx-padding: 10 40; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 20; -fx-font-weight: bold;" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Fin →" style="-fx-background-color: #5CB85C; -fx-text-fill: white; -fx-padding: 10 40; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 20; -fx-font-weight: bold;" />
+    </HBox>
 </VBox>
