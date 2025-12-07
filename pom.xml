@@ -116,6 +116,13 @@
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
     </dependency>
+    
+    <!-- jBCrypt for password hashing (no Spring dependency required) -->
+    <dependency>
+        <groupId>org.mindrot</groupId>
+        <artifactId>jbcrypt</artifactId>
+        <version>0.4</version>
+    </dependency>
 </dependencies>
 
 <profiles>
