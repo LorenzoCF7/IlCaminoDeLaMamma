@@ -66,4 +66,9 @@ public class Ingrediente {
     public void setRecetaIngredientes(Set<RecetaIngrediente> recetaIngredientes) {
         this.recetaIngredientes = recetaIngredientes;
     }
+    
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

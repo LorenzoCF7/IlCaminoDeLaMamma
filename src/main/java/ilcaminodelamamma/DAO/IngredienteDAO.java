@@ -43,8 +43,8 @@ public class IngredienteDAO {
 
     public List<Ingrediente> findByNombre(String nombre) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Ingrediente> ingredientes = session.createQuery("from Ingrediente where nombre = :nombre", Ingrediente.class)
-                .setParameter("nombre", nombre)
+        List<Ingrediente> ingredientes = session.createQuery("from Ingrediente where nombre like :nombre", Ingrediente.class)
+                .setParameter("nombre", "%" + nombre + "%")
                 .list();
         session.close();
         return ingredientes;

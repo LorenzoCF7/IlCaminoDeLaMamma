@@ -11,22 +11,27 @@ import java.util.List;
 public class RecetaDAO {
     public List<Receta> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Receta> recetas = session.createQuery("from Receta", Receta.class).list();
+        List<Receta> recetas = session.createQuery("select distinct r from Receta r left join fetch r.recetaIngredientes", Receta.class)
+                .list();
         session.close();
         return recetas;
     }
 
     public Receta findById(Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Receta receta = session.get(Receta.class, id);
+        Receta receta = session.createQuery(
+            "select r from Receta r left join fetch r.recetaIngredientes ri left join fetch ri.ingrediente where r.id_receta = :id", 
+            Receta.class)
+            .setParameter("id", id)
+            .uniqueResult();
         session.close();
         return receta;
     }
 
     public List<Receta> findByNombre(String nombre) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Receta> recetas = session.createQuery("from Receta where nombre = :nombre", Receta.class)
-                .setParameter("nombre", nombre)
+        List<Receta> recetas = session.createQuery("select distinct r from Receta r left join fetch r.recetaIngredientes where r.nombre like :nombre", Receta.class)
+                .setParameter("nombre", "%" + nombre + "%")
                 .list();
         session.close();
         return recetas;
@@ -64,7 +69,7 @@ public class RecetaDAO {
         Transaction tx = session.beginTransaction();
         Receta receta = session.get(Receta.class, id);
         if (receta != null) {
-            session.delete(receta);
+            session.remove(receta);
             tx.commit();
             session.close();
             return true;

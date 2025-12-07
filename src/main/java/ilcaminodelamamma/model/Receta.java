@@ -16,8 +16,11 @@ public class Receta {
     private Integer precio;
     private Integer tiempo_preparacion;
     private Boolean disponible;
+    @Lob
     private byte[] imagen;
     private String categoria;
+    @Lob
+    private String pasos;
 
     // RELACIÓN ONE-TO-MANY con la tabla intermedia (que contiene cantidad_usada)
     @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,6 +42,7 @@ public class Receta {
         this.disponible = disponible;
         this.imagen = imagen;
         this.categoria = categoria;
+        this.pasos = null;
     }
 
     public Integer getId_receta() {
@@ -111,6 +115,14 @@ public class Receta {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getPasos() {
+        return pasos;
+    }
+
+    public void setPasos(String pasos) {
+        this.pasos = pasos;
     }
 
     public Set<DetalleComanda> getDetalleComandas() {
