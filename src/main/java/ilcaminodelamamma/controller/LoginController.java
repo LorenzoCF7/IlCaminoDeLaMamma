@@ -1,6 +1,7 @@
 package ilcaminodelamamma.controller;
 
 import java.net.URL;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import ilcaminodelamamma.DAO.UsuarioDAO;
+import ilcaminodelamamma.model.Usuario;
+import ilcaminodelamamma.util.PasswordUtil;
 
 public class LoginController {
 
@@ -39,39 +44,54 @@ public class LoginController {
             return;
         }
 
-        // Lógica de autenticación de ejemplo (reemplazar por autenticación real)
-        // Mapeamos usuarios de ejemplo a vistas por rol:
-        // - chef  -> chef-view.fxml
-        // - assistant -> assistant-view.fxml
-        // - waiter -> waiter-view.fxml
-        // Si quieres integrar con la base de datos, aquí debes consultar al servicio/DAO correspondiente.
-        String usuarioLower = usuario.toLowerCase();
-
+        // Autenticación usando la base de datos y contraseñas hasheadas
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
         try {
-            switch (usuarioLower) {
-                case "chef":
-                    if (!password.equals("1234")) {
-                        throw new Exception("Contraseña incorrecta");
-                    }
-                    cargarVistaPorRol("/fxml/chef/chef-view.fxml");
-                    break;
-                case "assistant":
-                case "admin": // opcional: permitir admin para vista assistant
-                    if (!password.equals("1234")) {
-                        throw new Exception("Contraseña incorrecta");
-                    }
-                    cargarVistaPorRol("/fxml/assistant/assistant-view.fxml");
-                    break;
-                case "waiter":
-                case "camarero":
-                    if (!password.equals("1234")) {
-                        throw new Exception("Contraseña incorrecta");
-                    }
-                    cargarVistaPorRol("/fxml/waiter/waiter-view.fxml");
-                    break;
-                default:
+            List<Usuario> usuarios = usuarioDAO.findByNombre(usuario);
+            Usuario u = null;
+            if (!usuarios.isEmpty()) {
+                // tomar el primer usuario con ese nombre
+                u = usuarios.get(0);
+                if (!PasswordUtil.verify(password, u.getContrasena())) {
                     mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
+                    return;
+                }
+            } else {
+                // Si no hay usuario en la BD, permitir credenciales demo para pruebas
+                String usuarioLower = usuario.toLowerCase();
+                if ((usuarioLower.equals("chef") || usuarioLower.equals("assistant") || usuarioLower.equals("admin") || usuarioLower.equals("waiter") || usuarioLower.equals("camarero"))
+                        && password.equals("1234")) {
+                    // construir un usuario temporal con rol según el nombre
+                    u = new Usuario();
+                    u.setNombre(usuarioLower);
+                    if (usuarioLower.equals("chef")) {
+                        u.setRol(ilcaminodelamamma.model.RolEnum.JEFE);
+                    } else if (usuarioLower.equals("assistant") || usuarioLower.equals("admin")) {
+                        u.setRol(ilcaminodelamamma.model.RolEnum.ADMIN);
+                    } else {
+                        u.setRol(ilcaminodelamamma.model.RolEnum.CAMARERO);
+                    }
+                } else {
+                    mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
+                    return;
+                }
             }
+
+            // cargar vista según rol
+            String fxmlPath;
+            switch (u.getRol()) {
+                case JEFE:
+                    fxmlPath = "/fxml/chef/chef-view.fxml";
+                    break;
+                case ADMIN:
+                    fxmlPath = "/fxml/assistant/assistant-view.fxml";
+                    break;
+                case CAMARERO:
+                default:
+                    fxmlPath = "/fxml/waiter/waiter-view.fxml";
+                    break;
+            }
+            cargarVistaPorRol(fxmlPath);
         } catch (Exception e) {
             mostrarAlerta(Alert.AlertType.ERROR, "Error de autenticación", e.getMessage());
         }

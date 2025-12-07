@@ -2,6 +2,7 @@ package ilcaminodelamamma.DAO;
 
 import ilcaminodelamamma.config.HibernateUtil;
 import ilcaminodelamamma.model.Usuario;
+import ilcaminodelamamma.util.PasswordUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -9,6 +10,10 @@ import java.util.List;
 
 public class UsuarioDAO {
     public Usuario create(Usuario usuario) {
+        // Hash password before persisting if not already hashed
+        if (usuario.getContrasena() != null && !PasswordUtil.isHashed(usuario.getContrasena())) {
+            usuario.setContrasena(PasswordUtil.hash(usuario.getContrasena()));
+        }
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.persist(usuario);
@@ -18,6 +23,10 @@ public class UsuarioDAO {
     }
 
     public Usuario update(Usuario usuario) {
+        // Hash password before updating if not already hashed
+        if (usuario.getContrasena() != null && !PasswordUtil.isHashed(usuario.getContrasena())) {
+            usuario.setContrasena(PasswordUtil.hash(usuario.getContrasena()));
+        }
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.merge(usuario);
@@ -42,9 +51,10 @@ public class UsuarioDAO {
 
     public List<Usuario> findByNombre(String nombre) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Usuario> usuarios = session.createQuery("from Usuario where nombre = :nombre", Usuario.class)
-                .setParameter("nombre", nombre)
-                .list();
+        // Buscar por nombre de forma insensible a mayúsculas
+        List<Usuario> usuarios = session.createQuery("from Usuario where lower(nombre) = :nombre", Usuario.class)
+            .setParameter("nombre", nombre.toLowerCase())
+            .list();
         session.close();
         return usuarios;
     }
