@@ -39,6 +39,7 @@ public class ChefViewController implements Initializable {
     @FXML private Label contentTitle;
     @FXML private HBox breadcrumbBox;
     @FXML private VBox centerArea;
+    @FXML private Button btnCerrarSesion;
 
     // Estado actual de la vista
     private String currentView = "categories";
@@ -73,6 +74,18 @@ public class ChefViewController implements Initializable {
         if (breadcrumbBox != null) {
             breadcrumbBox.setVisible(false);
             breadcrumbBox.setManaged(false);
+        }
+        
+        // Configurar botón de cerrar sesión
+        if (btnCerrarSesion != null) {
+            btnCerrarSesion.setOnAction(e -> cerrarSesion());
+        }
+        
+        // Configurar búsqueda de recetas
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                buscarRecetas(newValue);
+            });
         }
     }
 
@@ -556,6 +569,88 @@ public class ChefViewController implements Initializable {
             this.imageName = imageName;
             this.description = description;
             this.price = price;
+        }
+    }
+    
+    /**
+     * Busca recetas por nombre en todas las categorías
+     */
+    private void buscarRecetas(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            // Si no hay búsqueda, mostrar vista actual
+            if (currentView.equals("categories")) {
+                reloadCategoryGrid();
+            } else {
+                reloadDishGrid();
+            }
+            return;
+        }
+        
+        String searchTerm = query.toLowerCase().trim();
+        categoryGrid.getChildren().clear();
+        
+        int column = 0;
+        int row = 0;
+        int foundCount = 0;
+        
+        // Buscar en todas las categorías
+        for (Map.Entry<String, List<DishItem>> entry : dishesByCategory.entrySet()) {
+            for (DishItem dish : entry.getValue()) {
+                if (dish.name.toLowerCase().contains(searchTerm)) {
+                    VBox dishCard = createDishCard(dish);
+                    categoryGrid.add(dishCard, column, row);
+                    
+                    column++;
+                    foundCount++;
+                    if (column >= currentColumns) {
+                        column = 0;
+                        row++;
+                    }
+                }
+            }
+        }
+        
+        // Actualizar título con resultados
+        if (contentTitle != null) {
+            contentTitle.setText("Resultados de búsqueda: \"" + query + "\" (" + foundCount + " recetas)");
+        }
+        
+        // Ocultar breadcrumb en búsqueda
+        if (breadcrumbBox != null) {
+            breadcrumbBox.setVisible(false);
+            breadcrumbBox.setManaged(false);
+        }
+    }
+    
+    /**
+     * Cierra la sesión actual y vuelve a la pantalla de login
+     */
+    private void cerrarSesion() {
+        try {
+            System.out.println("Cerrando sesión del Chef...");
+            
+            // Obtener el Stage actual
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnCerrarSesion.getScene().getWindow();
+            
+            // Cargar la vista de login
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/login/login.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            // Crear nueva escena con la vista de login
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 700, 550);
+            
+            // Cambiar la escena
+            stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma - Login");
+            stage.centerOnScreen();
+            
+            System.out.println("Sesión cerrada correctamente");
+            
+        } catch (Exception e) {
+            System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
