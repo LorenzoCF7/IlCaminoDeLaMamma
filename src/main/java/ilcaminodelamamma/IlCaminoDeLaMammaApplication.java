@@ -19,8 +19,8 @@ public class IlCaminoDeLaMammaApplication {
      * @param args argumentos de línea de comandos
      */
     public static void main(String[] args) {
-        // Lanzar la aplicación JavaFX (LoginApp)
-        // JavaFX se encargará de inicializar su propio ciclo de vida
+        // Lanzar la aplicación con LoginApp (requiere MySQL configurado)
+        // Para desarrollo sin BD, cambiar a: ilcaminodelamamma.view.chef.ChefApp.class
         Application.launch(LoginApp.class, args);
     }
 

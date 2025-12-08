@@ -1,17 +1,26 @@
 package ilcaminodelamamma.view.chef;
 
+import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import ilcaminodelamamma.DAO.ComandaDAO;
+import ilcaminodelamamma.DAO.RecetaDAO;
+import ilcaminodelamamma.model.Comanda;
+import ilcaminodelamamma.model.Receta;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -22,6 +31,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * Controlador para la vista principal del Jefe de Cocina
@@ -40,11 +50,18 @@ public class ChefViewController implements Initializable {
     @FXML private HBox breadcrumbBox;
     @FXML private VBox centerArea;
     @FXML private Button btnCerrarSesion;
+    @FXML private Button btnNuevaReceta;
+    @FXML private Button btnIngredientes;
+    @FXML private Button btnLibros;
+    @FXML private Button btnComandas;
 
     // Estado actual de la vista
     private String currentView = "categories";
     private String currentCategory = null;
     private int currentColumns = 3;
+    
+    // DAO para acceder a recetas de la base de datos
+    private RecetaDAO recetaDAO;
 
     // Lista de categorías con sus imágenes (en carpeta categorias/)
     private final List<CategoryItem> categories = Arrays.asList(
@@ -64,7 +81,9 @@ public class ChefViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista del Chef inicializada correctamente");
+        recetaDAO = new RecetaDAO();
         initializeDishes();
+        loadDynamicDishesFromDatabase();
         loadCategoryGrid();
         loadRecentRecipes();
         setupTabButtons();
@@ -81,6 +100,29 @@ public class ChefViewController implements Initializable {
             btnCerrarSesion.setOnAction(e -> cerrarSesion());
         }
         
+        // Configurar botón de nueva receta
+        if (btnNuevaReceta != null) {
+            btnNuevaReceta.setOnAction(e -> abrirNuevaReceta());
+        }
+        
+        // Configurar botón de ingredientes
+        if (btnIngredientes != null) {
+            btnIngredientes.setOnAction(e -> abrirIngredientes());
+        }
+        
+        // Configurar botón de libros de cocina
+        if (btnLibros != null) {
+            btnLibros.setOnAction(e -> {
+                System.out.println("Mostrando libros de cocina (categorías)");
+                goBackToCategories();
+            });
+        }
+        
+        // Configurar botón de comandas
+        if (btnComandas != null) {
+            btnComandas.setOnAction(e -> mostrarComandas());
+        }
+        
         // Configurar búsqueda de recetas
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -90,7 +132,46 @@ public class ChefViewController implements Initializable {
     }
 
     /**
-     * Inicializa los platos por categoría
+     * Carga recetas dinámicamente desde la base de datos
+     */
+    private void loadDynamicDishesFromDatabase() {
+        try {
+            List<Receta> todasLasRecetas = recetaDAO.findAll();
+            System.out.println("Recetas cargadas de la BD: " + todasLasRecetas.size());
+            
+            // Agrupar recetas por categoría
+            for (Receta receta : todasLasRecetas) {
+                String categoria = receta.getCategoria();
+                if (categoria == null || categoria.trim().isEmpty()) {
+                    continue; // Saltar recetas sin categoría
+                }
+                
+                // Crear DishItem desde la receta
+                DishItem dish = new DishItem(
+                    receta.getNombre(),
+                    null, // La imagen se cargará desde los bytes
+                    receta.getDescripcion(),
+                    0.0,  // Precio no disponible en BD
+                    receta.getImagen()
+                );
+                
+                // Agregar a la categoría correspondiente
+                dishesByCategory.computeIfAbsent(categoria, k -> new ArrayList<>()).add(dish);
+            }
+            
+            System.out.println("Categorías con recetas dinámicas:");
+            dishesByCategory.forEach((cat, dishes) -> 
+                System.out.println("  " + cat + ": " + dishes.size() + " recetas")
+            );
+            
+        } catch (Exception e) {
+            System.err.println("Error cargando recetas desde BD: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Inicializa los platos por categoría (platos estáticos de ejemplo)
      */
     private void initializeDishes() {
         // ENTRANTES
@@ -422,21 +503,35 @@ public class ChefViewController implements Initializable {
         imageContainer.setStyle("-fx-background-radius: 10 10 0 0;");
 
         try {
-            String imagePath = "/img/" + dish.imageName;
-            var inputStream = getClass().getResourceAsStream(imagePath);
+            Image image = null;
             
-            if (inputStream == null) {
-                throw new RuntimeException("Imagen no encontrada: " + imagePath);
+            // Primero intentar cargar desde bytes (recetas de BD)
+            if (dish.imageBytes != null && dish.imageBytes.length > 0) {
+                image = new Image(new ByteArrayInputStream(dish.imageBytes));
+            }
+            // Si no hay bytes, cargar desde archivo de recursos
+            else if (dish.imageName != null && !dish.imageName.isEmpty()) {
+                String imagePath = "/img/" + dish.imageName;
+                var inputStream = getClass().getResourceAsStream(imagePath);
+                
+                if (inputStream == null) {
+                    throw new RuntimeException("Imagen no encontrada: " + imagePath);
+                }
+                
+                image = new Image(inputStream);
             }
             
-            Image image = new Image(inputStream);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(180);
-            imageView.setFitHeight(140);
-            imageView.setPreserveRatio(false);
-            imageView.getStyleClass().add("dish-image");
-            
-            imageContainer.getChildren().add(imageView);
+            if (image != null) {
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(180);
+                imageView.setFitHeight(140);
+                imageView.setPreserveRatio(false);
+                imageView.getStyleClass().add("dish-image");
+                
+                imageContainer.getChildren().add(imageView);
+            } else {
+                throw new RuntimeException("No hay imagen disponible");
+            }
         } catch (Exception e) {
             Label placeholder = new Label("🍽️");
             placeholder.setStyle("-fx-font-size: 50px;");
@@ -563,12 +658,22 @@ public class ChefViewController implements Initializable {
         String imageName;
         String description;
         double price;
+        byte[] imageBytes;
 
         DishItem(String name, String imageName, String description, double price) {
             this.name = name;
             this.imageName = imageName;
             this.description = description;
             this.price = price;
+            this.imageBytes = null;
+        }
+        
+        DishItem(String name, String imageName, String description, double price, byte[] imageBytes) {
+            this.name = name;
+            this.imageName = imageName;
+            this.description = description;
+            this.price = price;
+            this.imageBytes = imageBytes;
         }
     }
     
@@ -629,6 +734,9 @@ public class ChefViewController implements Initializable {
         try {
             System.out.println("Cerrando sesión del Chef...");
             
+            // Limpiar la sesión
+            ilcaminodelamamma.config.SessionManager.cerrarSesion();
+            
             // Obtener el Stage actual
             javafx.stage.Stage stage = (javafx.stage.Stage) btnCerrarSesion.getScene().getWindow();
             
@@ -652,6 +760,180 @@ public class ChefViewController implements Initializable {
             System.err.println("Error al cerrar sesión: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Carga la vista de crear nueva receta en el área central
+     */
+    private void abrirNuevaReceta() {
+        try {
+            System.out.println("Cargando vista de nueva receta en el área central...");
+            
+            // Cambiar a la ventana principal completa para mostrar el formulario
+            Stage stage = (Stage) btnNuevaReceta.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/receta.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root, 900, 700);
+            stage.setScene(scene);
+            stage.setTitle("Nueva Receta - Il Camino Della Mamma");
+            stage.centerOnScreen();
+            
+            System.out.println("Vista de nueva receta cargada");
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar vista de nueva receta: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Carga la vista de gestión de ingredientes en el área central
+     */
+    private void abrirIngredientes() {
+        try {
+            System.out.println("Cargando vista de ingredientes en el área central...");
+            
+            // Cambiar a la ventana principal completa para mostrar el formulario
+            Stage stage = (Stage) btnIngredientes.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ingrediente.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root, 900, 700);
+            stage.setScene(scene);
+            stage.setTitle("Gestión de Ingredientes - Il Camino Della Mamma");
+            stage.centerOnScreen();
+            
+            System.out.println("Vista de ingredientes cargada");
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar vista de ingredientes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Muestra la lista de comandas activas
+     */
+    private void mostrarComandas() {
+        try {
+            System.out.println("=== MOSTRANDO COMANDAS ACTIVAS ===");
+            
+            // Limpiar el grid actual
+            categoryGrid.getChildren().clear();
+            System.out.println("Grid limpiado");
+            
+            // Cambiar el título
+            if (contentTitle != null) {
+                contentTitle.setText("Comandas Activas");
+                System.out.println("Título cambiado a: Comandas Activas");
+            }
+            
+            // Ocultar breadcrumb
+            if (breadcrumbBox != null) {
+                breadcrumbBox.setVisible(false);
+                breadcrumbBox.setManaged(false);
+            }
+            
+            // Cargar comandas desde la base de datos
+            System.out.println("Creando ComandaDAO...");
+            ComandaDAO comandaDAO = new ComandaDAO();
+            System.out.println("ComandaDAO creado. Cargando comandas...");
+            List<Comanda> comandas = comandaDAO.findAll();
+            System.out.println("Comandas recuperadas de BD: " + comandas.size());
+            
+            // Imprimir detalles de cada comanda
+            for (int i = 0; i < comandas.size(); i++) {
+                Comanda c = comandas.get(i);
+                System.out.println("  Comanda " + (i+1) + ": ID=" + c.getId_comanda() + 
+                                 ", Mesa=" + (c.getMesa() != null ? c.getMesa().getId_mesa() : "null") +
+                                 ", Detalles=" + (c.getDetalleComandas() != null ? c.getDetalleComandas().size() : "null"));
+            }
+            
+            int column = 0;
+            int row = 0;
+            
+            for (Comanda comanda : comandas) {
+                System.out.println("Creando tarjeta para comanda ID: " + comanda.getId_comanda());
+                VBox comandaCard = createComandaCard(comanda);
+                categoryGrid.add(comandaCard, column, row);
+                System.out.println("Tarjeta añadida al grid en posición (" + column + ", " + row + ")");
+                
+                column++;
+                if (column >= currentColumns) {
+                    column = 0;
+                    row++;
+                }
+            }
+            
+            if (comandas.isEmpty()) {
+                System.out.println("⚠️ NO HAY COMANDAS EN LA BASE DE DATOS");
+                Label noData = new Label("No hay comandas activas");
+                noData.setStyle("-fx-font-size: 18px; -fx-text-fill: #666;");
+                categoryGrid.add(noData, 0, 0);
+            }
+            
+            System.out.println("=== COMANDAS CARGADAS EXITOSAMENTE: " + comandas.size() + " ===");
+            
+        } catch (Exception e) {
+            System.err.println("❌ ERROR AL CARGAR COMANDAS: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Mostrar el error en la interfaz
+            Label errorLabel = new Label("Error al cargar comandas: " + e.getMessage());
+            errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+            categoryGrid.add(errorLabel, 0, 0);
+        }
+    }
+    
+    /**
+     * Crea una tarjeta visual para mostrar una comanda
+     */
+    private VBox createComandaCard(Comanda comanda) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("category-card");
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setMinWidth(180);
+        card.setPrefWidth(200);
+        card.setMaxWidth(250);
+        card.setPrefHeight(180);
+        card.setPadding(new Insets(15));
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+        
+        // Número de mesa
+        Label lblMesa = new Label("Mesa " + (comanda.getMesa() != null ? comanda.getMesa().getId_mesa() : "N/A"));
+        lblMesa.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+        
+        // Estado
+        String estadoTexto = comanda.getMesa() != null ? comanda.getMesa().getEstado().toString() : "SIN MESA";
+        Label lblEstado = new Label("Estado: " + estadoTexto);
+        lblEstado.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+        
+        // Número de platos
+        int numPlatos = comanda.getDetalleComandas() != null ? comanda.getDetalleComandas().size() : 0;
+        Label lblPlatos = new Label(numPlatos + " plato(s)");
+        lblPlatos.setStyle("-fx-font-size: 14px; -fx-text-fill: #28a745; -fx-font-weight: bold;");
+        
+        // ID de comanda
+        Label lblId = new Label("ID: " + comanda.getId_comanda());
+        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #999;");
+        
+        card.getChildren().addAll(lblMesa, lblEstado, lblPlatos, lblId);
+        
+        card.setOnMouseClicked(event -> {
+            System.out.println("Comanda seleccionada: ID " + comanda.getId_comanda());
+            // Aquí puedes agregar lógica para ver detalles de la comanda
+        });
+        
+        card.setOnMouseEntered(e -> {
+            card.setStyle("-fx-background-color: #F5E6D3; -fx-background-radius: 10; -fx-border-color: #8B7355; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+        });
+        
+        card.setOnMouseExited(e -> {
+            card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+        });
+        
+        return card;
     }
 }
 

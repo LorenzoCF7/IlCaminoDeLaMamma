@@ -24,6 +24,9 @@ module ilcaminodelamamma {
     // JAXB
     requires java.xml.bind;
 
+    // BCrypt para encriptación de contraseñas
+    requires jbcrypt;
+
     // Exports & Opens
     opens ilcaminodelamamma to javafx.fxml;
     opens ilcaminodelamamma.controller to javafx.fxml;

@@ -77,6 +77,9 @@ public class LoginController {
                 }
             }
 
+            // Guardar usuario en la sesión
+            ilcaminodelamamma.config.SessionManager.setUsuarioActual(u);
+            
             // cargar vista según rol
             String fxmlPath;
             switch (u.getRol()) {
