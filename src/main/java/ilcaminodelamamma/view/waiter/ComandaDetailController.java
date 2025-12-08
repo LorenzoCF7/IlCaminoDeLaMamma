@@ -2,6 +2,7 @@ package ilcaminodelamamma.view.waiter;
 
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +12,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import ilcaminodelamamma.DAO.ComandaDAO;
+import ilcaminodelamamma.DAO.MesaDAO;
+import ilcaminodelamamma.DAO.RecetaDAO;
+import ilcaminodelamamma.model.Comanda;
+import ilcaminodelamamma.model.DetalleComanda;
+import ilcaminodelamamma.model.EstadoMesa;
+import ilcaminodelamamma.model.Mesa;
+import ilcaminodelamamma.model.Receta;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -657,18 +666,120 @@ public class ComandaDetailController implements Initializable {
         System.out.println("TOTAL: " + df.format(total) + " €");
         System.out.println("=======================");
         
-        // TODO: En el futuro, aquí se guardará en la base de datos usando ComandaDAO
-        // Por ahora solo mostramos confirmación
-        
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Comanda guardada");
-        alert.setHeaderText("Mesa #" + mesaNumber);
-        alert.setContentText("La comanda se ha guardado correctamente.\n\n" +
-                           "Total: " + df.format(total) + " €\n" +
-                           "Platos: " + platosEnComanda.size() + " tipos");
-        alert.showAndWait();
-        
-        volverALista();
+        // Guardar en la base de datos
+        try {
+            System.out.println("Guardando comanda en base de datos...");
+            
+            // Obtener o crear la mesa en la BD
+            MesaDAO mesaDAO = new MesaDAO();
+            Mesa mesa = mesaDAO.findById(mesaNumber);
+            if (mesa == null) {
+                System.out.println("⚠️ Mesa " + mesaNumber + " no existe en BD. Creando...");
+                mesa = mesaDAO.createWithSpecificId(mesaNumber, EstadoMesa.LIBRE);
+                System.out.println("✅ Mesa " + mesaNumber + " creada en BD");
+            }
+            
+            // Actualizar estado de la mesa
+            String estadoSeleccionado = comboEstado.getValue();
+            if ("Ocupada".equals(estadoSeleccionado)) {
+                mesa.setEstado(EstadoMesa.OCUPADA);
+            } else if ("Reservada".equals(estadoSeleccionado)) {
+                mesa.setEstado(EstadoMesa.RESERVADA);
+            }
+            mesaDAO.update(mesa);
+            
+            // Obtener el usuario actual de la sesión
+            ilcaminodelamamma.model.Usuario usuarioSesion = ilcaminodelamamma.config.SessionManager.getUsuarioActual();
+            if (usuarioSesion == null) {
+                throw new Exception("No hay usuario logueado. Por favor, inicia sesión nuevamente.");
+            }
+            
+            // IMPORTANTE: Obtener el usuario desde la BD (no usar el de sesión directamente)
+            // porque el de sesión es un objeto transient (no gestionado por Hibernate)
+            ilcaminodelamamma.DAO.UsuarioDAO usuarioDAO = new ilcaminodelamamma.DAO.UsuarioDAO();
+            ilcaminodelamamma.model.Usuario usuarioActual = null;
+            
+            if (usuarioSesion.getId_usuario() != null) {
+                // Si tiene ID, buscarlo por ID
+                usuarioActual = usuarioDAO.findById(usuarioSesion.getId_usuario());
+            } else {
+                // Si no tiene ID (usuario demo), buscarlo por nombre
+                List<ilcaminodelamamma.model.Usuario> usuarios = usuarioDAO.findByNombre(usuarioSesion.getNombre());
+                if (!usuarios.isEmpty()) {
+                    usuarioActual = usuarios.get(0);
+                }
+            }
+            
+            // Si aún no tenemos usuario, es porque es un usuario demo que no existe en BD
+            // En ese caso, lo creamos
+            if (usuarioActual == null) {
+                System.out.println("⚠️ Usuario no existe en BD. Creando usuario: " + usuarioSesion.getNombre());
+                usuarioActual = new ilcaminodelamamma.model.Usuario();
+                usuarioActual.setNombre(usuarioSesion.getNombre());
+                usuarioActual.setRol(usuarioSesion.getRol());
+                usuarioActual.setContrasena("$2a$10$dummyhash"); // Hash dummy
+                usuarioActual = usuarioDAO.create(usuarioActual);
+                System.out.println("✅ Usuario creado en BD con ID: " + usuarioActual.getId_usuario());
+            }
+            
+            // Crear la comanda
+            Comanda comanda = new Comanda();
+            comanda.setUsuario(usuarioActual);
+            comanda.setMesa(mesa);
+            comanda.setFecha_hora(LocalDateTime.now());
+            comanda.setTotal((float) total);
+            
+            // Crear los detalles de la comanda
+            RecetaDAO recetaDAO = new RecetaDAO();
+            List<DetalleComanda> detalles = new ArrayList<>();
+            
+            for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+                // Buscar la receta por nombre
+                List<Receta> recetas = recetaDAO.findByNombre(platoComanda.plato.nombre);
+                if (!recetas.isEmpty()) {
+                    Receta receta = recetas.get(0);
+                    
+                    DetalleComanda detalle = new DetalleComanda();
+                    detalle.setComanda(comanda);
+                    detalle.setReceta(receta);
+                    detalle.setCantidad(platoComanda.cantidad);
+                    detalle.setPrecio_unitario((float) platoComanda.plato.precio);
+                    detalle.setSubtotal((float) (platoComanda.plato.precio * platoComanda.cantidad));
+                    
+                    detalles.add(detalle);
+                } else {
+                    System.err.println("⚠️ Receta no encontrada: " + platoComanda.plato.nombre);
+                }
+            }
+            
+            comanda.setDetalleComandas(new java.util.HashSet<>(detalles));
+            
+            // Guardar en la BD
+            ComandaDAO comandaDAO = new ComandaDAO();
+            comandaDAO.create(comanda);
+            
+            System.out.println("✅ Comanda guardada en BD con ID: " + comanda.getId_comanda());
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Comanda guardada");
+            alert.setHeaderText("Mesa #" + mesaNumber);
+            alert.setContentText("La comanda se ha guardado correctamente en la base de datos.\n\n" +
+                               "Total: " + df.format(total) + " €\n" +
+                               "Platos: " + platosEnComanda.size() + " tipos");
+            alert.showAndWait();
+            
+            volverALista();
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error al guardar comanda en BD: " + e.getMessage());
+            e.printStackTrace();
+            
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error al guardar comanda");
+            alert.setContentText("No se pudo guardar la comanda en la base de datos:\n" + e.getMessage());
+            alert.showAndWait();
+        }
     }
     
     /**

@@ -43,7 +43,12 @@ public class ComandaDAO {
 
     public List<Comanda> findAll() {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Comanda> comandas = session.createQuery("from Comanda", Comanda.class).list();
+        List<Comanda> comandas = session.createQuery(
+            "SELECT DISTINCT c FROM Comanda c " +
+            "LEFT JOIN FETCH c.mesa " +
+            "LEFT JOIN FETCH c.detalleComandas", 
+            Comanda.class
+        ).list();
         session.close();
         return comandas;
     }

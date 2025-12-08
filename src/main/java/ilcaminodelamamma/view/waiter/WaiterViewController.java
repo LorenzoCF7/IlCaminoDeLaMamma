@@ -317,6 +317,9 @@ public class WaiterViewController implements Initializable {
         try {
             System.out.println("Cerrando sesión del Camarero...");
             
+            // Limpiar la sesión
+            ilcaminodelamamma.config.SessionManager.cerrarSesion();
+            
             // Obtener el Stage actual
             javafx.stage.Stage stage = (javafx.stage.Stage) btnCerrarSesion.getScene().getWindow();
             

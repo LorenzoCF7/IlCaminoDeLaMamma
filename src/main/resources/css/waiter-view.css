@@ -304,7 +304,7 @@
 .section-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 /* Scroll de categorías */
@@ -361,7 +361,7 @@
 .plato-nombre {
     -fx-font-size: 15px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 .plato-categoria {
@@ -404,7 +404,7 @@
 .info-label {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-text-fill: #495057;
+    -fx-text-fill: black;
 }
 
 /* ComboBox personalizado */
@@ -431,7 +431,7 @@
 .plato-comanda-nombre {
     -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 .plato-comanda-precio-unit {
@@ -465,7 +465,7 @@
 .cantidad-label {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 /* Totales */
@@ -477,19 +477,19 @@
 
 .total-label {
     -fx-font-size: 14px;
-    -fx-text-fill: #495057;
+    -fx-text-fill: black;
 }
 
 .total-value {
     -fx-font-size: 15px;
     -fx-font-weight: 600;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 .total-label-final {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2C1810;
+    -fx-text-fill: black;
 }
 
 .total-value-final {

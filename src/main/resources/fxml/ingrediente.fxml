@@ -6,27 +6,100 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox spacing="0" style="-fx-background-color: #D4A574;" 
-    xmlns="http://javafx.com/javafx/21"
-    xmlns:fx="http://javafx.com/fxml/1" fx:controller="ilcaminodelamamma.controller.IngredienteController">
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.controller.IngredienteController"
+            minWidth="900" minHeight="600"
+            stylesheets="@../css/chef-view.css">
     
-    <!-- Header con logo -->
-    <HBox alignment="CENTER_LEFT" style="-fx-background-color: #D4A574; -fx-padding: 10;">
-        <padding>
-            <Insets top="10" right="20" bottom="10" left="20" />
-        </padding>
-        <Label text="🍕" style="-fx-font-size: 32; -fx-text-fill: #8B4513;" />
-    </HBox>
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" bottom="12" left="20" right="20"/>
+            </padding>
+            
+            <!-- Logo -->
+            <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+                <image>
+                    <Image url="@../img/logo.png"/>
+                </image>
+            </ImageView>
+            
+            <Label text="Il Camino Della Mamma" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <TextField fx:id="searchField" promptText="🔍 Buscar ingredientes..." 
+                       minWidth="200" prefWidth="350" maxWidth="450" styleClass="search-field"
+                       HBox.hgrow="SOMETIMES"/>
+        </HBox>
+    </top>
 
-    <!-- Contenedor principal con padding -->
-    <VBox spacing="15" style="-fx-background-color: #F5E6D3; -fx-background-radius: 15 15 0 0;">
-        <padding>
-            <Insets top="30" right="40" bottom="30" left="40" />
-        </padding>
+    <!-- Panel Lateral Izquierdo (Sidebar) -->
+    <left>
+        <VBox styleClass="sidebar" minWidth="180" prefWidth="220" maxWidth="280">
+            <padding>
+                <Insets top="25" bottom="20" left="15" right="15"/>
+            </padding>
+            
+            <!-- Título del menú con separador -->
+            <VBox spacing="10" styleClass="menu-header">
+                <Label text="MENÚ" styleClass="sidebar-title"/>
+                <Separator styleClass="menu-separator"/>
+            </VBox>
+            
+            <VBox.margin>
+                <Insets bottom="20"/>
+            </VBox.margin>
+            
+            <!-- Botones del menú -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnNuevaReceta" text="➕ Nueva Receta" maxWidth="Infinity" 
+                        styleClass="sidebar-button"/>
+                
+                <Region prefHeight="10"/>
+                
+                <Button fx:id="btnLibros" text="📚 Libros de cocina" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnComandas" text="📋 Lista de Comandas" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnIngredientesSidebar" text="🥬 Ingredientes" maxWidth="Infinity"
+                        styleClass="sidebar-button,primary-button"/>
+                
+                <Region VBox.vgrow="ALWAYS"/>
+                
+                <!-- Sección inferior -->
+                <Separator styleClass="menu-separator"/>
+                
+                <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnCerrarSesion" text="🚪 Cerrar Sesión" maxWidth="Infinity"
+                        styleClass="sidebar-button,logout-button"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área Central -->
+    <center>
+        <!-- Contenedor principal con padding -->
+        <VBox fx:id="centerArea" styleClass="center-area" spacing="15">
+            <padding>
+                <Insets top="20" bottom="20" left="20" right="20"/>
+            </padding>
+            
+            <Label text="Gestión de Ingredientes" styleClass="content-title"/>
 
         <!-- Formulario de entrada -->
         <VBox spacing="10" style="-fx-background-color: #FFE4B5; -fx-padding: 20; -fx-background-radius: 10;">
@@ -61,25 +134,36 @@
             <Button fx:id="btnGuardar" text="Agregar" style="-fx-background-color: #FFD580; -fx-text-fill: black; -fx-padding: 10 30; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;" />
         </HBox>
 
-        <!-- Tabla -->
-        <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: #E8D4B8; -fx-padding: 15; -fx-background-radius: 10;">
-            <Label text="Tabla" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-alignment: center;" />
-            <TableView fx:id="ingredienteTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 5;">
-                <columns>
-                    <TableColumn fx:id="colId" prefWidth="80" text="ID" />
-                    <TableColumn fx:id="colNombre" prefWidth="250" text="Nombre" />
-                    <TableColumn fx:id="colUnidadMedida" prefWidth="150" text="Unidad Medida" />
-                    <TableColumn fx:id="colStock" prefWidth="120" text="Stock" />
-                    <TableColumn fx:id="colAcciones" prefWidth="250" text="Acciones" />
-                </columns>
-            </TableView>
+            <!-- Tabla -->
+            <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-border-color: #D4A574; -fx-border-radius: 5; -fx-background-color: white; -fx-padding: 15;">
+                <Label text="Lista de Ingredientes" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4A2511;" />
+                <TableView fx:id="ingredienteTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-control-inner-background: white;">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="80" text="ID" />
+                        <TableColumn fx:id="colNombre" prefWidth="250" text="Nombre" />
+                        <TableColumn fx:id="colUnidadMedida" prefWidth="150" text="Unidad Medida" />
+                        <TableColumn fx:id="colStock" prefWidth="120" text="Stock" />
+                        <TableColumn fx:id="colAcciones" prefWidth="250" text="Acciones" />
+                    </columns>
+                </TableView>
+            </VBox>
         </VBox>
-    </VBox>
+    </center>
 
-    <!-- Footer con botones de navegación -->
-    <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #4A2511; -fx-padding: 15;">
-        <Button text="← Atrás" style="-fx-background-color: #DC5757; -fx-text-fill: white; -fx-padding: 10 40; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 20; -fx-font-weight: bold;" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button text="Fin →" style="-fx-background-color: #5CB85C; -fx-text-fill: white; -fx-padding: 10 40; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 20; -fx-font-weight: bold;" />
-    </HBox>
-</VBox>
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Button fx:id="btnAtras" text="← Volver al Chef" 
+                    styleClass="sidebar-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Sistema de gestión de ingredientes - Il Camino Della Mamma" styleClass="bottom-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnFin" text="Guardar y Salir →" 
+                    styleClass="sidebar-button,primary-button"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

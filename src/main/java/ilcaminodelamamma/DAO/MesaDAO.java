@@ -53,5 +53,27 @@ public class MesaDAO {
         Mesa mesa = session.get(Mesa.class, id);
         session.close();
         return mesa;
+    }
+    
+    /**
+     * Crea una mesa con un ID específico usando SQL nativo
+     * Esto bypasea la generación automática de IDs de Hibernate
+     */
+    public Mesa createWithSpecificId(Integer id, ilcaminodelamamma.model.EstadoMesa estado) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+        
+        // Usar SQL nativo para insertar con ID específico
+        session.createNativeQuery(
+            "INSERT INTO mesas (id_mesa, estado) VALUES (:id, :estado)")
+            .setParameter("id", id)
+            .setParameter("estado", estado.name())
+            .executeUpdate();
+        
+        tx.commit();
+        session.close();
+        
+        // Recuperar la mesa recién creada
+        return findById(id);
     }   
 }

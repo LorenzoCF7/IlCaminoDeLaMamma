@@ -30,7 +30,7 @@
                     onAction="#volverALista"/>
             
             <Label fx:id="lblComandaTitle" text="Comanda - Mesa #5" 
-                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: black;"/>
             
             <Region HBox.hgrow="ALWAYS"/>
             
@@ -48,7 +48,7 @@
             
             <!-- Panel Izquierdo: Menú de Platos -->
             <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="menu-panel">
-                <Label text="MENÚ DE PLATOS" styleClass="section-title"/>
+                <Label text="MENÚ DE PLATOS" styleClass="section-title" style="-fx-text-fill: black;"/>
                 
                 <!-- Barra de búsqueda -->
                 <TextField fx:id="searchField" promptText="🔍 Buscar plato..." 
@@ -76,13 +76,13 @@
                 
                 <!-- Info de mesa -->
                 <VBox spacing="8" styleClass="mesa-info-box">
-                    <Label text="INFORMACIÓN DE MESA" styleClass="section-title"/>
+                    <Label text="INFORMACIÓN DE MESA" styleClass="section-title" style="-fx-text-fill: black;"/>
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Mesa:" styleClass="info-label"/>
+                        <Label text="Mesa:" styleClass="info-label" style="-fx-text-fill: black;"/>
                         <ComboBox fx:id="comboMesa" prefWidth="100" promptText="Nº"/>
                     </HBox>
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Estado:" styleClass="info-label"/>
+                        <Label text="Estado:" styleClass="info-label" style="-fx-text-fill: black;"/>
                         <ComboBox fx:id="comboEstado" prefWidth="150" promptText="Estado"/>
                     </HBox>
                 </VBox>
@@ -92,7 +92,7 @@
                 
                 <!-- Platos añadidos -->
                 <VBox spacing="10" VBox.vgrow="ALWAYS">
-                    <Label text="PLATOS AÑADIDOS" styleClass="section-title"/>
+                    <Label text="PLATOS AÑADIDOS" styleClass="section-title" style="-fx-text-fill: black;"/>
                     
                     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
                                styleClass="scroll-pane" hbarPolicy="NEVER">
@@ -108,23 +108,23 @@
                 <!-- Resumen de totales -->
                 <VBox spacing="8" styleClass="totales-box">
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Subtotal:" styleClass="total-label"/>
+                        <Label text="Subtotal:" styleClass="total-label" style="-fx-text-fill: black;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="lblSubtotal" text="0,00 €" styleClass="total-value"/>
+                        <Label fx:id="lblSubtotal" text="0,00 €" styleClass="total-value" style="-fx-text-fill: black;"/>
                     </HBox>
                     
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="IVA (10%):" styleClass="total-label"/>
+                        <Label text="IVA (10%):" styleClass="total-label" style="-fx-text-fill: black;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="lblIVA" text="0,00 €" styleClass="total-value"/>
+                        <Label fx:id="lblIVA" text="0,00 €" styleClass="total-value" style="-fx-text-fill: black;"/>
                     </HBox>
                     
                     <Separator/>
                     
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="TOTAL:" styleClass="total-label-final"/>
+                        <Label text="TOTAL:" styleClass="total-label-final" style="-fx-text-fill: black;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Label fx:id="lblTotal" text="0,00 €" styleClass="total-value-final"/>
+                        <Label fx:id="lblTotal" text="0,00 €" styleClass="total-value-final" style="-fx-text-fill: black;"/>
                     </HBox>
                 </VBox>
                 

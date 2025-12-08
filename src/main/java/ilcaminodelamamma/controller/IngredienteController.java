@@ -1,17 +1,22 @@
 package ilcaminodelamamma.controller;
 
+import java.util.List;
 import java.util.Optional;
 
-import ilcaminodelamamma.model.Ingrediente;
 import ilcaminodelamamma.DAO.IngredienteDAO;
+import ilcaminodelamamma.model.Ingrediente;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-
-import java.util.List;
 
 
 public class IngredienteController {
@@ -54,6 +59,33 @@ public class IngredienteController {
     @FXML
     private Button btnListarTodos;
     
+    @FXML
+    private Button btnAtras;
+    
+    @FXML
+    private Button btnFin;
+    
+    @FXML
+    private Button btnNuevaReceta;
+    
+    @FXML
+    private Button btnLibros;
+    
+    @FXML
+    private Button btnComandas;
+    
+    @FXML
+    private Button btnIngredientesSidebar;
+    
+    @FXML
+    private Button btnConfiguracion;
+    
+    @FXML
+    private Button btnCerrarSesion;
+    
+    @FXML
+    private TextField searchField;
+    
     private IngredienteDAO ingredienteDAO;
     private ObservableList<Ingrediente> ingredientesObservable;
     private Ingrediente ingredienteActual;
@@ -64,6 +96,7 @@ public class IngredienteController {
         setupTableColumns();
         loadAllIngredientes();
         setupButtonHandlers();
+        setupSidebarButtons();
     }
 
     private void setupTableColumns() {
@@ -119,6 +152,8 @@ public class IngredienteController {
         btnGuardar.setOnAction(e -> guardarIngrediente());
         btnBuscar.setOnAction(e -> buscarIngrediente());
         btnListarTodos.setOnAction(e -> loadAllIngredientes());
+        btnAtras.setOnAction(e -> volverAVistaChef());
+        btnFin.setOnAction(e -> volverAVistaChef());
     }
 
     private void guardarIngrediente() {
@@ -244,6 +279,112 @@ public class IngredienteController {
         Ingrediente ingredienteSeleccionado = ingredienteTable.getSelectionModel().getSelectedItem();
         if (ingredienteSeleccionado != null) {
             cargarIngredienteParaEditar(ingredienteSeleccionado);
+        }
+    }
+    
+    /**
+     * Configura los botones del sidebar para navegación
+     */
+    private void setupSidebarButtons() {
+        if (btnLibros != null) {
+            btnLibros.setOnAction(e -> volverAVistaChef());
+        }
+        
+        if (btnComandas != null) {
+            btnComandas.setOnAction(e -> {
+                System.out.println("Navegando a comandas...");
+                // Por implementar
+            });
+        }
+        
+        if (btnNuevaReceta != null) {
+            btnNuevaReceta.setOnAction(e -> abrirNuevaReceta());
+        }
+        
+        if (btnConfiguracion != null) {
+            btnConfiguracion.setOnAction(e -> {
+                System.out.println("Abriendo configuración...");
+                // Por implementar
+            });
+        }
+        
+        if (btnCerrarSesion != null) {
+            btnCerrarSesion.setOnAction(e -> cerrarSesion());
+        }
+        
+        if (btnIngredientesSidebar != null) {
+            btnIngredientesSidebar.setOnAction(e -> limpiarFormulario());
+        }
+    }
+    
+    /**
+     * Vuelve a la vista principal del Chef
+     */
+    private void volverAVistaChef() {
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnAtras.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/chef/chef-view.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 1200, 700);
+            stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma - Chef");
+            stage.centerOnScreen();
+            
+            System.out.println("Volviendo a vista Chef");
+        } catch (Exception e) {
+            System.err.println("Error al volver a vista Chef: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Abre la vista de crear nueva receta
+     */
+    private void abrirNuevaReceta() {
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnNuevaReceta.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/receta.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 900, 700);
+            stage.setScene(scene);
+            stage.setTitle("Nueva Receta - Il Camino Della Mamma");
+            stage.centerOnScreen();
+            
+            System.out.println("Vista de nueva receta cargada");
+        } catch (Exception e) {
+            System.err.println("Error al cargar vista de nueva receta: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Cierra la sesión actual y vuelve a la pantalla de login
+     */
+    private void cerrarSesion() {
+        try {
+            System.out.println("Cerrando sesión...");
+            
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnCerrarSesion.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/login/login.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 700, 550);
+            stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma - Login");
+            stage.centerOnScreen();
+            
+            System.out.println("Sesión cerrada correctamente");
+        } catch (Exception e) {
+            System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

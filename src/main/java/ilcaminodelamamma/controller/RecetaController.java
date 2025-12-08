@@ -1,27 +1,39 @@
 package ilcaminodelamamma.controller;
 
-import ilcaminodelamamma.DAO.RecetaDAO;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import ilcaminodelamamma.DAO.IngredienteDAO;
-import ilcaminodelamamma.model.Receta;
+import ilcaminodelamamma.DAO.RecetaDAO;
 import ilcaminodelamamma.model.Ingrediente;
+import ilcaminodelamamma.model.Receta;
 import ilcaminodelamamma.model.RecetaIngrediente;
 import ilcaminodelamamma.model.RecetaIngredienteId;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class RecetaController {
     
@@ -91,6 +103,27 @@ public class RecetaController {
     @FXML
     private Button btnBuscarReceta;
     
+    @FXML
+    private Button btnNuevaRecetaSidebar;
+    
+    @FXML
+    private Button btnLibros;
+    
+    @FXML
+    private Button btnComandas;
+    
+    @FXML
+    private Button btnIngredientes;
+    
+    @FXML
+    private Button btnConfiguracion;
+    
+    @FXML
+    private Button btnCerrarSesion;
+    
+    @FXML
+    private TextField searchField;
+    
     private RecetaDAO recetaDAO;
     private IngredienteDAO ingredienteDAO;
     private Receta recetaActual;
@@ -108,7 +141,7 @@ public class RecetaController {
         
         // Configurar categorías
         cbCategoria.setItems(FXCollections.observableArrayList(
-            "Pasta", "Pizza", "Ensalada", "Postre", "Bebida", "Entrante", "Plato Principal"
+            "Entrantes", "Pasta", "Pizza", "Pescados", "Carnes", "Postres", "Vinos", "Menú Infantil"
         ));
         
         // Configurar tabla de recetas
@@ -116,6 +149,7 @@ public class RecetaController {
         cargarRecetas();
         
         setupEventHandlers();
+        setupSidebarButtons();
     }
     
     private void configureTablaRecetas() {
@@ -277,14 +311,11 @@ public class RecetaController {
         // Botón Buscar recetas
         btnBuscarReceta.setOnAction(e -> buscarRecetas());
         
-        // Botón Fin
-        btnFin.setOnAction(e -> {
-            // Aquí puedes cerrar la ventana o navegar a otra vista
-            limpiarFormulario();
-        });
+        // Botón Fin - Volver a vista Chef
+        btnFin.setOnAction(e -> volverAVistaChef());
         
-        // Botón Atrás
-        btnAtras.setOnAction(e -> limpiarFormulario());
+        // Botón Atrás - Volver a vista Chef
+        btnAtras.setOnAction(e -> volverAVistaChef());
     }
     
     private void seleccionarImagen() {
@@ -485,6 +516,112 @@ public class RecetaController {
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    /**
+     * Configura los botones del sidebar para navegación
+     */
+    private void setupSidebarButtons() {
+        if (btnLibros != null) {
+            btnLibros.setOnAction(e -> volverAVistaChef());
+        }
+        
+        if (btnComandas != null) {
+            btnComandas.setOnAction(e -> {
+                System.out.println("Navegando a comandas...");
+                // Por implementar
+            });
+        }
+        
+        if (btnIngredientes != null) {
+            btnIngredientes.setOnAction(e -> abrirIngredientes());
+        }
+        
+        if (btnConfiguracion != null) {
+            btnConfiguracion.setOnAction(e -> {
+                System.out.println("Abriendo configuración...");
+                // Por implementar
+            });
+        }
+        
+        if (btnCerrarSesion != null) {
+            btnCerrarSesion.setOnAction(e -> cerrarSesion());
+        }
+        
+        if (btnNuevaRecetaSidebar != null) {
+            btnNuevaRecetaSidebar.setOnAction(e -> limpiarFormulario());
+        }
+    }
+    
+    /**
+     * Vuelve a la vista principal del Chef
+     */
+    private void volverAVistaChef() {
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnAtras.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/chef/chef-view.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 1200, 700);
+            stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma - Chef");
+            stage.centerOnScreen();
+            
+            System.out.println("Volviendo a vista Chef");
+        } catch (Exception e) {
+            System.err.println("Error al volver a vista Chef: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Abre la vista de gestión de ingredientes
+     */
+    private void abrirIngredientes() {
+        try {
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnIngredientes.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/ingrediente.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 900, 700);
+            stage.setScene(scene);
+            stage.setTitle("Gestión de Ingredientes - Il Camino Della Mamma");
+            stage.centerOnScreen();
+            
+            System.out.println("Vista de ingredientes cargada");
+        } catch (Exception e) {
+            System.err.println("Error al cargar vista de ingredientes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Cierra la sesión actual y vuelve a la pantalla de login
+     */
+    private void cerrarSesion() {
+        try {
+            System.out.println("Cerrando sesión...");
+            
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnCerrarSesion.getScene().getWindow();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                getClass().getResource("/fxml/login/login.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+            
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 700, 550);
+            stage.setScene(scene);
+            stage.setTitle("Il Camino Della Mamma - Login");
+            stage.centerOnScreen();
+            
+            System.out.println("Sesión cerrada correctamente");
+        } catch (Exception e) {
+            System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
 

@@ -68,9 +68,6 @@
                         
                 <Button fx:id="btnIngredientes" text="🥬 Ingredientes" maxWidth="Infinity"
                         styleClass="sidebar-button"/>
-                        
-                <Button fx:id="btnReportes" text="📊 Reportes" maxWidth="Infinity"
-                        styleClass="sidebar-button"/>
                 
                 <Region VBox.vgrow="ALWAYS"/>
                 
