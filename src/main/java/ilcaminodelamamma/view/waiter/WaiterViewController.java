@@ -2,7 +2,9 @@ package ilcaminodelamamma.view.waiter;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -34,24 +36,32 @@ public class WaiterViewController implements Initializable {
     
     @FXML private VBox comandasContainer;
 
-    // Lista de comandas de ejemplo
-    private final List<ComandaItem> comandas = new ArrayList<>();
+    // Sistema de mesas (15 mesas predeterminadas) - TODAS LIBRES INICIALMENTE
+    public static final List<MesaInfo> MESAS = new ArrayList<>();
+    static {
+        // Inicializar 15 mesas - todas libres
+        for (int i = 1; i <= 15; i++) {
+            MESAS.add(new MesaInfo(i, "Libre", null));
+        }
+    }
+    
+    // Almacenamiento temporal de comandas (por mesa)
+    public static final Map<Integer, ComandaData> COMANDAS_ACTIVAS = new HashMap<>();
+    
+    private List<MesaInfo> mesasFiltradas = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista de Camarero inicializada correctamente");
         
-        // Cargar comandas de ejemplo
-        loadSampleComandas();
-        
         // Configurar botones de pestañas
         setupTabButtons();
         
-        // Configurar botón Nueva Comanda
-        btnNuevaComanda.setOnAction(e -> abrirNuevaComanda());
+        // Habilitar botón Nueva Comanda
+        btnNuevaComanda.setOnAction(e -> abrirSelectorMesa());
         
-        // Mostrar comandas
-        displayComandas();
+        // Mostrar todas las mesas ocupadas
+        filtrarYMostrarMesas("Todas");
         
         // Configurar botón de cerrar sesión
         if (btnCerrarSesion != null) {
@@ -60,20 +70,19 @@ public class WaiterViewController implements Initializable {
     }
 
     /**
-     * Carga comandas de ejemplo (datos temporales hasta conectar con la base de datos)
+     * Filtra y muestra las mesas según el estado
      */
-    private void loadSampleComandas() {
-        // Agregamos 10 comandas de prueba con diferentes mesas y platos de pasta
-        comandas.add(new ComandaItem(15, "pasta/espaguetis-a-la-carbonara.jpg"));
-        comandas.add(new ComandaItem(10, "pasta/lasagna-boloñesa.jpg"));
-        comandas.add(new ComandaItem(2, "pasta/ravioli-ricotta-espinacas.jpg"));
-        comandas.add(new ComandaItem(8, "pasta/tagliatelle-al-pesto.jpg"));
-        comandas.add(new ComandaItem(20, "pasta/tortellini_pannaprosciuttopiselli.jpg"));
-        comandas.add(new ComandaItem(5, "pasta/Penne-all-Arrabbiata_EXPS_TOHD24_277252_KristinaVanni_6.jpg"));
-        comandas.add(new ComandaItem(12, "pasta/one-pot-alfredo-recipe.jpg"));
-        comandas.add(new ComandaItem(7, "pasta/Noquis-a-la-sorrentina_650x433_wm.jpg"));
-        comandas.add(new ComandaItem(18, "pasta/marinara-sauce-18.jpg"));
-        comandas.add(new ComandaItem(3, "pasta/espaguetis-a-la-carbonara.jpg"));
+    private void filtrarYMostrarMesas(String filtro) {
+        mesasFiltradas.clear();
+        
+        for (MesaInfo mesa : MESAS) {
+            // Solo mostrar mesas ocupadas
+            if (mesa.estado.equals("Ocupada")) {
+                mesasFiltradas.add(mesa);
+            }
+        }
+        
+        displayMesas();
     }
 
     /**
@@ -103,21 +112,21 @@ public class WaiterViewController implements Initializable {
     }
 
     /**
-     * Muestra las comandas en el contenedor
+     * Muestra las mesas en el contenedor
      */
-    private void displayComandas() {
+    private void displayMesas() {
         comandasContainer.getChildren().clear();
         
-        for (ComandaItem comanda : comandas) {
-            HBox comandaBox = createComandaBox(comanda);
-            comandasContainer.getChildren().add(comandaBox);
+        for (MesaInfo mesa : mesasFiltradas) {
+            HBox mesaBox = createMesaBox(mesa);
+            comandasContainer.getChildren().add(mesaBox);
         }
     }
 
     /**
-     * Crea un box de comanda con tamaños uniformes
+     * Crea un box de mesa con tamaños uniformes
      */
-    private HBox createComandaBox(ComandaItem comanda) {
+    private HBox createMesaBox(MesaInfo mesa) {
         HBox box = new HBox();
         box.getStyleClass().add("comanda-box");
         box.setAlignment(Pos.CENTER_LEFT);
@@ -140,19 +149,21 @@ public class WaiterViewController implements Initializable {
         imageContainer.getStyleClass().add("image-container");
         
         // Imagen del plato con tamaño fijo
-        try {
-            var imageStream = getClass().getResourceAsStream("/img/" + comanda.imageName);
-            if (imageStream != null) {
-                ImageView imageView = new ImageView(new Image(imageStream));
-                imageView.setFitWidth(70);
-                imageView.setFitHeight(70);
-                imageView.setPreserveRatio(false); // Forzar tamaño exacto
-                imageView.setSmooth(true); // Suavizar la imagen
-                imageView.getStyleClass().add("comanda-image");
-                imageContainer.getChildren().add(imageView);
+        if (mesa.imageName != null) {
+            try {
+                var imageStream = getClass().getResourceAsStream("/img/" + mesa.imageName);
+                if (imageStream != null) {
+                    ImageView imageView = new ImageView(new Image(imageStream));
+                    imageView.setFitWidth(70);
+                    imageView.setFitHeight(70);
+                    imageView.setPreserveRatio(false); // Forzar tamaño exacto
+                    imageView.setSmooth(true); // Suavizar la imagen
+                    imageView.getStyleClass().add("comanda-image");
+                    imageContainer.getChildren().add(imageView);
+                }
+            } catch (Exception e) {
+                System.err.println("Error cargando imagen: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("Error cargando imagen: " + e.getMessage());
         }
         
         box.getChildren().add(imageContainer);
@@ -164,7 +175,7 @@ public class WaiterViewController implements Initializable {
         box.getChildren().add(spacer);
         
         // Label de mesa
-        Label mesaLabel = new Label("Mesa " + comanda.mesaNumber);
+        Label mesaLabel = new Label("Mesa " + mesa.numero);
         mesaLabel.getStyleClass().add("mesa-label");
         mesaLabel.setPrefWidth(200);
         mesaLabel.setAlignment(Pos.CENTER);
@@ -178,52 +189,125 @@ public class WaiterViewController implements Initializable {
         // Botón de flecha
         Button arrowButton = new Button("→");
         arrowButton.getStyleClass().add("arrow-button");
-        arrowButton.setOnAction(e -> openComandaDetail(comanda.mesaNumber));
+        arrowButton.setOnAction(e -> abrirComandaMesa(mesa.numero));
         box.getChildren().add(arrowButton);
         
         return box;
     }
 
     /**
-     * Abre el detalle de una comanda
+     * Abre selector de mesa para crear nueva comanda
      */
-    private void openComandaDetail(int mesaNumber) {
+    private void abrirSelectorMesa() {
+        // Crear diálogo de selección de mesa
+        javafx.scene.control.Dialog<Integer> dialog = new javafx.scene.control.Dialog<>();
+        dialog.setTitle("Nueva Comanda");
+        dialog.setHeaderText("Selecciona una mesa libre para crear la comanda");
+        
+        // Crear ComboBox con mesas libres
+        javafx.scene.control.ComboBox<String> comboMesas = new javafx.scene.control.ComboBox<>();
+        for (MesaInfo mesa : MESAS) {
+            if (mesa.estado.equals("Libre")) {
+                comboMesas.getItems().add("Mesa " + mesa.numero);
+            }
+        }
+        comboMesas.setPromptText("Selecciona una mesa");
+        comboMesas.setPrefWidth(200);
+        
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.getChildren().addAll(
+            new Label("Mesas disponibles:"),
+            comboMesas
+        );
+        
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(
+            javafx.scene.control.ButtonType.OK,
+            javafx.scene.control.ButtonType.CANCEL
+        );
+        
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == javafx.scene.control.ButtonType.OK && comboMesas.getValue() != null) {
+                String selected = comboMesas.getValue();
+                return Integer.parseInt(selected.replace("Mesa ", ""));
+            }
+            return null;
+        });
+        
+        dialog.showAndWait().ifPresent(mesaNumber -> {
+            abrirComandaMesa(mesaNumber);
+        });
+    }
+    
+    /**
+     * Abre la comanda de una mesa específica
+     */
+    private void abrirComandaMesa(int mesaNumber) {
         try {
-            System.out.println("Abriendo detalle de comanda para Mesa " + mesaNumber);
+            System.out.println("Abriendo comanda de Mesa " + mesaNumber);
             
+            // Pasar el número de mesa al controlador de detalle
             javafx.stage.Stage stage = (javafx.stage.Stage) comandasContainer.getScene().getWindow();
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
                 getClass().getResource("/fxml/waiter/comanda-detail.fxml")
             );
             javafx.scene.Parent root = loader.load();
-            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            
+            // Pasar número de mesa al controlador
+            ComandaDetailController controller = loader.getController();
+            controller.setMesaNumber(mesaNumber);
+            
+            // Crear escena con tamaño fijo 1024x768
+            javafx.scene.Scene scene = new javafx.scene.Scene(root, 1024, 768);
             stage.setScene(scene);
+            stage.setMinWidth(1024);
+            stage.setMinHeight(768);
             stage.centerOnScreen();
             
         } catch (Exception e) {
-            System.err.println("Error al abrir detalle de comanda: " + e.getMessage());
+            System.err.println("Error al abrir comanda de mesa: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
-     * Clase interna para representar una comanda
+     * Clase interna para representar información de una mesa
      */
-    private static class ComandaItem {
-        int mesaNumber;
-        String imageName;
+    public static class MesaInfo {
+        int numero;
+        String estado; // Libre, Ocupada, Reservada
+        String imageName; // Imagen del plato principal (null si está libre)
         
-        ComandaItem(int mesaNumber, String imageName) {
-            this.mesaNumber = mesaNumber;
+        MesaInfo(int numero, String estado, String imageName) {
+            this.numero = numero;
+            this.estado = estado;
             this.imageName = imageName;
         }
     }
     
     /**
-     * Abre la vista de nueva comanda
+     * Clase para almacenar datos de una comanda
      */
-    private void abrirNuevaComanda() {
-        openComandaDetail(0); // 0 indica nueva comanda
+    public static class ComandaData {
+        public Map<String, PlatoComanda> platos = new HashMap<>();
+        public String estado = "Ocupada";
+        
+        public static class PlatoComanda {
+            public String nombre;
+            public double precio;
+            public int cantidad;
+            public String nota;
+            public String categoria;
+            
+            public PlatoComanda(String nombre, double precio, int cantidad, String nota, String categoria) {
+                this.nombre = nombre;
+                this.precio = precio;
+                this.cantidad = cantidad;
+                this.nota = nota;
+                this.categoria = categoria;
+            }
+        }
     }
     
     /**

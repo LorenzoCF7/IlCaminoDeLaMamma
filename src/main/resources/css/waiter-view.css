@@ -310,20 +310,26 @@
 /* Scroll de categorías */
 .categories-scroll {
     -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.categories-scroll > .viewport {
+    -fx-background-color: transparent;
 }
 
 /* Botones de categoría */
 .category-button {
     -fx-background-color: #e9ecef;
     -fx-text-fill: #495057;
-    -fx-font-size: 14px;
+    -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-padding: 10 20;
+    -fx-padding: 8 16;
     -fx-cursor: hand;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
     -fx-border-width: 2;
     -fx-border-color: transparent;
+    -fx-min-width: 90;
 }
 
 .category-button:hover {

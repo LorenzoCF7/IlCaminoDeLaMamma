@@ -1,5 +1,16 @@
 package ilcaminodelamamma.view.waiter;
 
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,16 +18,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.*;
 
 /**
  * Controlador para el detalle de una comanda
@@ -37,15 +49,31 @@ public class ComandaDetailController implements Initializable {
     @FXML private Label lblTotal;
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
+    @FXML private Button btnEliminar;
 
     // Datos
     private final Map<String, List<PlatoItem>> platosPorCategoria = new LinkedHashMap<>();
-    private final Map<PlatoItem, Integer> platosEnComanda = new HashMap<>();
+    private final Map<String, PlatoEnComanda> platosEnComanda = new HashMap<>(); // Key: nombre del plato
     private String categoriaActual = "Todos";
     private int mesaNumber = 5;
     private final DecimalFormat df = new DecimalFormat("#,##0.00");
     
     private static final double IVA = 0.10; // 10% IVA
+    
+    /**
+     * Clase para representar un plato en la comanda con cantidad y nota
+     */
+    private static class PlatoEnComanda {
+        PlatoItem plato;
+        int cantidad;
+        String nota;
+        
+        PlatoEnComanda(PlatoItem plato, int cantidad, String nota) {
+            this.plato = plato;
+            this.cantidad = cantidad;
+            this.nota = nota != null ? nota : "";
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,6 +96,64 @@ public class ComandaDetailController implements Initializable {
         
         // Actualizar título
         lblComandaTitle.setText("Comanda - Mesa #" + mesaNumber);
+    }
+    
+    /**
+     * Establece el número de mesa (llamado desde WaiterViewController)
+     */
+    public void setMesaNumber(int numero) {
+        this.mesaNumber = numero;
+        lblComandaTitle.setText("Comanda - Mesa #" + mesaNumber);
+        comboMesa.setValue(String.valueOf(mesaNumber));
+        
+        // Deshabilitar el combo de mesa (no se puede cambiar la mesa)
+        comboMesa.setDisable(true);
+        
+        // Cargar comanda existente si la hay
+        cargarComandaExistente();
+    }
+    
+    /**
+     * Carga una comanda existente desde el almacenamiento
+     */
+    private void cargarComandaExistente() {
+        WaiterViewController.ComandaData comandaData = 
+            WaiterViewController.COMANDAS_ACTIVAS.get(mesaNumber);
+        
+        if (comandaData != null) {
+            System.out.println("Cargando comanda existente de Mesa " + mesaNumber);
+            
+            // Cargar platos de la comanda
+            for (WaiterViewController.ComandaData.PlatoComanda platoData : comandaData.platos.values()) {
+                // Buscar el plato en nuestro catálogo
+                PlatoItem plato = buscarPlatoPorNombre(platoData.nombre);
+                if (plato != null) {
+                    platosEnComanda.put(platoData.nombre, 
+                        new PlatoEnComanda(plato, platoData.cantidad, platoData.nota));
+                }
+            }
+            
+            // Actualizar estado
+            comboEstado.setValue(comandaData.estado);
+            actualizarEstadoVisual();
+            
+            // Actualizar visualización
+            actualizarComanda();
+        }
+    }
+    
+    /**
+     * Busca un plato por nombre en todas las categorías
+     */
+    private PlatoItem buscarPlatoPorNombre(String nombre) {
+        for (List<PlatoItem> platos : platosPorCategoria.values()) {
+            for (PlatoItem plato : platos) {
+                if (plato.nombre.equals(nombre)) {
+                    return plato;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -184,15 +270,11 @@ public class ComandaDetailController implements Initializable {
      * Configura los ComboBox
      */
     private void configurarCombos() {
-        // ComboBox de mesas (1-20)
-        for (int i = 1; i <= 20; i++) {
+        // ComboBox de mesas (1-15) - sistema de 15 mesas predeterminadas
+        for (int i = 1; i <= 15; i++) {
             comboMesa.getItems().add(String.valueOf(i));
         }
         comboMesa.setValue(String.valueOf(mesaNumber));
-        comboMesa.setOnAction(e -> {
-            mesaNumber = Integer.parseInt(comboMesa.getValue());
-            lblComandaTitle.setText("Comanda - Mesa #" + mesaNumber);
-        });
 
         // ComboBox de estados
         comboEstado.getItems().addAll("Ocupada", "Libre", "Reservada");
@@ -306,11 +388,49 @@ public class ComandaDetailController implements Initializable {
     }
 
     /**
-     * Añade un plato a la comanda
+     * Añade un plato a la comanda con opción de nota
      */
     private void anadirPlato(PlatoItem plato) {
-        int cantidad = platosEnComanda.getOrDefault(plato, 0);
-        platosEnComanda.put(plato, cantidad + 1);
+        PlatoEnComanda existing = platosEnComanda.get(plato.nombre);
+        
+        if (existing != null) {
+            // Si ya existe, solo aumentar cantidad
+            existing.cantidad++;
+        } else {
+            // Nuevo plato - preguntar si quiere añadir nota
+            Dialog<String> dialog = new Dialog<>();
+            dialog.setTitle("Añadir plato");
+            dialog.setHeaderText(plato.nombre);
+            
+            // Crear campos
+            VBox content = new VBox(10);
+            content.setPadding(new Insets(20));
+            Label label = new Label("¿Deseas añadir alguna nota? (opcional)");
+            TextField notaField = new TextField();
+            notaField.setPromptText("Ej: Sin cebolla, poco hecho, etc.");
+            notaField.setPrefWidth(300);
+            
+            content.getChildren().addAll(label, notaField);
+            dialog.getDialogPane().setContent(content);
+            
+            // Botones
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == ButtonType.OK) {
+                    return notaField.getText();
+                }
+                return null;
+            });
+            
+            dialog.showAndWait().ifPresent(nota -> {
+                platosEnComanda.put(plato.nombre, new PlatoEnComanda(plato, 1, nota));
+                actualizarComanda();
+            });
+            
+            return; // No actualizar aquí, se hace en el callback
+        }
+        
         actualizarComanda();
     }
 
@@ -325,8 +445,8 @@ public class ComandaDetailController implements Initializable {
             emptyLabel.getStyleClass().add("empty-label");
             platosComandaContainer.getChildren().add(emptyLabel);
         } else {
-            for (Map.Entry<PlatoItem, Integer> entry : platosEnComanda.entrySet()) {
-                HBox platoComandaBox = crearPlatoComandaBox(entry.getKey(), entry.getValue());
+            for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+                HBox platoComandaBox = crearPlatoComandaBox(platoComanda);
                 platosComandaContainer.getChildren().add(platoComandaBox);
             }
         }
@@ -335,22 +455,24 @@ public class ComandaDetailController implements Initializable {
     }
 
     /**
-     * Crea un box para un plato en la comanda
+     * Crea un box para un plato en la comanda con nota
      */
-    private HBox crearPlatoComandaBox(PlatoItem plato, int cantidad) {
-        HBox box = new HBox();
-        box.setAlignment(Pos.CENTER_LEFT);
-        box.setSpacing(10);
-        box.setPadding(new Insets(8, 10, 8, 10));
-        box.getStyleClass().add("plato-comanda-box");
+    private HBox crearPlatoComandaBox(PlatoEnComanda platoComanda) {
+        VBox mainBox = new VBox(5);
+        mainBox.getStyleClass().add("plato-comanda-box");
+        mainBox.setPadding(new Insets(8, 10, 8, 10));
         
-        // Nombre del plato
+        // Fila principal con info del plato
+        HBox topRow = new HBox(10);
+        topRow.setAlignment(Pos.CENTER_LEFT);
+        
+        // Nombre del plato y precio
         VBox infoBox = new VBox(2);
-        Label nombreLabel = new Label(plato.nombre);
+        Label nombreLabel = new Label(platoComanda.plato.nombre);
         nombreLabel.getStyleClass().add("plato-comanda-nombre");
         nombreLabel.setWrapText(true);
         
-        Label precioUnitLabel = new Label(df.format(plato.precio) + " € c/u");
+        Label precioUnitLabel = new Label(df.format(platoComanda.plato.precio) + " € c/u");
         precioUnitLabel.getStyleClass().add("plato-comanda-precio-unit");
         
         infoBox.getChildren().addAll(nombreLabel, precioUnitLabel);
@@ -363,15 +485,15 @@ public class ComandaDetailController implements Initializable {
         Button btnMenos = new Button("-");
         btnMenos.getStyleClass().add("btn-quantity");
         btnMenos.setOnAction(e -> {
-            if (cantidad > 1) {
-                platosEnComanda.put(plato, cantidad - 1);
+            if (platoComanda.cantidad > 1) {
+                platoComanda.cantidad--;
             } else {
-                platosEnComanda.remove(plato);
+                platosEnComanda.remove(platoComanda.plato.nombre);
             }
             actualizarComanda();
         });
         
-        Label cantidadLabel = new Label("x" + cantidad);
+        Label cantidadLabel = new Label("x" + platoComanda.cantidad);
         cantidadLabel.getStyleClass().add("cantidad-label");
         cantidadLabel.setMinWidth(35);
         cantidadLabel.setAlignment(Pos.CENTER);
@@ -379,22 +501,43 @@ public class ComandaDetailController implements Initializable {
         Button btnMas = new Button("+");
         btnMas.getStyleClass().add("btn-quantity");
         btnMas.setOnAction(e -> {
-            platosEnComanda.put(plato, cantidad + 1);
+            platoComanda.cantidad++;
             actualizarComanda();
         });
         
         cantidadBox.getChildren().addAll(btnMenos, cantidadLabel, btnMas);
         
         // Precio total del plato
-        double precioTotal = plato.precio * cantidad;
+        double precioTotal = platoComanda.plato.precio * platoComanda.cantidad;
         Label precioTotalLabel = new Label(df.format(precioTotal) + " €");
         precioTotalLabel.getStyleClass().add("plato-comanda-precio-total");
         precioTotalLabel.setMinWidth(70);
         precioTotalLabel.setAlignment(Pos.CENTER_RIGHT);
         
-        box.getChildren().addAll(infoBox, cantidadBox, precioTotalLabel);
+        topRow.getChildren().addAll(infoBox, cantidadBox, precioTotalLabel);
+        mainBox.getChildren().add(topRow);
         
-        return box;
+        // Si hay nota, mostrarla en segunda fila
+        if (platoComanda.nota != null && !platoComanda.nota.trim().isEmpty()) {
+            HBox notaRow = new HBox(5);
+            notaRow.setPadding(new Insets(0, 0, 0, 10));
+            
+            Label notaIcon = new Label("📝");
+            Label notaLabel = new Label(platoComanda.nota);
+            notaLabel.getStyleClass().add("plato-nota");
+            notaLabel.setWrapText(true);
+            notaLabel.setStyle("-fx-font-style: italic; -fx-text-fill: #6c757d; -fx-font-size: 12px;");
+            
+            notaRow.getChildren().addAll(notaIcon, notaLabel);
+            mainBox.getChildren().add(notaRow);
+        }
+        
+        // Convertir VBox a HBox para retornar
+        HBox wrapper = new HBox();
+        wrapper.getChildren().add(mainBox);
+        HBox.setHgrow(mainBox, Priority.ALWAYS);
+        
+        return wrapper;
     }
 
     /**
@@ -403,8 +546,8 @@ public class ComandaDetailController implements Initializable {
     private void actualizarTotales() {
         double subtotal = 0.0;
         
-        for (Map.Entry<PlatoItem, Integer> entry : platosEnComanda.entrySet()) {
-            subtotal += entry.getKey().precio * entry.getValue();
+        for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+            subtotal += platoComanda.plato.precio * platoComanda.cantidad;
         }
         
         double iva = subtotal * IVA;
@@ -463,26 +606,107 @@ public class ComandaDetailController implements Initializable {
             return;
         }
         
+        // Calcular totales
+        double subtotal = 0.0;
+        for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+            subtotal += platoComanda.plato.precio * platoComanda.cantidad;
+        }
+        double iva = subtotal * IVA;
+        double total = subtotal + iva;
+        
+        // Guardar en el almacenamiento temporal
+        WaiterViewController.ComandaData comandaData = new WaiterViewController.ComandaData();
+        comandaData.estado = comboEstado.getValue();
+        
+        for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+            WaiterViewController.ComandaData.PlatoComanda platoData = 
+                new WaiterViewController.ComandaData.PlatoComanda(
+                    platoComanda.plato.nombre,
+                    platoComanda.plato.precio,
+                    platoComanda.cantidad,
+                    platoComanda.nota,
+                    platoComanda.plato.categoria
+                );
+            comandaData.platos.put(platoComanda.plato.nombre, platoData);
+        }
+        
+        WaiterViewController.COMANDAS_ACTIVAS.put(mesaNumber, comandaData);
+        
+        // Actualizar estado de la mesa
+        for (WaiterViewController.MesaInfo mesa : WaiterViewController.MESAS) {
+            if (mesa.numero == mesaNumber) {
+                mesa.estado = comboEstado.getValue();
+                // Todas las mesas con comanda usan la imagen de mesa
+                mesa.imageName = "img/mesa.jpg";
+                break;
+            }
+        }
+        
         System.out.println("=== COMANDA GUARDADA ===");
         System.out.println("Mesa: " + mesaNumber);
         System.out.println("Estado: " + comboEstado.getValue());
+        System.out.println("Número de platos: " + platosEnComanda.size());
         System.out.println("Platos:");
-        for (Map.Entry<PlatoItem, Integer> entry : platosEnComanda.entrySet()) {
-            System.out.println("  - " + entry.getKey().nombre + " x" + entry.getValue() + 
-                             " = " + df.format(entry.getKey().precio * entry.getValue()) + " €");
+        for (PlatoEnComanda platoComanda : platosEnComanda.values()) {
+            System.out.println("  - " + platoComanda.plato.nombre + " x" + platoComanda.cantidad + 
+                             " = " + df.format(platoComanda.plato.precio * platoComanda.cantidad) + " €" +
+                             (platoComanda.nota != null && !platoComanda.nota.isEmpty() ? " [" + platoComanda.nota + "]" : ""));
         }
-        System.out.println("Subtotal: " + lblSubtotal.getText());
-        System.out.println("IVA: " + lblIVA.getText());
-        System.out.println("TOTAL: " + lblTotal.getText());
+        System.out.println("Subtotal: " + df.format(subtotal) + " €");
+        System.out.println("IVA (10%): " + df.format(iva) + " €");
+        System.out.println("TOTAL: " + df.format(total) + " €");
         System.out.println("=======================");
+        
+        // TODO: En el futuro, aquí se guardará en la base de datos usando ComandaDAO
+        // Por ahora solo mostramos confirmación
         
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Comanda guardada");
-        alert.setHeaderText(null);
-        alert.setContentText("La comanda se ha guardado correctamente.");
+        alert.setHeaderText("Mesa #" + mesaNumber);
+        alert.setContentText("La comanda se ha guardado correctamente.\n\n" +
+                           "Total: " + df.format(total) + " €\n" +
+                           "Platos: " + platosEnComanda.size() + " tipos");
         alert.showAndWait();
         
         volverALista();
+    }
+    
+    /**
+     * Elimina la comanda actual
+     */
+    @FXML
+    private void eliminarComanda() {
+        // Confirmar eliminación
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Eliminar comanda");
+        confirmacion.setHeaderText("¿Eliminar comanda de Mesa #" + mesaNumber + "?");
+        confirmacion.setContentText("Esta acción no se puede deshacer.");
+        
+        confirmacion.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Eliminar del almacenamiento
+                WaiterViewController.COMANDAS_ACTIVAS.remove(mesaNumber);
+                
+                // Actualizar estado de la mesa a Libre
+                for (WaiterViewController.MesaInfo mesa : WaiterViewController.MESAS) {
+                    if (mesa.numero == mesaNumber) {
+                        mesa.estado = "Libre";
+                        mesa.imageName = "img/mesa.jpg";
+                        break;
+                    }
+                }
+                
+                System.out.println("Comanda de Mesa " + mesaNumber + " eliminada");
+                
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Comanda eliminada");
+                alert.setHeaderText(null);
+                alert.setContentText("La comanda de la Mesa #" + mesaNumber + " ha sido eliminada.");
+                alert.showAndWait();
+                
+                volverALista();
+            }
+        });
     }
 
     /**
@@ -494,8 +718,10 @@ public class ComandaDetailController implements Initializable {
             Stage stage = (Stage) btnVolver.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/waiter/waiter-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1024, 768);
             stage.setScene(scene);
+            stage.setMinWidth(1024);
+            stage.setMinHeight(768);
             stage.centerOnScreen();
         } catch (Exception e) {
             System.err.println("Error al volver a lista: " + e.getMessage());
@@ -529,5 +755,22 @@ public class ComandaDetailController implements Initializable {
         public int hashCode() {
             return Objects.hash(nombre);
         }
+    }
+    
+    /**
+     * Obtiene la imagen representativa de una categoría de plato
+     */
+    private String obtenerImagenCategoria(String categoria) {
+        return switch (categoria.toLowerCase()) {
+            case "entrantes" -> "img/entrantes/ensalada-caprese.jpg";
+            case "pasta" -> "img/pasta/espaguetis-a-la-carbonara.jpg";
+            case "pizza" -> "img/pizza/margherita.jpg";
+            case "carnes" -> "img/carnes/escalopa-a-la-milanesa.jpg";
+            case "pescados" -> "img/pescados/salmon-a-la-plancha.jpg";
+            case "postres" -> "img/postres/tiramisu.jpg";
+            case "vino" -> "img/vino/chianti-classico.jpg";
+            case "menu-infantil" -> "img/menu-infantil/macarrones-con-tomate.jpg";
+            default -> "img/default.jpg";
+        };
     }
 }
