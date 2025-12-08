@@ -2,12 +2,13 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/20"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ilcaminodelamamma.view.waiter.ComandaDetailController"
-            minWidth="1100" minHeight="700"
+            minWidth="1024" minHeight="768"
             stylesheets="@../../css/waiter-view.css">
 
     <!-- Barra Superior -->
@@ -17,12 +18,19 @@
                 <Insets top="12" bottom="12" left="20" right="20"/>
             </padding>
             
+            <!-- Logo -->
+            <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                <image>
+                    <Image url="@../../img/logo.png"/>
+                </image>
+            </ImageView>
+            
             <!-- Botón Volver -->
             <Button fx:id="btnVolver" text="← Volver" styleClass="back-button" 
                     onAction="#volverALista"/>
             
             <Label fx:id="lblComandaTitle" text="Comanda - Mesa #5" 
-                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
             
             <Region HBox.hgrow="ALWAYS"/>
             
@@ -47,9 +55,9 @@
                           styleClass="search-field"/>
                 
                 <!-- Pestañas de categorías -->
-                <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" 
-                           styleClass="categories-scroll" prefHeight="50">
-                    <HBox fx:id="categoriesBox" spacing="10" alignment="CENTER_LEFT">
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" 
+                           styleClass="categories-scroll" minHeight="60" maxHeight="60">
+                    <HBox fx:id="categoriesBox" spacing="10" alignment="CENTER_LEFT" minHeight="50">
                         <padding><Insets top="5" bottom="5"/></padding>
                     </HBox>
                 </ScrollPane>
@@ -121,14 +129,28 @@
                 </VBox>
                 
                 <!-- Botones de acción -->
-                <HBox spacing="10">
-                    <Button fx:id="btnGuardar" text="💾 Guardar" maxWidth="Infinity" 
-                            HBox.hgrow="ALWAYS" styleClass="btn-success" onAction="#guardarComanda"/>
-                    <Button fx:id="btnCancelar" text="✖ Cancelar" maxWidth="Infinity" 
-                            HBox.hgrow="ALWAYS" styleClass="btn-danger" onAction="#volverALista"/>
-                </HBox>
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <Button fx:id="btnGuardar" text="💾 Guardar" maxWidth="Infinity" 
+                                HBox.hgrow="ALWAYS" styleClass="btn-success" onAction="#guardarComanda"/>
+                        <Button fx:id="btnCancelar" text="✖ Cancelar" maxWidth="Infinity" 
+                                HBox.hgrow="ALWAYS" styleClass="btn-danger" onAction="#volverALista"/>
+                    </HBox>
+                    <Button fx:id="btnEliminar" text="🗑️ Eliminar Comanda" maxWidth="Infinity"
+                            styleClass="btn-warning" onAction="#eliminarComanda"/>
+                </VBox>
             </VBox>
         </HBox>
     </center>
+
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Label text="Sistema de gestión de comandas - Il Camino Della Mamma" styleClass="bottom-text"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>
