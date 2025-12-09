@@ -20,6 +20,7 @@ import ilcaminodelamamma.model.DetalleComanda;
 import ilcaminodelamamma.model.EstadoMesa;
 import ilcaminodelamamma.model.Mesa;
 import ilcaminodelamamma.model.Receta;
+import ilcaminodelamamma.service.TicketPdfService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -59,6 +60,7 @@ public class ComandaDetailController implements Initializable {
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
     @FXML private Button btnEliminar;
+    @FXML private Button btnGenerarTicket;
 
     // Datos
     private final Map<String, List<PlatoItem>> platosPorCategoria = new LinkedHashMap<>();
@@ -200,7 +202,7 @@ public class ComandaDetailController implements Initializable {
                 // Convertir categoría de BD a categoría de UI
                 String categoriaUI = categoryMapping.getOrDefault(categoriaBD, categoriaBD);
                 
-                // Calcular precio en euros (BD guarda en centavos)
+                // El precio ya viene en euros desde la BD (DECIMAL)
                 double precio = receta.getPrecio() != null ? receta.getPrecio() / 100.0 : 0.0;
                 
                 // Crear el plato
@@ -934,6 +936,118 @@ public class ComandaDetailController implements Initializable {
                 volverALista();
             }
         });
+    }
+
+    /**
+     * Genera un ticket PDF de la comanda actual
+     */
+    @FXML
+    private void generarTicketPdf() {
+        if (platosEnComanda.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("⚠ Comanda vacía");
+            alert.setHeaderText("No se puede generar el ticket");
+            alert.setContentText("La comanda no tiene platos. Añade al menos un plato antes de generar el ticket.");
+            
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
+            alert.showAndWait();
+            return;
+        }
+        
+        try {
+            // Primero verificar si la comanda ya está guardada en la BD
+            ComandaDAO comandaDAO = new ComandaDAO();
+            MesaDAO mesaDAO = new MesaDAO();
+            Mesa mesa = mesaDAO.findById(mesaNumber);
+            
+            if (mesa == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("❌ Error");
+                alert.setHeaderText("Mesa no encontrada");
+                alert.setContentText("La mesa " + mesaNumber + " no existe en la base de datos. Guarda la comanda primero.");
+                alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+                alert.showAndWait();
+                return;
+            }
+            
+            // Buscar la comanda más reciente de esta mesa
+            Comanda comanda = comandaDAO.findByMesa(mesa);
+            
+            if (comanda == null) {
+                // Si no hay comanda en BD, mostrar mensaje
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("⚠ Comanda no guardada");
+                alert.setHeaderText("Debes guardar la comanda primero");
+                alert.setContentText("Para generar el ticket PDF, primero debes guardar la comanda en el sistema.");
+                
+                alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+                javafx.application.Platform.runLater(() -> {
+                    Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                    if (okBtn != null) {
+                        okBtn.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                    }
+                });
+                
+                alert.showAndWait();
+                return;
+            }
+            
+            // Generar el ticket
+            TicketPdfService ticketService = new TicketPdfService();
+            String rutaArchivo = ticketService.generarTicket(comanda);
+            
+            // Mensaje de éxito
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("✓ Ticket generado");
+            alert.setHeaderText("Ticket PDF creado correctamente");
+            alert.setContentText("El ticket se ha guardado en: " + rutaArchivo);
+            
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setText("✓ Entendido");
+                    okBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
+            alert.showAndWait();
+            
+            // Abrir el archivo PDF automáticamente
+            try {
+                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                java.io.File archivo = new java.io.File(rutaArchivo);
+                if (archivo.exists()) {
+                    desktop.open(archivo);
+                }
+            } catch (Exception e) {
+                System.err.println("No se pudo abrir el PDF automáticamente: " + e.getMessage());
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("❌ Error");
+            alert.setHeaderText("Error al generar el ticket");
+            alert.setContentText("Ocurrió un error al generar el PDF: " + e.getMessage());
+            
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
+            alert.showAndWait();
+        }
     }
 
     /**
