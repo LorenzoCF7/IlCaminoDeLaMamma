@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.controller.RecetaController"
+            minWidth="900" minHeight="600"
+            stylesheets="@../css/chef-view.css">
+    
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" bottom="12" left="20" right="20"/>
+            </padding>
+            
+            <!-- Logo -->
+            <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+                <image>
+                    <Image url="@../img/logo.png"/>
+                </image>
+            </ImageView>
+            
+            <Label text="Il Camino Della Mamma" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <TextField fx:id="searchField" promptText="🔍 Buscar recetas..." 
+                       minWidth="200" prefWidth="350" maxWidth="450" styleClass="search-field"
+                       HBox.hgrow="SOMETIMES"/>
+        </HBox>
+    </top>
+
+    <!-- Panel Lateral Izquierdo (Sidebar) -->
+    <left>
+        <VBox styleClass="sidebar" minWidth="180" prefWidth="220" maxWidth="280">
+            <padding>
+                <Insets top="25" bottom="20" left="15" right="15"/>
+            </padding>
+            
+            <!-- Título del menú con separador -->
+            <VBox spacing="10" styleClass="menu-header">
+                <Label text="MENÚ" styleClass="sidebar-title"/>
+                <Separator styleClass="menu-separator"/>
+            </VBox>
+            
+            <VBox.margin>
+                <Insets bottom="20"/>
+            </VBox.margin>
+            
+            <!-- Botones del menú -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnNuevaRecetaSidebar" text="➕ Nueva Receta" maxWidth="Infinity" 
+                        styleClass="sidebar-button,primary-button"/>
+                
+                <Region prefHeight="10"/>
+                
+                <Button fx:id="btnLibros" text="📚 Libros de cocina" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnComandas" text="📋 Lista de Comandas" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnIngredientes" text="🥬 Ingredientes" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                
+                <Region VBox.vgrow="ALWAYS"/>
+                
+                <!-- Sección inferior -->
+                <Separator styleClass="menu-separator"/>
+                
+                <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnCerrarSesion" text="🚪 Cerrar Sesión" maxWidth="Infinity"
+                        styleClass="sidebar-button,logout-button"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área Central -->
+    <center>
+        <!-- Contenido principal con ScrollPane -->
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane" hbarPolicy="NEVER">
+            <VBox fx:id="centerArea" styleClass="center-area" spacing="15">
+                <padding>
+                    <Insets top="20" bottom="20" left="20" right="20"/>
+                </padding>
+                
+                <Label text="Nueva Receta" styleClass="content-title"/>
+
+                <!-- Sección del formulario -->
+                <VBox spacing="15" style="-fx-border-color: #E8CFAF; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-color: #FFF5E6; -fx-padding: 20;">
+                    <Label text="Nueva Receta" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4A2511;" />
+                    
+                    <HBox spacing="20">
+                        <!-- Columna izquierda - Imagen -->
+                        <VBox spacing="10" alignment="TOP_CENTER" minWidth="250">
+                            <StackPane fx:id="stackImagen" style="-fx-background-color: #D3D3D3; -fx-background-radius: 10; -fx-cursor: hand;" prefHeight="250" prefWidth="250">
+                                <ImageView fx:id="imgReceta" fitHeight="240" fitWidth="240" preserveRatio="true" />
+                                <Label fx:id="lblIconoImagen" text="+" style="-fx-font-size: 80; -fx-text-fill: #666;" />
+                            </StackPane>
+                            
+                            <Label text="Ingredientes:" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: black;" />
+                            <ListView fx:id="lvIngredientes" prefHeight="200" style="-fx-background-color: white; -fx-background-radius: 5;" />
+                            <HBox spacing="5" alignment="CENTER">
+                                <Button fx:id="btnAgregarIngrediente" onAction="#agregarIngrediente" text="+" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 20; -fx-cursor: hand; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 20;" />
+                                <Button fx:id="btnEliminarIngrediente" onAction="#eliminarIngrediente" text="−" style="-fx-background-color: #DC5757; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 20;" />
+                            </HBox>
+                        </VBox>
+
+                        <!-- Columna derecha - Formulario -->
+                        <VBox spacing="15" HBox.hgrow="ALWAYS">
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <Label text="Nombre Receta:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <TextField fx:id="tfNombre" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" />
+                            </HBox>
+
+                            <HBox spacing="15" alignment="TOP_LEFT">
+                                <Label text="Descripción Corta:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <TextArea fx:id="taDescripcion" prefRowCount="3" wrapText="true" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" />
+                            </HBox>
+
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <Label text="Tiempo de preparación:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <TextField fx:id="tfTiempo" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" />
+                            </HBox>
+
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <Label text="Categoría:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <ComboBox fx:id="cbCategoria" promptText="∨" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
+                            </HBox>
+
+                            <HBox spacing="15" alignment="TOP_LEFT">
+                                <Label text="Pasos:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <TextArea fx:id="taPasos" prefRowCount="17" wrapText="true" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
+                            </HBox>
+                            
+                            <!-- Botón Agregar Receta -->
+                            <HBox alignment="CENTER" spacing="10">
+                                <Button fx:id="btnAgregar" text="Agregar Receta" style="-fx-background-color: #5CB85C; -fx-text-fill: white; -fx-padding: 12 40; -fx-font-size: 14; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Sección de tabla de recetas -->
+                <VBox spacing="10" style="-fx-border-color: #D4A574; -fx-border-radius: 5; -fx-background-color: white; -fx-padding: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Recetas" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #4A2511;" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="tfBuscarReceta" promptText="Buscar por nombre..." style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" prefWidth="200" />
+                    <Button fx:id="btnBuscarReceta" text="Buscar" style="-fx-background-color: #4A90E2; -fx-text-fill: white; -fx-font-size: 12; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 5;" />
+                    <Button fx:id="btnRecargarRecetas" text="🔄" style="-fx-background-color: #D4A574; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-padding: 5 15; -fx-background-radius: 5;" />
+                </HBox>                    <TableView fx:id="tvRecetas" prefHeight="300" style="-fx-background-color: white; -fx-control-inner-background: white;">
+                        <columns>
+                            <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150" />
+                            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="150" />
+                            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="100" />
+                            <TableColumn fx:id="colTiempo" text="Tiempo (min)" prefWidth="100" />
+                            <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="170" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Button fx:id="btnAtras" text="← Volver al Chef" 
+                    styleClass="sidebar-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Sistema de gestión de recetas - Il Camino Della Mamma" styleClass="bottom-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnFin" text="Guardar y Salir →" 
+                    styleClass="sidebar-button,primary-button"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

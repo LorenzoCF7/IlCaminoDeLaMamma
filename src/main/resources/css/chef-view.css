@@ -1,0 +1,301 @@
+/* === Colores principales === */
+.root {
+    -fx-background-color: #8B7355;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* === SIDEBAR (Panel Izquierdo) === */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #8B7355 0%, #6B5645 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 3, 0);
+}
+
+.sidebar-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 2px;
+}
+
+.menu-header {
+    -fx-alignment: center-left;
+}
+
+.menu-separator {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-pref-height: 2px;
+}
+
+/* Botones del sidebar */
+.sidebar-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 12 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-alignment: center-left;
+    -fx-border-width: 1;
+    -fx-border-color: transparent;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.sidebar-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Botón primario (Nueva Receta) */
+.primary-button {
+    -fx-background-color: #D4A574;
+    -fx-font-weight: bold;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+}
+
+.primary-button:hover {
+    -fx-background-color: #E5B685;
+    -fx-effect: dropshadow(gaussian, rgba(212, 165, 116, 0.6), 12, 0, 0, 3);
+}
+
+/* Botón de cerrar sesión */
+.logout-button {
+    -fx-background-color: rgba(220, 53, 69, 0.8);
+}
+
+.logout-button:hover {
+    -fx-background-color: rgba(220, 53, 69, 1);
+    -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.5), 10, 0, 0, 2);
+}
+
+/* === Barra superior === */
+.top-bar {
+    -fx-background-color: #D4A574;
+    -fx-min-height: 80;
+}
+
+.search-field {
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-border-radius: 25;
+}
+
+.search-field:focused {
+    -fx-border-color: #8B7355;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+}
+
+/* === Área central === */
+.center-area {
+    -fx-background-color: #F5E6D3;
+}
+
+.content-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+}
+
+/* === Pestañas === */
+.tab-bar {
+    -fx-alignment: center-left;
+}
+
+.tab-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2C1810;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.tab-button:hover {
+    -fx-background-color: rgba(139, 115, 85, 0.1);
+}
+
+.tab-button.active {
+    -fx-border-color: #8B7355;
+    -fx-font-weight: bold;
+}
+
+/* === Grid de categorías === */
+.category-grid {
+    -fx-alignment: center;
+}
+
+.category-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-alignment: top-center;
+}
+
+.category-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0, 0, 3);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.category-image {
+    -fx-background-radius: 10 10 0 0;
+}
+
+.category-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+    -fx-padding: 12;
+    -fx-alignment: center;
+    -fx-background-color: white;
+}
+
+/* === Panel derecho - Recientes === */
+.recent-panel {
+    -fx-background-color: #E8D4B8;
+}
+
+.recent-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+}
+
+/* === Barra inferior === */
+.bottom-bar {
+    -fx-background-color: #5C4033;
+}
+
+.bottom-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-font-style: italic;
+}
+
+/* === Scrollbar === */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #8B7355;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: rgba(139, 115, 85, 0.2);
+    -fx-background-radius: 5;
+}
+
+/* === Tarjetas de Platos === */
+.dish-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+    -fx-cursor: hand;
+    -fx-alignment: top-center;
+}
+
+.dish-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(139, 115, 85, 0.4), 15, 0, 0, 5);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.dish-image {
+    -fx-background-radius: 12 12 0 0;
+}
+
+.dish-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+    -fx-alignment: center;
+}
+
+.dish-description {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666;
+    -fx-alignment: center;
+}
+
+.dish-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+    -fx-alignment: center;
+    -fx-padding: 5 0 0 0;
+}
+
+/* === Breadcrumb === */
+.breadcrumb-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B7355;
+    -fx-font-size: 13px;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-underline: false;
+}
+
+.breadcrumb-button:hover {
+    -fx-text-fill: #5C4033;
+    -fx-underline: true;
+}
+
+/* === Recetas Recientes === */
+.recent-recipe-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+.recent-recipe-card:hover {
+    -fx-background-color: #F5E6D3;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 3);
+}
+
+.recent-recipe-name {
+    -fx-font-size: 12px;
+    -fx-text-fill: #2C1810;
+    -fx-font-weight: bold;
+}
+
+.recent-recipe-time {
+    -fx-font-size: 10px;
+    -fx-text-fill: #666;
+}
+
+/* === Responsive Adjustments === */
+.category-card {
+    -fx-min-width: 160;
+    -fx-pref-width: 180;
+    -fx-max-width: 220;
+}
+
+.dish-card {
+    -fx-min-width: 160;
+    -fx-pref-width: 180;
+    -fx-max-width: 220;
+}

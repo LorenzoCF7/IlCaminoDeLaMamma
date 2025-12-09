@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="KitchenAssistantApp" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="ilcaminodelamamma.view.assistant.KitchenAssistantApp" />
+    <module name="IlCaminoDeLaMamma" />
+    <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\marcocc090506\.m2\repository\org\openjfx\javafx-controls\21;C:\Users\marcocc090506\.m2\repository\org\openjfx\javafx-fxml\21;C:\Users\marcocc090506\.m2\repository\org\openjfx\javafx-graphics\21;C:\Users\marcocc090506\.m2\repository\org\openjfx\javafx-base\21&quot; --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base --add-opens javafx.graphics/com.sun.javafx.util=ALL-UNNAMED --add-opens javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED --add-opens javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED --add-opens javafx.base/com.sun.javafx.binding=ALL-UNNAMED --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED --add-opens javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

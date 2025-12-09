@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.view.waiter.WaiterViewController"
+            minWidth="900" minHeight="600"
+            stylesheets="@../../css/waiter-view.css">
+
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" bottom="12" left="20" right="20"/>
+            </padding>
+            
+            <!-- Logo más grande -->
+            <ImageView fitWidth="80" fitHeight="80" preserveRatio="true">
+                <image>
+                    <Image url="@../../img/logo.png"/>
+                </image>
+            </ImageView>
+            
+            <Label text="Il Camino Della Mamma" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Buscador responsive -->
+            <TextField fx:id="searchField" promptText="🔍 Buscar comandas..." 
+                       minWidth="200" prefWidth="350" maxWidth="450" styleClass="search-field"
+                       HBox.hgrow="SOMETIMES"/>
+        </HBox>
+    </top>
+
+    <!-- Panel Lateral Izquierdo (Sidebar) - Responsive -->
+    <left>
+        <VBox styleClass="sidebar" minWidth="180" prefWidth="220" maxWidth="280">
+            <padding>
+                <Insets top="25" bottom="20" left="15" right="15"/>
+            </padding>
+            
+            <!-- Título del menú con separador -->
+            <VBox spacing="10" styleClass="menu-header">
+                <Label text="MENÚ" styleClass="sidebar-title"/>
+                <Separator styleClass="menu-separator"/>
+            </VBox>
+            
+            <VBox.margin>
+                <Insets bottom="20"/>
+            </VBox.margin>
+            
+            <!-- Botones del menú -->
+            <VBox spacing="8" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnNuevaComanda" text="➕ Nueva Comanda" maxWidth="Infinity" 
+                        styleClass="sidebar-button,primary-button"/>
+                
+                <Region prefHeight="10"/>
+                
+                <Button fx:id="btnListaComandas" text="📚 Lista de Comandas" maxWidth="Infinity"
+                        styleClass="sidebar-button,active"/>
+                
+                <Region VBox.vgrow="ALWAYS"/>
+                
+                <!-- Sección inferior -->
+                <Separator styleClass="menu-separator"/>
+                
+                <Button fx:id="btnAyuda" text="❓ Ayuda" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnConfiguracion" text="⚙️ Configuración" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                        
+                <Button fx:id="btnCerrarSesion" text="🚪 Cerrar Sesión" maxWidth="Infinity"
+                        styleClass="sidebar-button,logout-button"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Área Central -->
+    <center>
+        <VBox styleClass="center-area" spacing="15">
+            <padding>
+                <Insets top="20" bottom="20" left="20" right="20"/>
+            </padding>
+            
+            <!-- Título -->
+            <Label text="Todas las comandas (10)" styleClass="content-title"/>
+            
+            <!-- Pestañas de filtro -->
+            <HBox spacing="20" styleClass="tab-bar">
+                <Button fx:id="tabTodas" text="Todas" styleClass="tab-button,active"/>
+                <Button fx:id="tabPreparacion" text="Preparación" styleClass="tab-button"/>
+                <Button fx:id="tabListas" text="Listas" styleClass="tab-button"/>
+            </HBox>
+            
+            <!-- Lista de comandas con scroll -->
+            <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" 
+                       styleClass="scroll-pane" hbarPolicy="NEVER">
+                <VBox fx:id="comandasContainer" spacing="0" styleClass="comandas-container">
+                    <padding>
+                        <Insets top="10" bottom="10"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Label text="Sistema de gestión de comandas - Il Camino Della Mamma" styleClass="bottom-text"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

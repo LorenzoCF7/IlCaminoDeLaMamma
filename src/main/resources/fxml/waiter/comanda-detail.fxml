@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ilcaminodelamamma.view.waiter.ComandaDetailController"
+            minWidth="1024" minHeight="768"
+            stylesheets="@../../css/waiter-view.css">
+
+    <!-- Barra Superior -->
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="12" bottom="12" left="20" right="20"/>
+            </padding>
+            
+            <!-- Logo -->
+            <ImageView fitWidth="60" fitHeight="60" preserveRatio="true">
+                <image>
+                    <Image url="@../../img/logo.png"/>
+                </image>
+            </ImageView>
+            
+            <!-- Botón Volver -->
+            <Button fx:id="btnVolver" text="← Volver" styleClass="back-button" 
+                    onAction="#volverALista"/>
+            
+            <Label fx:id="lblComandaTitle" text="Comanda - Mesa #5" 
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: black;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Estado de la mesa -->
+            <Label fx:id="lblEstadoMesa" text="●" styleClass="estado-label,estado-ocupada"/>
+        </HBox>
+    </top>
+
+    <!-- Contenido Principal -->
+    <center>
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="20" bottom="20" left="20" right="20"/>
+            </padding>
+            
+            <!-- Panel Izquierdo: Menú de Platos -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="menu-panel">
+                <Label text="MENÚ DE PLATOS" styleClass="section-title" style="-fx-text-fill: black;"/>
+                
+                <!-- Barra de búsqueda -->
+                <TextField fx:id="searchField" promptText="🔍 Buscar plato..." 
+                          styleClass="search-field"/>
+                
+                <!-- Pestañas de categorías -->
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" 
+                           styleClass="categories-scroll" minHeight="60" maxHeight="60">
+                    <HBox fx:id="categoriesBox" spacing="10" alignment="CENTER_LEFT" minHeight="50">
+                        <padding><Insets top="5" bottom="5"/></padding>
+                    </HBox>
+                </ScrollPane>
+                
+                <!-- Lista de platos -->
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                    <VBox fx:id="platosContainer" spacing="8">
+                        <padding><Insets top="10" bottom="10"/></padding>
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+            
+            <!-- Panel Derecho: Resumen de Comanda -->
+            <VBox spacing="15" prefWidth="400" minWidth="400" maxWidth="400" 
+                  styleClass="comanda-panel">
+                
+                <!-- Info de mesa -->
+                <VBox spacing="8" styleClass="mesa-info-box">
+                    <Label text="INFORMACIÓN DE MESA" styleClass="section-title" style="-fx-text-fill: black;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Mesa:" styleClass="info-label" style="-fx-text-fill: black;"/>
+                        <ComboBox fx:id="comboMesa" prefWidth="100" promptText="Nº"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Estado:" styleClass="info-label" style="-fx-text-fill: black;"/>
+                        <ComboBox fx:id="comboEstado" prefWidth="150" promptText="Estado"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Línea separadora -->
+                <Separator/>
+                
+                <!-- Platos añadidos -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Label text="PLATOS AÑADIDOS" styleClass="section-title" style="-fx-text-fill: black;"/>
+                    
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                               styleClass="scroll-pane" hbarPolicy="NEVER">
+                        <VBox fx:id="platosComandaContainer" spacing="5">
+                            <padding><Insets top="5" bottom="5"/></padding>
+                        </VBox>
+                    </ScrollPane>
+                </VBox>
+                
+                <!-- Línea separadora -->
+                <Separator/>
+                
+                <!-- Resumen de totales -->
+                <VBox spacing="8" styleClass="totales-box">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Subtotal:" styleClass="total-label" style="-fx-text-fill: black;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblSubtotal" text="0,00 €" styleClass="total-value" style="-fx-text-fill: black;"/>
+                    </HBox>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="IVA (10%):" styleClass="total-label" style="-fx-text-fill: black;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblIVA" text="0,00 €" styleClass="total-value" style="-fx-text-fill: black;"/>
+                    </HBox>
+                    
+                    <Separator/>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="TOTAL:" styleClass="total-label-final" style="-fx-text-fill: black;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblTotal" text="0,00 €" styleClass="total-value-final" style="-fx-text-fill: black;"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- Botones de acción -->
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <Button fx:id="btnGuardar" text="💾 Guardar" maxWidth="Infinity" 
+                                HBox.hgrow="ALWAYS" styleClass="btn-success" onAction="#guardarComanda"/>
+                        <Button fx:id="btnCancelar" text="✖ Cancelar" maxWidth="Infinity" 
+                                HBox.hgrow="ALWAYS" styleClass="btn-danger" onAction="#volverALista"/>
+                    </HBox>
+                    <Button fx:id="btnEliminar" text="🗑️ Eliminar Comanda" maxWidth="Infinity"
+                            styleClass="btn-warning" onAction="#eliminarComanda"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+
+    <!-- Barra Inferior -->
+    <bottom>
+        <HBox styleClass="bottom-bar">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            <Label text="Sistema de gestión de comandas - Il Camino Della Mamma" styleClass="bottom-text"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
