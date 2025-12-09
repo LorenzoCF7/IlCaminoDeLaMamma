@@ -64,9 +64,13 @@ public class XMLRecetaLoader {
                     String descripcion = getTextContent(recetaElement, "Descripcion_corta");
                     String tiempoStr = getTextContent(recetaElement, "Tiempo_preparacion");
                     String categoria = getTextContent(recetaElement, "Categoria");
+                    String precioStr = getTextContent(recetaElement, "Precio");
                     
                     // Parsear tiempo de preparación (extraer número de "XX minutos")
                     Integer tiempoPreparacion = parsearTiempo(tiempoStr);
+                    
+                    // Parsear precio (debe estar en céntimos en el XML)
+                    Integer precio = parsearPrecio(precioStr);
                     
                     // Obtener pasos
                     String pasos = obtenerPasos(recetaElement);
@@ -82,7 +86,8 @@ public class XMLRecetaLoader {
                         // Actualizar la primera receta encontrada
                         receta = recetasEncontradas.get(0);
                         
-                        // Actualizar tiempo de preparación y pasos
+                        // Actualizar precio, tiempo de preparación y pasos
+                        receta.setPrecio(precio);
                         receta.setTiempo_preparacion(tiempoPreparacion);
                         receta.setPasos(pasos);
                         
@@ -90,13 +95,13 @@ public class XMLRecetaLoader {
                         recetaDAO.update(receta);
                         
                         recetasActualizadas++;
-                        System.out.println("✅ Actualizada: " + nombre);
+                        System.out.println("✅ Actualizada: " + nombre + " - Precio: " + precio + " céntimos");
                     } else {
                         // Crear nueva receta
                         receta = new Receta(
                             nombre,
                             descripcion,
-                            Integer.valueOf(0), // Precio por defecto (puedes cambiarlo después)
+                            precio, // Precio desde el XML (en céntimos)
                             tiempoPreparacion,
                             Boolean.TRUE, // Disponible por defecto
                             null, // Sin imagen por ahora
@@ -106,7 +111,7 @@ public class XMLRecetaLoader {
                         
                         receta = recetaDAO.create(receta);
                         recetasCreadas++;
-                        System.out.println("✨ Creada nueva receta: " + nombre + " (" + categoria + ")");
+                        System.out.println("✨ Creada nueva receta: " + nombre + " (" + categoria + ") - Precio: " + precio + " céntimos");
                     }
                     
                     // Vincular ingredientes (tanto para actualizadas como creadas)
@@ -224,6 +229,21 @@ public class XMLRecetaLoader {
             String numero = tiempoStr.replaceAll("[^0-9]", "");
             return Integer.parseInt(numero);
         } catch (Exception e) {
+            return 0;
+        }
+    }
+    
+    /**
+     * Parsea el precio desde el XML (debe estar en céntimos)
+     */
+    private Integer parsearPrecio(String precioStr) {
+        try {
+            if (precioStr == null || precioStr.trim().isEmpty()) {
+                return 0;
+            }
+            return Integer.parseInt(precioStr.trim());
+        } catch (Exception e) {
+            System.err.println("⚠️  Error al parsear precio: " + precioStr);
             return 0;
         }
     }

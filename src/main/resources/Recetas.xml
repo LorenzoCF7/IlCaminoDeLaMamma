@@ -5,6 +5,7 @@
   <receta>
     <Nombre_Receta>Bruschetta clásica</Nombre_Receta>
     <Descripcion_corta>Pan tostado con tomate, ajo y albahaca.</Descripcion_corta>
+    <Precio>650</Precio>
     <Tiempo_preparacion>10 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -25,6 +26,7 @@
   <receta>
     <Nombre_Receta>Ensalada caprese</Nombre_Receta>
     <Descripcion_corta>Tomate, mozzarella fresca y albahaca.</Descripcion_corta>
+    <Precio>890</Precio>
     <Tiempo_preparacion>8 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -44,6 +46,7 @@
   <receta>
     <Nombre_Receta>Carpaccio de ternera</Nombre_Receta>
     <Descripcion_corta>Láminas finas de ternera con rúcula y parmesano.</Descripcion_corta>
+    <Precio>1200</Precio>
     <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -63,6 +66,7 @@
   <receta>
     <Nombre_Receta>Tabla de quesos italianos</Nombre_Receta>
     <Descripcion_corta>Selección de quesos tradicionales italianos.</Descripcion_corta>
+    <Precio>1450</Precio>
     <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -83,6 +87,7 @@
   <receta>
     <Nombre_Receta>Sopa minestrone</Nombre_Receta>
     <Descripcion_corta>Sopa italiana de verduras con pasta.</Descripcion_corta>
+    <Precio>720</Precio>
     <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -103,6 +108,7 @@
   <receta>
     <Nombre_Receta>Calamares fritos</Nombre_Receta>
     <Descripcion_corta>Calamares rebozados y fritos.</Descripcion_corta>
+    <Precio>1180</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -122,6 +128,7 @@
   <receta>
     <Nombre_Receta>Provolone al horno</Nombre_Receta>
     <Descripcion_corta>Queso provolone fundido con especias.</Descripcion_corta>
+    <Precio>950</Precio>
     <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -139,6 +146,7 @@
   <receta>
     <Nombre_Receta>Tartar de salmón</Nombre_Receta>
     <Descripcion_corta>Dados de salmón marinado con cítricos.</Descripcion_corta>
+    <Precio>1390</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -158,6 +166,7 @@
   <receta>
     <Nombre_Receta>Antipasto mixto</Nombre_Receta>
     <Descripcion_corta>Variedad de embutidos, quesos y encurtidos italianos.</Descripcion_corta>
+    <Precio>1500</Precio>
     <Tiempo_preparacion>10 minutos</Tiempo_preparacion>
     <Categoria>Entrante</Categoria>
     <Ingredientes>
@@ -180,6 +189,7 @@
   <receta>
     <Nombre_Receta>Spaghetti Carbonara</Nombre_Receta>
     <Descripcion_corta>Spaghetti con salsa de huevo, queso y panceta.</Descripcion_corta>
+    <Precio>1290</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -200,6 +210,7 @@
   <receta>
     <Nombre_Receta>Penne Arrabbiata</Nombre_Receta>
     <Descripcion_corta>Penne con salsa de tomate picante.</Descripcion_corta>
+    <Precio>1150</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -220,6 +231,7 @@
   <receta>
     <Nombre_Receta>Tagliatelle al pesto</Nombre_Receta>
     <Descripcion_corta>Pasta fresca con salsa de albahaca y piñones.</Descripcion_corta>
+    <Precio>1320</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -240,6 +252,7 @@
   <receta>
     <Nombre_Receta>Lasagna boloñesa</Nombre_Receta>
     <Descripcion_corta>Capas de pasta con carne boloñesa y bechamel.</Descripcion_corta>
+    <Precio>1450</Precio>
     <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -259,6 +272,7 @@
   <receta>
     <Nombre_Receta>Ravioli de ricotta y espinacas</Nombre_Receta>
     <Descripcion_corta>Pasta rellena de ricotta y espinacas con salsa suave.</Descripcion_corta>
+    <Precio>1380</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -278,6 +292,7 @@
   <receta>
     <Nombre_Receta>Gnocchi a la sorrentina</Nombre_Receta>
     <Descripcion_corta>Ñoquis horneados con tomate, albahaca y mozzarella.</Descripcion_corta>
+    <Precio>1200</Precio>
     <Tiempo_preparacion>22 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -297,6 +312,7 @@
   <receta>
     <Nombre_Receta>Fettuccine Alfredo</Nombre_Receta>
     <Descripcion_corta>Pasta cremosa con mantequilla y parmesano.</Descripcion_corta>
+    <Precio>1390</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -316,6 +332,7 @@
   <receta>
     <Nombre_Receta>Tortellini panna e prosciutto</Nombre_Receta>
     <Descripcion_corta>Tortellini con salsa de nata y jamón.</Descripcion_corta>
+    <Precio>1400</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -334,6 +351,7 @@
   <receta>
     <Nombre_Receta>Spaghetti marinara</Nombre_Receta>
     <Descripcion_corta>Pasta con salsa de tomate, ajo y hierbas.</Descripcion_corta>
+    <Precio>1530</Precio>
     <Tiempo_preparacion>16 minutos</Tiempo_preparacion>
     <Categoria>Pasta</Categoria>
     <Ingredientes>
@@ -356,6 +374,7 @@
   <receta>
     <Nombre_Receta>Pizza Margherita</Nombre_Receta>
     <Descripcion_corta>Pizza clásica con tomate, mozzarella y albahaca.</Descripcion_corta>
+    <Precio>900</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -374,6 +393,7 @@
   <receta>
     <Nombre_Receta>Pepperoni</Nombre_Receta>
     <Descripcion_corta>Pizza con pepperoni crujiente y mozzarella.</Descripcion_corta>
+    <Precio>1150</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -392,6 +412,7 @@
   <receta>
     <Nombre_Receta>Cuatro quesos</Nombre_Receta>
     <Descripcion_corta>Pizza con mezcla de cuatro quesos italianos.</Descripcion_corta>
+    <Precio>1250</Precio>
     <Tiempo_preparacion>17 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -410,6 +431,7 @@
   <receta>
     <Nombre_Receta>Hawaiana</Nombre_Receta>
     <Descripcion_corta>Pizza con jamón dulce y piña.</Descripcion_corta>
+    <Precio>1100</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -428,6 +450,7 @@
   <receta>
     <Nombre_Receta>BBQ Pollo</Nombre_Receta>
     <Descripcion_corta>Pizza con salsa barbacoa y pollo asado.</Descripcion_corta>
+    <Precio>1320</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -446,6 +469,7 @@
   <receta>
     <Nombre_Receta>Prosciutto e funghi</Nombre_Receta>
     <Descripcion_corta>Pizza con jamón y champiñones.</Descripcion_corta>
+    <Precio>1280</Precio>
     <Tiempo_preparacion>16 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -464,6 +488,7 @@
   <receta>
     <Nombre_Receta>Vegetariana</Nombre_Receta>
     <Descripcion_corta>Pizza con verduras frescas variadas.</Descripcion_corta>
+    <Precio>1190</Precio>
     <Tiempo_preparacion>17 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -483,6 +508,7 @@
   <receta>
     <Nombre_Receta>Diavola</Nombre_Receta>
     <Descripcion_corta>Pizza picante con salami y guindilla.</Descripcion_corta>
+    <Precio>1220</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -501,6 +527,7 @@
   <receta>
     <Nombre_Receta>Calzone clásico</Nombre_Receta>
     <Descripcion_corta>Masa doblada rellena de tomate, queso y jamón.</Descripcion_corta>
+    <Precio>1350</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Pizza</Categoria>
     <Ingredientes>
@@ -522,6 +549,7 @@
   <receta>
     <Nombre_Receta>Salmón a la plancha con limón</Nombre_Receta>
     <Descripcion_corta>Salmón cocinado a la plancha con toque cítrico.</Descripcion_corta>
+    <Precio>1790</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -541,6 +569,7 @@
   <receta>
     <Nombre_Receta>Lubina al horno</Nombre_Receta>
     <Descripcion_corta>Lubina horneada con hierbas mediterráneas.</Descripcion_corta>
+    <Precio>1950</Precio>
     <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -560,6 +589,7 @@
   <receta>
     <Nombre_Receta>Bacalao con tomate</Nombre_Receta>
     <Descripcion_corta>Bacalao en salsa casera de tomate.</Descripcion_corta>
+    <Precio>1680</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -579,6 +609,7 @@
   <receta>
     <Nombre_Receta>Atún a la parrilla</Nombre_Receta>
     <Descripcion_corta>Atún marcado a la parrilla con especias.</Descripcion_corta>
+    <Precio>2100</Precio>
     <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -597,6 +628,7 @@
   <receta>
     <Nombre_Receta>Merluza en salsa verde</Nombre_Receta>
     <Descripcion_corta>Clásica merluza con salsa de perejil.</Descripcion_corta>
+    <Precio>1590</Precio>
     <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -616,6 +648,7 @@
   <receta>
     <Nombre_Receta>Dorada a la espalda</Nombre_Receta>
     <Descripcion_corta>Dorada abierta y cocinada con ajo y perejil.</Descripcion_corta>
+    <Precio>1820</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -634,6 +667,7 @@
   <receta>
     <Nombre_Receta>Pulpo a la brasa</Nombre_Receta>
     <Descripcion_corta>Pulpo cocido y marcado a la brasa.</Descripcion_corta>
+    <Precio>2250</Precio>
     <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -652,6 +686,7 @@
   <receta>
     <Nombre_Receta>Calamares en su tinta</Nombre_Receta>
     <Descripcion_corta>Calamares cocinados en una salsa de tinta negra.</Descripcion_corta>
+    <Precio>1580</Precio>
     <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -671,6 +706,7 @@
   <receta>
     <Nombre_Receta>Fritura mixta de mar</Nombre_Receta>
     <Descripcion_corta>Selección de mariscos y pescados fritos.</Descripcion_corta>
+    <Precio>1750</Precio>
     <Tiempo_preparacion>22 minutos</Tiempo_preparacion>
     <Categoria>Pescado</Categoria>
     <Ingredientes>
@@ -693,6 +729,7 @@
   <receta>
     <Nombre_Receta>Pollo al ajillo</Nombre_Receta>
     <Descripcion_corta>Pollo troceado cocinado con ajo y vino.</Descripcion_corta>
+    <Precio>1450</Precio>
     <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -712,6 +749,7 @@
   <receta>
     <Nombre_Receta>Churrasco a la parrilla</Nombre_Receta>
     <Descripcion_corta>Tiras de churrasco asadas con sal gruesa.</Descripcion_corta>
+    <Precio>2200</Precio>
     <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -728,6 +766,7 @@
   <receta>
     <Nombre_Receta>Estofado de ternera</Nombre_Receta>
     <Descripcion_corta>Clásico estofado de carne con verduras.</Descripcion_corta>
+    <Precio>1920</Precio>
     <Tiempo_preparacion>60 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -747,6 +786,7 @@
   <receta>
     <Nombre_Receta>Chuletas de cerdo a la plancha</Nombre_Receta>
     <Descripcion_corta>Chuletas sazonadas y cocinadas a la plancha.</Descripcion_corta>
+    <Precio>1690</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -764,6 +804,7 @@
   <receta>
     <Nombre_Receta>Albóndigas caseras</Nombre_Receta>
     <Descripcion_corta>Albóndigas en salsa de tomate.</Descripcion_corta>
+    <Precio>1350</Precio>
     <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -783,6 +824,7 @@
   <receta>
     <Nombre_Receta>Cordero asado</Nombre_Receta>
     <Descripcion_corta>Cordero al horno con ajo y romero.</Descripcion_corta>
+    <Precio>2300</Precio>
     <Tiempo_preparacion>90 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -802,6 +844,7 @@
   <receta>
     <Nombre_Receta>Lasaña de carne</Nombre_Receta>
     <Descripcion_corta>Lasaña rellena de carne y tomate.</Descripcion_corta>
+    <Precio>1450</Precio>
     <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -821,6 +864,7 @@
   <receta>
     <Nombre_Receta>Costillas BBQ</Nombre_Receta>
     <Descripcion_corta>Costillas de cerdo glaseadas con salsa barbacoa.</Descripcion_corta>
+    <Precio>1850</Precio>
     <Tiempo_preparacion>50 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -838,6 +882,7 @@
   <receta>
     <Nombre_Receta>Pechuga de pollo a la plancha</Nombre_Receta>
     <Descripcion_corta>Pechuga ligera y jugosa a la plancha.</Descripcion_corta>
+    <Precio>1280</Precio>
     <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
     <Categoria>Carne</Categoria>
     <Ingredientes>
@@ -859,6 +904,7 @@
   <receta>
     <Nombre_Receta>Tiramisú clásico</Nombre_Receta>
     <Descripcion_corta>Postre italiano con café, cacao y crema mascarpone.</Descripcion_corta>
+    <Precio>650</Precio>
     <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -878,6 +924,7 @@
   <receta>
     <Nombre_Receta>Panna cotta con frutos rojos</Nombre_Receta>
     <Descripcion_corta>Delicada panna cotta acompañada de coulis de frutos rojos.</Descripcion_corta>
+    <Precio>680</Precio>
     <Tiempo_preparacion>15 minutos + enfriado</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -897,6 +944,7 @@
   <receta>
     <Nombre_Receta>Helado artesanal (2 bolas)</Nombre_Receta>
     <Descripcion_corta>Dos bolas de helado elaborado artesanalmente.</Descripcion_corta>
+    <Precio>480</Precio>
     <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -910,6 +958,7 @@
   <receta>
     <Nombre_Receta>Brownie con helado</Nombre_Receta>
     <Descripcion_corta>Brownie de chocolate tibio con bola de helado.</Descripcion_corta>
+    <Precio>690</Precio>
     <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -927,6 +976,7 @@
   <receta>
     <Nombre_Receta>Tarta de queso al horno</Nombre_Receta>
     <Descripcion_corta>Clásica tarta de queso cremosa horneada.</Descripcion_corta>
+    <Precio>670</Precio>
     <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -946,6 +996,7 @@
   <receta>
     <Nombre_Receta>Coulant de chocolate</Nombre_Receta>
     <Descripcion_corta>Bizcocho de chocolate con centro fundente.</Descripcion_corta>
+    <Precio>720</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -965,6 +1016,7 @@
   <receta>
     <Nombre_Receta>Fruta fresca de temporada</Nombre_Receta>
     <Descripcion_corta>Selección de frutas frescas según temporada.</Descripcion_corta>
+    <Precio>450</Precio>
     <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -978,6 +1030,7 @@
   <receta>
     <Nombre_Receta>Cannoli sicilianos</Nombre_Receta>
     <Descripcion_corta>Dulces crujientes rellenos de crema de ricotta.</Descripcion_corta>
+    <Precio>580</Precio>
     <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -997,6 +1050,7 @@
   <receta>
     <Nombre_Receta>Gelato affogato</Nombre_Receta>
     <Descripcion_corta>Helado italiano bañado en espresso caliente.</Descripcion_corta>
+    <Precio>590</Precio>
     <Tiempo_preparacion>3 minutos</Tiempo_preparacion>
     <Categoria>Postre</Categoria>
     <Ingredientes>
@@ -1015,6 +1069,7 @@
   <receta>
     <Nombre_Receta>Mini hamburguesa con patatas, bebida y helado</Nombre_Receta>
     <Descripcion_corta>Menú infantil completo con hamburguesa, patatas, bebida y helado.</Descripcion_corta>
+    <Precio>990</Precio>
     <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
     <Categoria>Menú Infantil</Categoria>
     <Ingredientes>
@@ -1035,6 +1090,7 @@
   <receta>
     <Nombre_Receta>Pasta corta con tomate, bebida y fruta</Nombre_Receta>
     <Descripcion_corta>Plato infantil de pasta suave con salsa de tomate acompañado de bebida y fruta.</Descripcion_corta>
+    <Precio>850</Precio>
     <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
     <Categoria>Menú Infantil</Categoria>
     <Ingredientes>
@@ -1056,6 +1112,7 @@
   <receta>
     <Nombre_Receta>Rioja Crianza</Nombre_Receta>
     <Descripcion_corta>Vino tinto con crianza en barrica, equilibrado y aromático.</Descripcion_corta>
+    <Precio>1800</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1069,6 +1126,7 @@
   <receta>
     <Nombre_Receta>Albariño Rías Baixas</Nombre_Receta>
     <Descripcion_corta>Vino blanco fresco y afrutado típico de Galicia.</Descripcion_corta>
+    <Precio>1780</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1082,6 +1140,7 @@
   <receta>
     <Nombre_Receta>Chianti DOCG</Nombre_Receta>
     <Descripcion_corta>Vino tinto italiano con carácter y acidez equilibrada.</Descripcion_corta>
+    <Precio>1890</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1095,6 +1154,7 @@
   <receta>
     <Nombre_Receta>Ribera del Duero Crianza</Nombre_Receta>
     <Descripcion_corta>Vino tinto con cuerpo y notas de madera.</Descripcion_corta>
+    <Precio>2600</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1108,6 +1168,7 @@
   <receta>
     <Nombre_Receta>Godello sobre lías (Valdeorras)</Nombre_Receta>
     <Descripcion_corta>Vino blanco con cuerpo y notas minerales.</Descripcion_corta>
+    <Precio>2450</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1121,6 +1182,7 @@
   <receta>
     <Nombre_Receta>Barolo joven (Piamonte)</Nombre_Receta>
     <Descripcion_corta>Vino tinto intenso elaborado en Piamonte.</Descripcion_corta>
+    <Precio>3200</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1134,6 +1196,7 @@
   <receta>
     <Nombre_Receta>Ribera del Duero Reserva</Nombre_Receta>
     <Descripcion_corta>Vino reserva con gran complejidad aromática.</Descripcion_corta>
+    <Precio>4500</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1147,6 +1210,7 @@
   <receta>
     <Nombre_Receta>Chablis Premier Cru</Nombre_Receta>
     <Descripcion_corta>Vino blanco francés mineral y elegante.</Descripcion_corta>
+    <Precio>4800</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
@@ -1160,6 +1224,7 @@
   <receta>
     <Nombre_Receta>Brunello di Montalcino</Nombre_Receta>
     <Descripcion_corta>Prestigioso vino tinto italiano de largo envejecimiento.</Descripcion_corta>
+    <Precio>6200</Precio>
     <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
     <Categoria>Vino</Categoria>
     <Ingredientes>
