@@ -3,6 +3,7 @@ module ilcaminodelamamma {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires javafx.swing;
 
     // Spring Boot
     requires spring.boot;

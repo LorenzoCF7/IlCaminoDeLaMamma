@@ -2,7 +2,6 @@ package ilcaminodelamamma.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -275,9 +274,26 @@ public class RecetaController {
     
     private void eliminarReceta(Receta receta) {
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Eliminar Receta");
-        confirmacion.setHeaderText(null);
-        confirmacion.setContentText("¿Estás seguro de que deseas eliminar la receta '" + receta.getNombre() + "'?");
+        confirmacion.setTitle("🗑️ Eliminar Receta");
+        confirmacion.setHeaderText("¿Eliminar la receta '" + receta.getNombre() + "'?");
+        confirmacion.setContentText("Esta acción no se puede deshacer. Todos los ingredientes y pasos se perderán.");
+        
+        // Estilizar diálogo de confirmación
+        confirmacion.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+        
+        javafx.application.Platform.runLater(() -> {
+            Button okButton = (Button) confirmacion.getDialogPane().lookupButton(ButtonType.OK);
+            if (okButton != null) {
+                okButton.setText("✓ Sí, eliminar");
+                okButton.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+            
+            Button cancelButton = (Button) confirmacion.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelButton != null) {
+                cancelButton.setText("✗ Cancelar");
+                cancelButton.setStyle("-fx-background-color: #8B7355; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+        });
         
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
@@ -328,23 +344,75 @@ public class RecetaController {
         File archivo = fileChooser.showOpenDialog(imgReceta.getScene().getWindow());
         if (archivo != null) {
             try {
-                // Verificar tamaño del archivo (máximo 1MB)
-                if (archivo.length() > 1048576) { // 1MB en bytes
-                    mostrarAlerta("Advertencia", "La imagen es muy grande. Por favor selecciona una imagen menor a 1MB.", Alert.AlertType.WARNING);
+                // Cargar y comprimir la imagen
+                Image imagenOriginal = new Image(archivo.toURI().toString());
+                imgReceta.setImage(imagenOriginal);
+                lblIconoImagen.setVisible(false);
+                
+                // Comprimir imagen a bytes
+                imagenBytes = comprimirImagen(imagenOriginal);
+                
+                // Verificar tamaño final (máximo 500KB para MySQL)
+                if (imagenBytes != null && imagenBytes.length > 512000) {
+                    mostrarAlerta("Advertencia", "La imagen es muy grande incluso después de comprimir. Intenta con una imagen más pequeña.", Alert.AlertType.WARNING);
+                    imagenBytes = null;
                     return;
                 }
                 
-                Image imagen = new Image(archivo.toURI().toString());
-                imgReceta.setImage(imagen);
-                lblIconoImagen.setVisible(false); // Ocultar el ícono cuando hay imagen
-                
-                // Convertir imagen a bytes
-                FileInputStream fis = new FileInputStream(archivo);
-                imagenBytes = fis.readAllBytes();
-                fis.close();
             } catch (Exception e) {
                 mostrarAlerta("Error", "No se pudo cargar la imagen: " + e.getMessage(), Alert.AlertType.ERROR);
             }
+        }
+    }
+    
+    /**
+     * Comprime una imagen a formato JPEG con calidad reducida
+     */
+    private byte[] comprimirImagen(Image imagen) {
+        try {
+            // Crear BufferedImage redimensionado si es necesario
+            int maxWidth = 800;
+            int maxHeight = 600;
+            
+            double width = imagen.getWidth();
+            double height = imagen.getHeight();
+            
+            // Calcular nueva dimensión manteniendo proporción
+            if (width > maxWidth || height > maxHeight) {
+                double ratio = Math.min(maxWidth / width, maxHeight / height);
+                width *= ratio;
+                height *= ratio;
+            }
+            
+            // Redimensionar imagen
+            javafx.scene.image.ImageView tempView = new javafx.scene.image.ImageView(imagen);
+            tempView.setFitWidth(width);
+            tempView.setFitHeight(height);
+            tempView.setPreserveRatio(true);
+            tempView.setSmooth(true);
+            
+            // Crear snapshot
+            javafx.scene.image.WritableImage writableImage = new javafx.scene.image.WritableImage((int)width, (int)height);
+            javafx.scene.SnapshotParameters params = new javafx.scene.SnapshotParameters();
+            params.setFill(javafx.scene.paint.Color.TRANSPARENT);
+            tempView.snapshot(params, writableImage);
+            
+            // Convertir a BufferedImage
+            java.awt.image.BufferedImage buffered = javafx.embed.swing.SwingFXUtils.fromFXImage(writableImage, null);
+            
+            // Comprimir como JPEG
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(buffered, "jpg", baos);
+            baos.flush();
+            byte[] comprimido = baos.toByteArray();
+            baos.close();
+            
+            System.out.println("✓ Imagen comprimida: " + comprimido.length + " bytes");
+            return comprimido;
+            
+        } catch (Exception e) {
+            System.err.println("Error comprimiendo imagen: " + e.getMessage());
+            return null;
         }
     }
     
@@ -512,9 +580,86 @@ public class RecetaController {
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
+        
+        // Emojis y colores según el tipo
+        final String emoji;
+        final String colorHeader;
+        
+        switch (tipo) {
+            case INFORMATION:
+                emoji = "✓ ";
+                colorHeader = "#4CAF50";
+                break;
+            case WARNING:
+                emoji = "⚠ ";
+                colorHeader = "#FF9800";
+                break;
+            case ERROR:
+                emoji = "✗ ";
+                colorHeader = "#D32F2F";
+                break;
+            case CONFIRMATION:
+                emoji = "❓ ";
+                colorHeader = "#2196F3";
+                break;
+            default:
+                emoji = "";
+                colorHeader = "#8B7355";
+                break;
+        }
+        
+        alerta.setTitle(emoji + titulo);
+        alerta.setHeaderText(titulo);
         alerta.setContentText(mensaje);
+        
+        // Estilizar el diálogo
+        alerta.getDialogPane().setStyle(
+            "-fx-background-color: #FAF8F5; " +
+            "-fx-font-family: 'Segoe UI'; " +
+            "-fx-font-size: 13px;"
+        );
+        
+        // Estilizar header
+        javafx.application.Platform.runLater(() -> {
+            javafx.scene.Node header = alerta.getDialogPane().lookup(".header-panel");
+            if (header != null) {
+                header.setStyle("-fx-background-color: " + colorHeader + ";");
+            }
+            
+            javafx.scene.Node headerLabel = alerta.getDialogPane().lookup(".header-panel .label");
+            if (headerLabel != null) {
+                headerLabel.setStyle(
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 16px; " +
+                    "-fx-font-weight: bold;"
+                );
+            }
+            
+            // Estilizar botón OK
+            Button okButton = (Button) alerta.getDialogPane().lookupButton(ButtonType.OK);
+            if (okButton != null) {
+                okButton.setStyle(
+                    "-fx-background-color: " + colorHeader + "; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-padding: 10px 20px; " +
+                    "-fx-background-radius: 5px;"
+                );
+            }
+            
+            // Estilizar botón CANCEL si existe
+            Button cancelButton = (Button) alerta.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelButton != null) {
+                cancelButton.setStyle(
+                    "-fx-background-color: #cccccc; " +
+                    "-fx-text-fill: #333333; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-padding: 10px 20px; " +
+                    "-fx-background-radius: 5px;"
+                );
+            }
+        });
+        
         alerta.showAndWait();
     }
     

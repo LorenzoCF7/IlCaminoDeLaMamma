@@ -205,9 +205,26 @@ public class IngredienteController {
     
     private void eliminarIngredienteDirecto(Ingrediente ingrediente) {
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Confirmar eliminación");
-        confirmacion.setHeaderText("¿Deseas eliminar este ingrediente?");
-        confirmacion.setContentText("Se eliminará: " + ingrediente.getNombre());
+        confirmacion.setTitle("🗑️ Eliminar Ingrediente");
+        confirmacion.setHeaderText("¿Eliminar '" + ingrediente.getNombre() + "'?");
+        confirmacion.setContentText("Esta acción no se puede deshacer. El ingrediente se eliminará permanentemente.");
+        
+        // Estilizar diálogo
+        confirmacion.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+        
+        javafx.application.Platform.runLater(() -> {
+            javafx.scene.control.Button okButton = (javafx.scene.control.Button) confirmacion.getDialogPane().lookupButton(ButtonType.OK);
+            if (okButton != null) {
+                okButton.setText("✓ Sí, eliminar");
+                okButton.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+            
+            javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) confirmacion.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelButton != null) {
+                cancelButton.setText("✗ Cancelar");
+                cancelButton.setStyle("-fx-background-color: #8B7355; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+        });
 
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
@@ -259,9 +276,70 @@ public class IngredienteController {
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
+        
+        // Emojis y colores según el tipo
+        final String emoji;
+        final String colorHeader;
+        
+        switch (tipo) {
+            case INFORMATION:
+                emoji = "✓ ";
+                colorHeader = "#4CAF50";
+                break;
+            case WARNING:
+                emoji = "⚠ ";
+                colorHeader = "#FF9800";
+                break;
+            case ERROR:
+                emoji = "✗ ";
+                colorHeader = "#D32F2F";
+                break;
+            case CONFIRMATION:
+                emoji = "❓ ";
+                colorHeader = "#2196F3";
+                break;
+            default:
+                emoji = "";
+                colorHeader = "#8B7355";
+                break;
+        }
+        
+        alerta.setTitle(emoji + titulo);
+        alerta.setHeaderText(titulo);
         alerta.setContentText(mensaje);
+        
+        // Estilizar el diálogo
+        alerta.getDialogPane().setStyle(
+            "-fx-background-color: #FAF8F5; " +
+            "-fx-font-family: 'Segoe UI'; " +
+            "-fx-font-size: 13px;"
+        );
+        
+        // Estilizar header y botones
+        javafx.application.Platform.runLater(() -> {
+            javafx.scene.control.Button okButton = (javafx.scene.control.Button) alerta.getDialogPane().lookupButton(javafx.scene.control.ButtonType.OK);
+            if (okButton != null) {
+                okButton.setStyle(
+                    "-fx-background-color: " + colorHeader + "; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-padding: 10px 20px; " +
+                    "-fx-background-radius: 5px;"
+                );
+            }
+            
+            javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) alerta.getDialogPane().lookupButton(javafx.scene.control.ButtonType.CANCEL);
+            if (cancelButton != null) {
+                cancelButton.setStyle(
+                    "-fx-background-color: #cccccc; " +
+                    "-fx-text-fill: #333333; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-padding: 10px 20px; " +
+                    "-fx-background-radius: 5px;"
+                );
+            }
+        });
+        
         alerta.showAndWait();
     }
 

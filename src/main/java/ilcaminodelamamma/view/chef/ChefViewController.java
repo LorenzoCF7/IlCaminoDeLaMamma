@@ -31,7 +31,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Controlador para la vista principal del Jefe de Cocina
@@ -77,13 +79,25 @@ public class ChefViewController implements Initializable {
 
     // Mapa de platos por categoría
     private final Map<String, List<DishItem>> dishesByCategory = new HashMap<>();
+    
+    // Mapeo de categorías BD → UI (XML usa singular, UI usa plural)
+    private final Map<String, String> categoryMapping = new HashMap<String, String>() {{
+        put("Entrante", "Entrantes");
+        put("Pasta", "Pasta");
+        put("Pizza", "Pizza");
+        put("Pescado", "Pescados");
+        put("Carne", "Carnes");
+        put("Postre", "Postres");
+        put("Vino", "Vinos");
+        put("Menu Infantil", "Menú Infantil");
+    }};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista del Chef inicializada correctamente");
         recetaDAO = new RecetaDAO();
-        initializeDishes();
-        loadDynamicDishesFromDatabase();
+        initializeImageMapping(); // Cargar mapeo de imágenes
+        loadDynamicDishesFromDatabase(); // Cargar todos los platos desde BD
         loadCategoryGrid();
         loadRecentRecipes();
         setupTabButtons();
@@ -131,146 +145,165 @@ public class ChefViewController implements Initializable {
         }
     }
 
+    // Mapa de imágenes por nombre de plato (para asignar imágenes a platos de BD)
+    // Usa claves en minúsculas para búsqueda case-insensitive
+    private final Map<String, String> imageMapping = new HashMap<>();
+    
     /**
-     * Carga recetas dinámicamente desde la base de datos
+     * Inicializa el mapeo de imágenes por nombre de plato
+     * Esto permite asignar las imágenes correctas a los platos cargados desde la BD
+     * Las claves se almacenan en minúsculas para hacer búsquedas case-insensitive
+     * RUTAS EXACTAS desde la carpeta resources/img/
      */
-    private void loadDynamicDishesFromDatabase() {
-        try {
-            List<Receta> todasLasRecetas = recetaDAO.findAll();
-            System.out.println("Recetas cargadas de la BD: " + todasLasRecetas.size());
-            
-            // Agrupar recetas por categoría
-            for (Receta receta : todasLasRecetas) {
-                String categoria = receta.getCategoria();
-                if (categoria == null || categoria.trim().isEmpty()) {
-                    continue; // Saltar recetas sin categoría
-                }
-                
-                // Crear DishItem desde la receta
-                DishItem dish = new DishItem(
-                    receta.getNombre(),
-                    null, // La imagen se cargará desde los bytes
-                    receta.getDescripcion(),
-                    0.0,  // Precio no disponible en BD
-                    receta.getImagen()
-                );
-                
-                // Agregar a la categoría correspondiente
-                dishesByCategory.computeIfAbsent(categoria, k -> new ArrayList<>()).add(dish);
-            }
-            
-            System.out.println("Categorías con recetas dinámicas:");
-            dishesByCategory.forEach((cat, dishes) -> 
-                System.out.println("  " + cat + ": " + dishes.size() + " recetas")
-            );
-            
-        } catch (Exception e) {
-            System.err.println("Error cargando recetas desde BD: " + e.getMessage());
-            e.printStackTrace();
-        }
+    private void initializeImageMapping() {
+        // ENTRANTES (claves en minúsculas, rutas EXACTAS con prefijo /img/)
+        imageMapping.put("bruschetta clásica", "/img/entrantes/bruschetta-clasica.jpg.jpg");
+        imageMapping.put("ensalada caprese", "/img/entrantes/ensalada-caprese-receta-original-italiana.jpg");
+        imageMapping.put("carpaccio de ternera", "/img/entrantes/carpaccio-de-ternera.jpg");
+        imageMapping.put("tabla de quesos italianos", "/img/entrantes/quesos-italianos.jpg");
+        imageMapping.put("sopa minestrone", "/img/entrantes/sopas-minestrone.jpg");
+        imageMapping.put("calamares fritos", "/img/entrantes/calamares-fritos.jpg");
+        imageMapping.put("provolone al horno", "/img/entrantes/Provolone-al-horno-1-scaled.jpg");
+        imageMapping.put("tartar de salmón", "/img/entrantes/tartar-de-salmon-y-aguacate.jpg");
+        imageMapping.put("antipasto mixto", "/img/entrantes/full.Mixed_Antipasto.jpg");
+        
+        // PASTA
+        imageMapping.put("spaghetti carbonara", "/img/pasta/espaguetis-a-la-carbonara.jpg");
+        imageMapping.put("penne arrabbiata", "/img/pasta/Penne-all-Arrabbiata_EXPS_TOHD24_277252_KristinaVanni_6.jpg");
+        imageMapping.put("tagliatelle al pesto", "/img/pasta/tagliatelle-al-pesto.jpg");
+        imageMapping.put("lasagna boloñesa", "/img/pasta/lasagna-boloñesa.jpg");
+        imageMapping.put("ravioli ricotta y espinacas", "/img/pasta/ravioli-ricotta-espinacas.jpg");
+        imageMapping.put("gnocchi a la sorrentina", "/img/pasta/Noquis-a-la-sorrentina_650x433_wm.jpg");
+        imageMapping.put("fettuccine alfredo", "/img/pasta/one-pot-alfredo-recipe.jpg");
+        imageMapping.put("tortellini panna e prosciutto", "/img/pasta/tortellini_pannaprosciuttopiselli.jpg");
+        imageMapping.put("spaghetti marinara", "/img/pasta/marinara-sauce-18.jpg");
+        
+        // PIZZA
+        imageMapping.put("margherita", "/img/pizza/margherita-1-scaled.jpg");
+        imageMapping.put("pepperoni", "/img/pizza/pepperoni.jpg");
+        imageMapping.put("cuatro quesos", "/img/pizza/pizza-4-quesos.jpg");
+        imageMapping.put("hawaiana", "/img/pizza/hawaiana.jpg");
+        imageMapping.put("bbq pollo", "/img/pizza/bbq-pollo.jpg");
+        imageMapping.put("prosciutto e funghi", "/img/pizza/pizza-prosciutto-e-funghi-1.jpg");
+        imageMapping.put("vegetariana", "/img/pizza/pizza-vegetariana.jpg");
+        imageMapping.put("diavola", "/img/pizza/Pizza-alla-diavola_650x433_wm.jpg");
+        imageMapping.put("calzone clásico", "/img/pizza/pizza calzone ab.jpg");
+        
+        // PESCADOS
+        imageMapping.put("salmón a la plancha", "/img/pescados/salmon-en-salsa-de-limon.jpg");
+        imageMapping.put("lubina al horno", "/img/pescados/lubina-al-horno-con-patatas.jpg");
+        imageMapping.put("bacalao con tomate", "/img/pescados/bacalao-con-tomate.jpg");
+        imageMapping.put("atún a la parrilla", "/img/pescados/atun_a_la_parrilla_31410_orig.jpg");
+        imageMapping.put("merluza en salsa verde", "/img/pescados/merluza-salsa-verde-receta.jpg");
+        imageMapping.put("dorada a la espalda", "/img/pescados/dorada-a-la-espalda-receta.jpg");
+        imageMapping.put("pulpo a la brasa", "/img/pescados/pulpo-brasa.jpg");
+        imageMapping.put("calamares en su tinta", "/img/pescados/calamares-tinta-1-scaled.jpg");
+        imageMapping.put("fritura mixta de mar", "/img/pescados/fritura-mixata.jpg");
+        
+        // CARNES
+        imageMapping.put("pollo a la parrilla", "/img/carnes/PechugaParrillaHierbasLimon.jpg");
+        imageMapping.put("solomillo de cerdo", "/img/carnes/solomillo-de-cerdo.jpg");
+        imageMapping.put("entrecot de ternera", "/img/carnes/Entrecot-de-ternera-con-patatas-al-ajo-y-tomillo-y-espírragos-blancos.jpg");
+        imageMapping.put("costillas bbq", "/img/carnes/costillas-bbq.jpg");
+        imageMapping.put("carrillera de ternera", "/img/carnes/carrilleras-de-ternera-receta.jpg");
+        imageMapping.put("albóndigas en salsa", "/img/carnes/Albondigas-de-carne-picada-en-salsa-de-tomate.jpg");
+        imageMapping.put("filete de pollo empanado", "/img/carnes/Pollo-empanado-air-fryer.jpg");
+        imageMapping.put("hamburguesa gourmet", "/img/carnes/hamburguesa-con-queso-cabra.jpg.jpg");
+        imageMapping.put("cordero asado", "/img/carnes/cordero-asado.jpg");
+        
+        // POSTRES
+        imageMapping.put("tiramisú clásico", "/img/postres/Tiramisu-clasico.jpg");
+        imageMapping.put("panna cotta", "/img/postres/PANACOTTA-CON-FRUTOS-ROJOS.jpg");
+        imageMapping.put("helado artesanal", "/img/postres/helado-artesanal.jpg");
+        imageMapping.put("brownie con helado", "/img/postres/brownie-con-helado-destacada.jpg");
+        imageMapping.put("tarta de queso", "/img/postres/tarta-queso-horno-receta.jpg");
+        imageMapping.put("coulant de chocolate", "/img/postres/coulant-de-chocolate_515_1.jpg");
+        imageMapping.put("fruta fresca", "/img/postres/fruta-fresca.jpg");
+        imageMapping.put("cannoli sicilianos", "/img/postres/Cannoli-siciliani_1200x800.jpg");
+        imageMapping.put("gelato affogato", "/img/postres/gelato-affogato.jpg");
+        
+        // VINOS
+        imageMapping.put("rioja crianza", "/img/vino/rioja-vega-crianza.jpg");
+        imageMapping.put("albariño rías baixas", "/img/vino/albariño rias baixas.jpg");
+        imageMapping.put("chianti docg", "/img/vino/chianti-docg.jpg");
+        imageMapping.put("ribera del duero crianza", "/img/vino/ribera-duero-crianza.jpg");
+        imageMapping.put("godello sobre lías", "/img/vino/valdeorras-o-luar-do-sil-godello-sobre-lias-75-cl.jpg");
+        imageMapping.put("barolo joven", "/img/vino/barolo-joven.jpg");
+        imageMapping.put("barolo joven (piamonte)", "/img/vino/barolo-joven.jpg");
+        imageMapping.put("ribera del duero reserva", "/img/vino/rivera-duero.jpg");
+        imageMapping.put("chablis premier cru", "/img/vino/chablis-premier-cru-montmains-simonnet-febvre.jpg");
+        imageMapping.put("brunello di montalcino", "/img/vino/brunello.jpg");
+        
+        // MENÚ INFANTIL
+        imageMapping.put("menú pizza", "/img/menu-infantil/MENU-INFANTIL.jpeg");
+        imageMapping.put("menú hamburguesa", "/img/menu-infantil/menu-infantil2.jpg");
     }
     
     /**
-     * Inicializa los platos por categoría (platos estáticos de ejemplo)
+     * Carga todos los platos dinámicamente desde la base de datos
+     * Utiliza el mapeo de imágenes para asignar las imágenes correctas
+     * y mapea categorías de BD (singular) a categorías de UI (plural)
      */
-    private void initializeDishes() {
-        // ENTRANTES
-        dishesByCategory.put("Entrantes", Arrays.asList(
-            new DishItem("Bruschetta Clásica", "entrantes/bruschetta-clasica.jpg.jpg", "Tostadas con tomate fresco y albahaca", 6.50),
-            new DishItem("Ensalada Caprese", "entrantes/ensalada-caprese-receta-original-italiana.jpg", "Tomate, mozzarella y albahaca", 8.90),
-            new DishItem("Carpaccio de Ternera", "entrantes/carpaccio-de-ternera.jpg", "Finas láminas de ternera con rúcula", 12.00),
-            new DishItem("Tabla de Quesos Italianos", "entrantes/quesos-italianos.jpg", "Selección de quesos artesanos", 14.50),
-            new DishItem("Sopa Minestrone", "entrantes/sopas-minestrone.jpg", "Sopa tradicional italiana de verduras", 7.20),
-            new DishItem("Calamares Fritos", "entrantes/calamares-fritos.jpg", "Calamares crujientes con limón", 11.80),
-            new DishItem("Provolone al Horno", "entrantes/Provolone-al-horno-1-scaled.jpg", "Queso provolone gratinado con orégano", 9.50),
-            new DishItem("Tartar de Salmón", "entrantes/tartar-de-salmon-y-aguacate.jpg", "Salmón fresco con aguacate y sésamo", 13.90),
-            new DishItem("Antipasto Mixto", "entrantes/full.Mixed_Antipasto.jpg", "Selección de embutidos y quesos italianos", 15.00)
-        ));
-
-        // PASTA
-        dishesByCategory.put("Pasta", Arrays.asList(
-            new DishItem("Spaghetti Carbonara", "pasta/espaguetis-a-la-carbonara.jpg", "Pasta con huevo, pecorino y guanciale", 12.90),
-            new DishItem("Penne Arrabbiata", "pasta/Penne-all-Arrabbiata_EXPS_TOHD24_277252_KristinaVanni_6.jpg", "Pasta con salsa de tomate picante", 11.50),
-            new DishItem("Tagliatelle al Pesto", "pasta/tagliatelle-al-pesto.jpg", "Pasta fresca con pesto genovés", 13.20),
-            new DishItem("Lasagna Boloñesa", "pasta/lasagna-boloñesa.jpg", "Capas de pasta con ragú y bechamel", 14.50),
-            new DishItem("Ravioli Ricotta y Espinacas", "pasta/ravioli-ricotta-espinacas.jpg", "Pasta rellena con salsa de mantequilla", 13.80),
-            new DishItem("Gnocchi a la Sorrentina", "pasta/Noquis-a-la-sorrentina_650x433_wm.jpg", "Ñoquis con tomate y mozzarella", 12.00),
-            new DishItem("Fettuccine Alfredo", "pasta/one-pot-alfredo-recipe.jpg", "Pasta con crema de parmesano", 13.90),
-            new DishItem("Tortellini Panna e Prosciutto", "pasta/tortellini_pannaprosciuttopiselli.jpg", "Tortellini con nata y jamón", 14.00),
-            new DishItem("Spaghetti Marinara", "pasta/marinara-sauce-18.jpg", "Pasta con salsa de tomate y albahaca", 15.30)
-        ));
-
-        // PIZZA
-        dishesByCategory.put("Pizza", Arrays.asList(
-            new DishItem("Margherita", "pizza/margherita-1-scaled.jpg", "Tomate, mozzarella y albahaca fresca", 9.00),
-            new DishItem("Pepperoni", "pizza/pepperoni.jpg", "Con pepperoni picante", 11.50),
-            new DishItem("Cuatro Quesos", "pizza/pizza-4-quesos.jpg", "Mozzarella, gorgonzola, parmesano y fontina", 12.50),
-            new DishItem("Hawaiana", "pizza/hawaiana.jpg", "Jamón y piña", 11.00),
-            new DishItem("BBQ Pollo", "pizza/bbq-pollo.jpg", "Pollo con salsa barbacoa", 13.20),
-            new DishItem("Prosciutto e Funghi", "pizza/pizza-prosciutto-e-funghi-1.jpg", "Jamón y champiñones", 12.80),
-            new DishItem("Vegetariana", "pizza/pizza-vegetariana.jpg", "Verduras variadas de temporada", 11.90),
-            new DishItem("Diavola", "pizza/Pizza-alla-diavola_650x433_wm.jpg", "Con salame picante calabrés", 12.20),
-            new DishItem("Calzone Clásico", "pizza/pizza calzone ab.jpg", "Pizza cerrada rellena", 13.50)
-        ));
-
-        // PESCADOS
-        dishesByCategory.put("Pescados", Arrays.asList(
-            new DishItem("Salmón a la Plancha", "pescados/salmon-en-salsa-de-limon.jpg", "Salmón con limón y hierbas", 17.90),
-            new DishItem("Lubina al Horno", "pescados/lubina-al-horno-con-patatas.jpg", "Lubina con patatas y verduras", 19.50),
-            new DishItem("Bacalao con Tomate", "pescados/bacalao-con-tomate.jpg", "Bacalao en salsa de tomate casera", 16.80),
-            new DishItem("Atún a la Parrilla", "pescados/atun_a_la_parrilla_31410_orig.jpg", "Atún sellado con especias", 21.00),
-            new DishItem("Merluza en Salsa Verde", "pescados/merluza-salsa-verde-receta.jpg", "Merluza con perejil y almejas", 15.90),
-            new DishItem("Dorada a la Espalda", "pescados/dorada-a-la-espalda-receta.jpg", "Dorada abierta al horno", 18.20),
-            new DishItem("Pulpo a la Brasa", "pescados/pulpo-brasa.jpg", "Pulpo con pimentón y aceite", 22.50),
-            new DishItem("Calamares en su Tinta", "pescados/calamares-tinta-1-scaled.jpg", "Calamares en salsa de tinta", 15.80),
-            new DishItem("Fritura Mixta de Mar", "pescados/fritura-mixata.jpg", "Variedad de pescados y mariscos fritos", 17.50)
-        ));
-
-        // CARNES
-        dishesByCategory.put("Carnes", Arrays.asList(
-            new DishItem("Pollo a la Parrilla", "carnes/PechugaParrillaHierbasLimon.jpg", "Pollo con hierbas mediterráneas", 14.50),
-            new DishItem("Solomillo de Cerdo", "carnes/solomillo-de-cerdo.jpg", "Solomillo con salsa de mostaza", 16.90),
-            new DishItem("Entrecot de Ternera", "carnes/Entrecot-de-ternera-con-patatas-al-ajo-y-tomillo-y-espírragos-blancos.jpg", "Entrecot con guarnición", 22.00),
-            new DishItem("Costillas BBQ", "carnes/costillas-bbq.jpg", "Costillas con salsa barbacoa", 18.50),
-            new DishItem("Carrillera de Ternera", "carnes/carrilleras-de-ternera-receta.jpg", "Carrillera estofada al vino", 19.20),
-            new DishItem("Albóndigas en Salsa", "carnes/Albondigas-de-carne-picada-en-salsa-de-tomate.jpg", "Albóndigas caseras con tomate", 13.50),
-            new DishItem("Filete de Pollo Empanado", "carnes/Pollo-empanado-air-fryer.jpg", "Pollo crujiente empanado", 12.80),
-            new DishItem("Hamburguesa Gourmet", "carnes/hamburguesa-con-queso-cabra.jpg.jpg", "Hamburguesa con queso de cabra", 15.90),
-            new DishItem("Cordero Asado", "carnes/cordero-asado.jpg", "Cordero al horno con romero", 23.00)
-        ));
-
-        // POSTRES
-        dishesByCategory.put("Postres", Arrays.asList(
-            new DishItem("Tiramisú Clásico", "postres/Tiramisu-clasico.jpg", "Postre italiano con café y mascarpone", 6.50),
-            new DishItem("Panna Cotta", "postres/PANACOTTA-CON-FRUTOS-ROJOS.jpg", "Crema italiana con frutos rojos", 6.80),
-            new DishItem("Helado Artesanal", "postres/helado-artesanal.jpg", "2 bolas de helado a elegir", 4.80),
-            new DishItem("Brownie con Helado", "postres/brownie-con-helado-destacada.jpg", "Brownie caliente con helado", 6.90),
-            new DishItem("Tarta de Queso", "postres/tarta-queso-horno-receta.jpg", "Tarta de queso al horno", 6.70),
-            new DishItem("Coulant de Chocolate", "postres/coulant-de-chocolate_515_1.jpg", "Bizcocho con corazón fundido", 7.20),
-            new DishItem("Fruta Fresca", "postres/fruta-fresca.jpg", "Fruta fresca de temporada", 4.50),
-            new DishItem("Cannoli Sicilianos", "postres/Cannoli-siciliani_1200x800.jpg", "Cannoli rellenos de ricotta", 5.80),
-            new DishItem("Gelato Affogato", "postres/gelato-affogato.jpg", "Helado con espresso caliente", 5.90)
-        ));
-
-        // VINOS
-        dishesByCategory.put("Vinos", Arrays.asList(
-            new DishItem("Rioja Crianza", "vino/rioja-vega-crianza.jpg", "Vino tinto español con crianza en barrica", 18.00),
-            new DishItem("Albariño Rías Baixas", "vino/albariño rias baixas.jpg", "Vino blanco gallego fresco y afrutado", 17.80),
-            new DishItem("Chianti DOCG", "vino/chianti-docg.jpg", "Vino tinto italiano de la Toscana", 18.90),
-            new DishItem("Ribera del Duero Crianza", "vino/ribera-duero-crianza.jpg", "Vino tinto castellano con cuerpo", 26.00),
-            new DishItem("Godello sobre Lías", "vino/valdeorras-o-luar-do-sil-godello-sobre-lias-75-cl.jpg", "Vino blanco de Valdeorras con crianza", 24.50),
-            new DishItem("Barolo Joven", "vino/barolo-joven.jpg", "Vino tinto italiano del Piamonte", 32.00),
-            new DishItem("Ribera del Duero Reserva", "vino/rivera-duero.jpg", "Vino tinto reserva de alta calidad", 45.00),
-            new DishItem("Chablis Premier Cru", "vino/chablis-premier-cru-montmains-simonnet-febvre.jpg", "Vino blanco francés de Borgoña", 48.00),
-            new DishItem("Brunello di Montalcino", "vino/brunello.jpg", "Vino tinto italiano premium de la Toscana", 62.00)
-        ));
-
-        // MENÚ INFANTIL
-        dishesByCategory.put("Menú Infantil", Arrays.asList(
-            new DishItem("Menú Pizza", "menu-infantil/MENU-INFANTIL.jpeg", "Pizza infantil con bebida y postre", 8.50),
-            new DishItem("Menú Hamburguesa", "menu-infantil/menu-infantil2.jpg", "Hamburguesa infantil con patatas y bebida", 8.50)
-        ));
+    private void loadDynamicDishesFromDatabase() {
+        try {
+            // Limpiar categorías existentes
+            dishesByCategory.clear();
+            
+            List<Receta> todasLasRecetas = recetaDAO.findAll();
+            System.out.println("\n🔄 Cargando " + todasLasRecetas.size() + " recetas desde la base de datos...");
+            
+            for (Receta receta : todasLasRecetas) {
+                String categoriaBD = receta.getCategoria();
+                if (categoriaBD == null || categoriaBD.trim().isEmpty()) {
+                    System.out.println("⚠️ Receta sin categoría: " + receta.getNombre());
+                    continue;
+                }
+                
+                // Convertir categoría de BD a categoría de UI usando el mapeo
+                String categoriaUI = categoryMapping.getOrDefault(categoriaBD, categoriaBD);
+                
+                // Buscar imagen en el mapeo (case-insensitive)
+                String nombreNormalizado = receta.getNombre().toLowerCase().trim();
+                String imagePath = imageMapping.get(nombreNormalizado);
+                
+                // Si no hay imagen en el mapeo, usar la imagen de la BD
+                if (imagePath == null && receta.getImagen() != null) {
+                    imagePath = null; // Se usará la imagen de BD (byte[])
+                }
+                
+                // Calcular precio en euros (BD guarda en centavos)
+                double precio = receta.getPrecio() != null ? receta.getPrecio() / 100.0 : 0.0;
+                
+                // Crear el plato con toda la información
+                DishItem dish = new DishItem(
+                    receta.getNombre(),
+                    imagePath,
+                    receta.getDescripcion(),
+                    precio,
+                    receta.getImagen(),
+                    receta
+                );
+                
+                // Añadir a la categoría UI correspondiente
+                dishesByCategory.computeIfAbsent(categoriaUI, k -> new ArrayList<>()).add(dish);
+                
+                String imageInfo = imagePath != null ? "con imagen local" : 
+                                  (receta.getImagen() != null ? "con imagen BD" : "sin imagen");
+                System.out.println("✓ " + categoriaBD + " → " + categoriaUI + ": " + receta.getNombre() + " (" + imageInfo + ")");
+            }
+            
+            System.out.println("\n📊 Resumen final por categorías UI:");
+            dishesByCategory.forEach((cat, dishes) -> {
+                System.out.println("  " + cat + ": " + dishes.size() + " platos");
+            });
+            System.out.println();
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error cargando recetas desde BD: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Configura el layout responsive
@@ -511,7 +544,8 @@ public class ChefViewController implements Initializable {
             }
             // Si no hay bytes, cargar desde archivo de recursos
             else if (dish.imageName != null && !dish.imageName.isEmpty()) {
-                String imagePath = "/img/" + dish.imageName;
+                // imageName ya contiene la ruta completa con /img/
+                String imagePath = dish.imageName;
                 var inputStream = getClass().getResourceAsStream(imagePath);
                 
                 if (inputStream == null) {
@@ -556,9 +590,57 @@ public class ChefViewController implements Initializable {
 
         card.setOnMouseClicked(event -> {
             System.out.println("Plato seleccionado: " + dish.name);
+            abrirDetallesReceta(dish.receta);
         });
 
         return card;
+    }
+    
+    /**
+     * Abre una ventana modal con los detalles completos de la receta
+     */
+    private void abrirDetallesReceta(Receta receta) {
+        if (receta == null) {
+            System.err.println("No se puede abrir detalles: receta es null");
+            return;
+        }
+        
+        try {
+            // Cargar la receta completa con ingredientes desde la BD
+            Receta recetaCompleta = recetaDAO.findById(receta.getId_receta());
+            
+            if (recetaCompleta == null) {
+                System.err.println("No se encontró la receta en la BD");
+                return;
+            }
+            
+            // Cargar el FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/recipe-detail.fxml"));
+            Parent root = loader.load();
+            
+            // Obtener el controlador y pasar la receta
+            RecipeDetailController controller = loader.getController();
+            controller.setReceta(recetaCompleta);
+            
+            // Crear la ventana modal
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.initStyle(StageStyle.UNDECORATED);
+            modalStage.setTitle("Detalles de " + recetaCompleta.getNombre());
+            
+            Scene scene = new Scene(root, 900, 700);
+            modalStage.setScene(scene);
+            
+            // Centrar en la pantalla
+            modalStage.centerOnScreen();
+            
+            // Mostrar la ventana
+            modalStage.showAndWait();
+            
+        } catch (Exception e) {
+            System.err.println("Error al abrir detalles de receta: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -659,6 +741,7 @@ public class ChefViewController implements Initializable {
         String description;
         double price;
         byte[] imageBytes;
+        Receta receta; // Referencia a la receta completa
 
         DishItem(String name, String imageName, String description, double price) {
             this.name = name;
@@ -666,6 +749,7 @@ public class ChefViewController implements Initializable {
             this.description = description;
             this.price = price;
             this.imageBytes = null;
+            this.receta = null;
         }
         
         DishItem(String name, String imageName, String description, double price, byte[] imageBytes) {
@@ -674,6 +758,16 @@ public class ChefViewController implements Initializable {
             this.description = description;
             this.price = price;
             this.imageBytes = imageBytes;
+            this.receta = null;
+        }
+        
+        DishItem(String name, String imageName, String description, double price, byte[] imageBytes, Receta receta) {
+            this.name = name;
+            this.imageName = imageName;
+            this.description = description;
+            this.price = price;
+            this.imageBytes = imageBytes;
+            this.receta = receta;
         }
     }
     

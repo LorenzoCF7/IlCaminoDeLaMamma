@@ -201,36 +201,55 @@ public class WaiterViewController implements Initializable {
     private void abrirSelectorMesa() {
         // Crear diálogo de selección de mesa
         javafx.scene.control.Dialog<Integer> dialog = new javafx.scene.control.Dialog<>();
-        dialog.setTitle("Nueva Comanda");
-        dialog.setHeaderText("Selecciona una mesa libre para crear la comanda");
+        dialog.setTitle("✨ Nueva Comanda");
         
         // Crear ComboBox con mesas libres
         javafx.scene.control.ComboBox<String> comboMesas = new javafx.scene.control.ComboBox<>();
         for (MesaInfo mesa : MESAS) {
             if (mesa.estado.equals("Libre")) {
-                comboMesas.getItems().add("Mesa " + mesa.numero);
+                comboMesas.getItems().add("🪑 Mesa " + mesa.numero);
             }
         }
-        comboMesas.setPromptText("Selecciona una mesa");
-        comboMesas.setPrefWidth(200);
+        comboMesas.setPromptText("Selecciona una mesa...");
+        comboMesas.setPrefWidth(250);
+        comboMesas.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
         
-        VBox content = new VBox(10);
-        content.setPadding(new Insets(20));
+        Label titulo = new Label("Selecciona una mesa libre");
+        titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #8B7355;");
+        
+        Label subtitulo = new Label("Elige la mesa donde se sentarán los clientes");
+        subtitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+        
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(25));
+        content.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        content.setStyle("-fx-background-color: #FAF8F5; -fx-background-radius: 10px;");
         content.getChildren().addAll(
-            new Label("Mesas disponibles:"),
+            titulo,
+            subtitulo,
             comboMesas
         );
         
         dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().setStyle("-fx-background-color: #FAF8F5;");
         dialog.getDialogPane().getButtonTypes().addAll(
             javafx.scene.control.ButtonType.OK,
             javafx.scene.control.ButtonType.CANCEL
         );
         
+        // Personalizar botones
+        javafx.scene.control.Button okButton = (javafx.scene.control.Button) dialog.getDialogPane().lookupButton(javafx.scene.control.ButtonType.OK);
+        okButton.setText("✓ Crear Comanda");
+        okButton.setStyle("-fx-background-color: #8B7355; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+        
+        javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) dialog.getDialogPane().lookupButton(javafx.scene.control.ButtonType.CANCEL);
+        cancelButton.setText("✗ Cancelar");
+        cancelButton.setStyle("-fx-background-color: #cccccc; -fx-text-fill: #333333; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+        
         dialog.setResultConverter(buttonType -> {
             if (buttonType == javafx.scene.control.ButtonType.OK && comboMesas.getValue() != null) {
                 String selected = comboMesas.getValue();
-                return Integer.parseInt(selected.replace("Mesa ", ""));
+                return Integer.parseInt(selected.replace("🪑 Mesa ", ""));
             }
             return null;
         });
