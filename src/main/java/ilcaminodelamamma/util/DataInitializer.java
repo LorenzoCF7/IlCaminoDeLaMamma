@@ -14,11 +14,13 @@ import ilcaminodelamamma.model.Receta;
 public class DataInitializer {
     
     private final XMLRecetaLoader xmlRecetaLoader;
+    private final ImagenLoader imagenLoader;
     private final RecetaDAO recetaDAO;
     private final IngredienteDAO ingredienteDAO;
     
     public DataInitializer() {
         this.xmlRecetaLoader = new XMLRecetaLoader();
+        this.imagenLoader = new ImagenLoader();
         this.recetaDAO = new RecetaDAO();
         this.ingredienteDAO = new IngredienteDAO();
     }
@@ -58,6 +60,9 @@ public class DataInitializer {
                 System.out.println("\n⚠️  No se procesaron recetas. Verifica que el archivo Recetas.xml exista en resources/");
             }
             
+            // Cargar imágenes de ejemplo
+            cargarImagenesEjemplo();
+            
         } catch (Exception e) {
             System.err.println("❌ Error durante la inicialización de datos: " + e.getMessage());
             e.printStackTrace();
@@ -72,5 +77,25 @@ public class DataInitializer {
         System.out.println("🔄 Forzando recarga de datos desde XML...");
         int actualizadas = xmlRecetaLoader.cargarRecetasDesdeXML();
         System.out.println("✅ Recarga completada: " + actualizadas + " recetas actualizadas");
+    }
+    
+    /**
+     * Carga una imagen para una receta específica
+     * Delega la operación a ImagenLoader
+     * 
+     * @param rutaImagen Ruta de la imagen
+     * @param idReceta ID de la receta
+     * @return true si se cargó correctamente
+     */
+    public boolean cargarImagenReceta(String rutaImagen, Integer idReceta) {
+        return imagenLoader.cargarImagenReceta(rutaImagen, idReceta);
+    }
+    
+    /**
+     * Carga imágenes de ejemplo para las primeras 5 recetas
+     * Delega la operación a ImagenLoader
+     */
+    public void cargarImagenesEjemplo() {
+        imagenLoader.cargarImagenesEjemplo();
     }
 }
