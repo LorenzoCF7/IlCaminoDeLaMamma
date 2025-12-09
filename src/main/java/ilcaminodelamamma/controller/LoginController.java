@@ -3,6 +3,9 @@ package ilcaminodelamamma.controller;
 import java.net.URL;
 import java.util.List;
 
+import ilcaminodelamamma.DAO.UsuarioDAO;
+import ilcaminodelamamma.model.Usuario;
+import ilcaminodelamamma.util.PasswordUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,10 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import ilcaminodelamamma.DAO.UsuarioDAO;
-import ilcaminodelamamma.model.Usuario;
-import ilcaminodelamamma.util.PasswordUtil;
 
 public class LoginController {
 
@@ -44,39 +43,54 @@ public class LoginController {
             return;
         }
 
-        // Autenticación usando la base de datos y contraseñas hasheadas
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        try {
-            List<Usuario> usuarios = usuarioDAO.findByNombre(usuario);
-            Usuario u = null;
-            if (!usuarios.isEmpty()) {
-                // tomar el primer usuario con ese nombre
-                u = usuarios.get(0);
-                if (!PasswordUtil.verify(password, u.getContrasena())) {
-                    mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
-                    return;
-                }
-            } else {
-                // Si no hay usuario en la BD, permitir credenciales demo para pruebas
-                String usuarioLower = usuario.toLowerCase();
-                if ((usuarioLower.equals("chef") || usuarioLower.equals("assistant") || usuarioLower.equals("admin") || usuarioLower.equals("waiter") || usuarioLower.equals("camarero"))
-                        && password.equals("1234")) {
-                    // construir un usuario temporal con rol según el nombre
-                    u = new Usuario();
-                    u.setNombre(usuarioLower);
-                    if (usuarioLower.equals("chef")) {
-                        u.setRol(ilcaminodelamamma.model.RolEnum.JEFE);
-                    } else if (usuarioLower.equals("assistant") || usuarioLower.equals("admin")) {
-                        u.setRol(ilcaminodelamamma.model.RolEnum.ADMIN);
-                    } else {
-                        u.setRol(ilcaminodelamamma.model.RolEnum.CAMARERO);
+        // Primero intentar credenciales demo (más rápido para desarrollo)
+        String usuarioLower = usuario.toLowerCase();
+        Usuario u = null;
+        
+        if ((usuarioLower.equals("chef") || usuarioLower.equals("assistant") || 
+             usuarioLower.equals("admin") || usuarioLower.equals("waiter") || 
+             usuarioLower.equals("camarero")) && password.equals("1234")) {
+            // Crear usuario temporal con rol según el nombre
+            u = new Usuario();
+            u.setNombre(usuarioLower);
+            if (usuarioLower.equals("chef")) {
+                u.setRol(ilcaminodelamamma.model.RolEnum.JEFE);
+            } else if (usuarioLower.equals("assistant") || usuarioLower.equals("admin")) {
+                u.setRol(ilcaminodelamamma.model.RolEnum.ADMIN);
+            } else { // waiter o camarero
+                u.setRol(ilcaminodelamamma.model.RolEnum.CAMARERO);
+            }
+            
+            System.out.println("✓ Login demo exitoso: " + usuarioLower + " → " + u.getRol());
+        } else {
+            // Si no es demo, buscar en la base de datos
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            try {
+                List<Usuario> usuarios = usuarioDAO.findByNombre(usuario);
+                if (!usuarios.isEmpty()) {
+                    u = usuarios.get(0);
+                    if (!PasswordUtil.verify(password, u.getContrasena())) {
+                        mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
+                        return;
                     }
+                    System.out.println("✓ Login BD exitoso: " + u.getNombre() + " → " + u.getRol());
                 } else {
                     mostrarAlerta(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña inválidos.");
                     return;
                 }
+            } catch (Exception e) {
+                System.err.println("Error al buscar usuario en BD: " + e.getMessage());
+                mostrarAlerta(Alert.AlertType.ERROR, "Error de autenticación", "No se pudo verificar el usuario: " + e.getMessage());
+                return;
             }
+        }
 
+        if (u == null) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo autenticar el usuario.");
+            return;
+        }
+
+        try {
             // Guardar usuario en la sesión
             ilcaminodelamamma.config.SessionManager.setUsuarioActual(u);
             
@@ -94,9 +108,14 @@ public class LoginController {
                     fxmlPath = "/fxml/waiter/waiter-view.fxml";
                     break;
             }
+            
+            System.out.println("Cargando vista: " + fxmlPath + " para rol: " + u.getRol());
             cargarVistaPorRol(fxmlPath);
+            
         } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Error de autenticación", e.getMessage());
+            System.err.println("Error al cargar vista: " + e.getMessage());
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error al cargar vista", e.getMessage());
         }
     }
 
@@ -147,9 +166,59 @@ public class LoginController {
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
+        
+        // Emojis y colores según el tipo
+        final String emoji;
+        final String colorHeader;
+        
+        switch (tipo) {
+            case INFORMATION:
+                emoji = "✓ ";
+                colorHeader = "#4CAF50";
+                break;
+            case WARNING:
+                emoji = "⚠ ";
+                colorHeader = "#FF9800";
+                break;
+            case ERROR:
+                emoji = "✗ ";
+                colorHeader = "#D32F2F";
+                break;
+            case CONFIRMATION:
+                emoji = "❓ ";
+                colorHeader = "#2196F3";
+                break;
+            default:
+                emoji = "";
+                colorHeader = "#8B7355";
+                break;
+        }
+        
+        alert.setTitle(emoji + titulo);
+        alert.setHeaderText(titulo);
         alert.setContentText(mensaje);
+        
+        // Estilizar el diálogo
+        alert.getDialogPane().setStyle(
+            "-fx-background-color: #FAF8F5; " +
+            "-fx-font-family: 'Segoe UI'; " +
+            "-fx-font-size: 13px;"
+        );
+        
+        // Estilizar botones
+        javafx.application.Platform.runLater(() -> {
+            javafx.scene.control.Button okButton = (javafx.scene.control.Button) alert.getDialogPane().lookupButton(javafx.scene.control.ButtonType.OK);
+            if (okButton != null) {
+                okButton.setStyle(
+                    "-fx-background-color: " + colorHeader + "; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-padding: 10px 20px; " +
+                    "-fx-background-radius: 5px;"
+                );
+            }
+        });
+        
         alert.showAndWait();
     }
 }

@@ -1,5 +1,6 @@
 package ilcaminodelamamma.view;
 
+import ilcaminodelamamma.util.DataInitializer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,23 @@ import javafx.stage.Stage;
  * Aplicación JavaFX principal que muestra la pantalla de login
  */
 public class LoginApp extends Application {
+
+    @Override
+    public void init() throws Exception {
+        super.init();
+        
+        // Inicializar datos de la aplicación (cargar desde XML)
+        System.out.println("\n========================================");
+        System.out.println("  INICIALIZANDO APLICACIÓN");
+        System.out.println("========================================\n");
+        
+        DataInitializer dataInitializer = new DataInitializer();
+        dataInitializer.inicializarDatos();
+        
+        System.out.println("\n========================================");
+        System.out.println("  APLICACIÓN LISTA");
+        System.out.println("========================================\n");
+    }
 
     @Override
     public void start(Stage primaryStage) {

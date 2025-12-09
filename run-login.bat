@@ -7,9 +7,14 @@ echo ================================================
 echo.
 echo Compilando proyecto...
 
-REM Ruta a Maven
-set MAVEN_HOME=C:\Users\mario\.maven\maven-3.9.11
+REM Ruta a Maven (ajustar según tu instalación)
+set MAVEN_HOME=C:\Users\marcocc090506\.maven\maven-3.9.11
 set MAVEN_CMD=%MAVEN_HOME%\bin\mvn.cmd
+
+REM Si no encuentra Maven en esa ruta, buscar en PATH
+if not exist "%MAVEN_CMD%" (
+    set MAVEN_CMD=mvn
+)
 
 REM Compilar el proyecto
 %MAVEN_CMD% clean compile -DskipTests -q

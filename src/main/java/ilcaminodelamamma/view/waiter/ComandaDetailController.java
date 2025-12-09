@@ -66,8 +66,21 @@ public class ComandaDetailController implements Initializable {
     private String categoriaActual = "Todos";
     private int mesaNumber = 5;
     private final DecimalFormat df = new DecimalFormat("#,##0.00");
+    private RecetaDAO recetaDAO;
     
     private static final double IVA = 0.10; // 10% IVA
+    
+    // Mapeo de categorías BD → UI
+    private final Map<String, String> categoryMapping = new HashMap<String, String>() {{
+        put("Entrante", "Entrantes");
+        put("Pasta", "Pasta");
+        put("Pizza", "Pizza");
+        put("Pescado", "Pescados");
+        put("Carne", "Carnes");
+        put("Postre", "Postres");
+        put("Vino", "Vinos");
+        put("Menu Infantil", "Menú Infantil");
+    }};
     
     /**
      * Clase para representar un plato en la comanda con cantidad y nota
@@ -88,8 +101,11 @@ public class ComandaDetailController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Comanda Detail inicializada");
         
-        // Inicializar platos con precios de la carta
-        inicializarPlatos();
+        // Inicializar DAO
+        recetaDAO = new RecetaDAO();
+        
+        // Inicializar platos cargándolos dinámicamente desde la BD
+        inicializarPlatosDesdeDB();
         
         // Configurar combos
         configurarCombos();
@@ -166,7 +182,44 @@ public class ComandaDetailController implements Initializable {
     }
 
     /**
-     * Inicializa todos los platos con sus precios según la carta
+     * Inicializa los platos cargándolos dinámicamente desde la base de datos
+     */
+    private void inicializarPlatosDesdeDB() {
+        try {
+            platosPorCategoria.clear();
+            
+            List<Receta> todasLasRecetas = recetaDAO.findAll();
+            System.out.println("🍽️ Cargando " + todasLasRecetas.size() + " recetas para comandas...");
+            
+            for (Receta receta : todasLasRecetas) {
+                String categoriaBD = receta.getCategoria();
+                if (categoriaBD == null || categoriaBD.trim().isEmpty()) {
+                    continue;
+                }
+                
+                // Convertir categoría de BD a categoría de UI
+                String categoriaUI = categoryMapping.getOrDefault(categoriaBD, categoriaBD);
+                
+                // Calcular precio en euros (BD guarda en centavos)
+                double precio = receta.getPrecio() != null ? receta.getPrecio() / 100.0 : 0.0;
+                
+                // Crear el plato
+                PlatoItem plato = new PlatoItem(receta.getNombre(), precio, categoriaUI);
+                
+                // Añadir a la categoría correspondiente
+                platosPorCategoria.computeIfAbsent(categoriaUI, k -> new ArrayList<>()).add(plato);
+            }
+            
+            System.out.println("\n📊 Comandas: " + platosPorCategoria.size() + " categorías cargadas");
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error cargando recetas: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Inicializa todos los platos con sus precios según la carta (método antiguo de respaldo)
      */
     private void inicializarPlatos() {
         // ENTRANTES
@@ -608,9 +661,19 @@ public class ComandaDetailController implements Initializable {
     private void guardarComanda() {
         if (platosEnComanda.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Comanda vacía");
-            alert.setHeaderText(null);
-            alert.setContentText("No se puede guardar una comanda sin platos.");
+            alert.setTitle("⚠ Comanda vacía");
+            alert.setHeaderText("La comanda no tiene platos");
+            alert.setContentText("Debes añadir al menos un plato antes de guardar la comanda.");
+            
+            // Estilizar
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
             alert.showAndWait();
             return;
         }
@@ -761,11 +824,23 @@ public class ComandaDetailController implements Initializable {
             System.out.println("✅ Comanda guardada en BD con ID: " + comanda.getId_comanda());
             
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Comanda guardada");
-            alert.setHeaderText("Mesa #" + mesaNumber);
-            alert.setContentText("La comanda se ha guardado correctamente en la base de datos.\n\n" +
+            alert.setTitle("✓ Comanda guardada");
+            alert.setHeaderText("Comanda guardada correctamente");
+            alert.setContentText("Mesa #" + mesaNumber + "\n\n" +
                                "Total: " + df.format(total) + " €\n" +
-                               "Platos: " + platosEnComanda.size() + " tipos");
+                               "Platos: " + platosEnComanda.size() + " tipos\n\n" +
+                               "La comanda ha sido guardada en la base de datos.");
+            
+            // Estilizar
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setText("✓ Entendido");
+                    okBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
             alert.showAndWait();
             
             volverALista();
@@ -775,9 +850,19 @@ public class ComandaDetailController implements Initializable {
             e.printStackTrace();
             
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error al guardar comanda");
-            alert.setContentText("No se pudo guardar la comanda en la base de datos:\n" + e.getMessage());
+            alert.setTitle("✗ Error al guardar");
+            alert.setHeaderText("No se pudo guardar la comanda");
+            alert.setContentText("Ha ocurrido un error al guardar en la base de datos:\n\n" + e.getMessage());
+            
+            // Estilizar
+            alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+            javafx.application.Platform.runLater(() -> {
+                Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                if (okBtn != null) {
+                    okBtn.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                }
+            });
+            
             alert.showAndWait();
         }
     }
@@ -789,9 +874,27 @@ public class ComandaDetailController implements Initializable {
     private void eliminarComanda() {
         // Confirmar eliminación
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Eliminar comanda");
+        confirmacion.setTitle("🗑️ Eliminar comanda");
         confirmacion.setHeaderText("¿Eliminar comanda de Mesa #" + mesaNumber + "?");
-        confirmacion.setContentText("Esta acción no se puede deshacer.");
+        confirmacion.setContentText("Esta acción no se puede deshacer. Todos los platos de esta comanda se perderán.");
+        
+        // Estilizar el diálogo de confirmación
+        confirmacion.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+        
+        // Personalizar botones
+        javafx.application.Platform.runLater(() -> {
+            Button okButton = (Button) confirmacion.getDialogPane().lookupButton(ButtonType.OK);
+            if (okButton != null) {
+                okButton.setText("✓ Sí, eliminar");
+                okButton.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+            
+            Button cancelButton = (Button) confirmacion.getDialogPane().lookupButton(ButtonType.CANCEL);
+            if (cancelButton != null) {
+                cancelButton.setText("✗ Cancelar");
+                cancelButton.setStyle("-fx-background-color: #8B7355; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+            }
+        });
         
         confirmacion.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -809,10 +912,23 @@ public class ComandaDetailController implements Initializable {
                 
                 System.out.println("Comanda de Mesa " + mesaNumber + " eliminada");
                 
+                // Mensaje de éxito
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Comanda eliminada");
-                alert.setHeaderText(null);
-                alert.setContentText("La comanda de la Mesa #" + mesaNumber + " ha sido eliminada.");
+                alert.setTitle("✓ Comanda eliminada");
+                alert.setHeaderText("Comanda eliminada correctamente");
+                alert.setContentText("La Mesa #" + mesaNumber + " está ahora libre y disponible para nuevos clientes.");
+                
+                // Estilizar mensaje de éxito
+                alert.getDialogPane().setStyle("-fx-background-color: #FAF8F5; -fx-font-family: 'Segoe UI';");
+                
+                javafx.application.Platform.runLater(() -> {
+                    Button okBtn = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+                    if (okBtn != null) {
+                        okBtn.setText("✓ Entendido");
+                        okBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10px 20px; -fx-background-radius: 5px;");
+                    }
+                });
+                
                 alert.showAndWait();
                 
                 volverALista();
