@@ -59,4 +59,32 @@ public class ComandaDAO {
         session.close();
         return comanda;
     }
+
+    /**
+     * Busca la comanda más reciente de una mesa específica
+     * @param mesa La mesa a buscar
+     * @return La comanda más reciente o null si no hay comandas
+     */
+    public Comanda findByMesa(ilcaminodelamamma.model.Mesa mesa) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<Comanda> comandas = session.createQuery(
+                "SELECT DISTINCT c FROM Comanda c " +
+                "LEFT JOIN FETCH c.mesa m " +
+                "LEFT JOIN FETCH c.usuario u " +
+                "LEFT JOIN FETCH c.detalleComandas d " +
+                "LEFT JOIN FETCH d.receta r " +
+                "WHERE m.id_mesa = :mesaId " +
+                "ORDER BY c.fecha_hora DESC", 
+                Comanda.class
+            )
+            .setParameter("mesaId", mesa.getId_mesa())
+            .setMaxResults(1)
+            .list();
+            
+            return comandas.isEmpty() ? null : comandas.get(0);
+        } finally {
+            session.close();
+        }
+    }
 }

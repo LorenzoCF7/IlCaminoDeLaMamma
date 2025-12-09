@@ -138,6 +138,8 @@
                     </HBox>
                     <Button fx:id="btnEliminar" text="🗑️ Eliminar Comanda" maxWidth="Infinity"
                             styleClass="btn-warning" onAction="#eliminarComanda"/>
+                    <Button fx:id="btnGenerarTicket" text="📄 Generar Ticket PDF" maxWidth="Infinity"
+                            styleClass="btn-primary" onAction="#generarTicketPdf"/>
                 </VBox>
             </VBox>
         </HBox>
