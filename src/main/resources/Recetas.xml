@@ -1,0 +1,1172 @@
+
+<menu>
+  <!-- ===================== ENTRANTES ===================== -->
+
+  <receta>
+    <Nombre_Receta>Bruschetta clásica</Nombre_Receta>
+    <Descripcion_corta>Pan tostado con tomate, ajo y albahaca.</Descripcion_corta>
+    <Tiempo_preparacion>10 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pan rústico</Ingrediente>
+      <Ingrediente>Tomate picado</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Albahaca fresca</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Tostar las rebanadas de pan.</Paso>
+      <Paso>Mezclar tomate, ajo, aceite y sal.</Paso>
+      <Paso>Colocar la mezcla sobre el pan y agregar albahaca.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Ensalada caprese</Nombre_Receta>
+    <Descripcion_corta>Tomate, mozzarella fresca y albahaca.</Descripcion_corta>
+    <Tiempo_preparacion>8 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Albahaca</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Sal y pimienta</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cortar tomate y mozzarella.</Paso>
+      <Paso>Colocar en capas alternadas.</Paso>
+      <Paso>Aliñar con aceite, sal y pimienta.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Carpaccio de ternera</Nombre_Receta>
+    <Descripcion_corta>Láminas finas de ternera con rúcula y parmesano.</Descripcion_corta>
+    <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Ternera laminada</Ingrediente>
+      <Ingrediente>Rúcula</Ingrediente>
+      <Ingrediente>Queso parmesano</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Limón</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Extender las láminas de ternera.</Paso>
+      <Paso>Añadir rúcula y parmesano.</Paso>
+      <Paso>Aliñar con aceite y unas gotas de limón.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Tabla de quesos italianos</Nombre_Receta>
+    <Descripcion_corta>Selección de quesos tradicionales italianos.</Descripcion_corta>
+    <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Gorgonzola</Ingrediente>
+      <Ingrediente>Parmigiano Reggiano</Ingrediente>
+      <Ingrediente>Pecorino</Ingrediente>
+      <Ingrediente>Provolone</Ingrediente>
+      <Ingrediente>Frutos secos</Ingrediente>
+      <Ingrediente>Mermelada o miel</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cortar y disponer los quesos.</Paso>
+      <Paso>Añadir frutos secos y acompañamiento dulce.</Paso>
+      <Paso>Servir a temperatura ambiente.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Sopa minestrone</Nombre_Receta>
+    <Descripcion_corta>Sopa italiana de verduras con pasta.</Descripcion_corta>
+    <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Zanahoria</Ingrediente>
+      <Ingrediente>Apio</Ingrediente>
+      <Ingrediente>Calabacín</Ingrediente>
+      <Ingrediente>Judías blancas</Ingrediente>
+      <Ingrediente>Pasta corta</Ingrediente>
+      <Ingrediente>Caldo de verduras</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Picar y sofreír las verduras.</Paso>
+      <Paso>Añadir caldo y cocer.</Paso>
+      <Paso>Agregar pasta y cocinar hasta que esté lista.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Calamares fritos</Nombre_Receta>
+    <Descripcion_corta>Calamares rebozados y fritos.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Calamares</Ingrediente>
+      <Ingrediente>Harina</Ingrediente>
+      <Ingrediente>Limón</Ingrediente>
+      <Ingrediente>Aceite</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cortar calamares en anillas.</Paso>
+      <Paso>Enharinar y freír en aceite caliente.</Paso>
+      <Paso>Servir con limón.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Provolone al horno</Nombre_Receta>
+    <Descripcion_corta>Queso provolone fundido con especias.</Descripcion_corta>
+    <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Queso provolone</Ingrediente>
+      <Ingrediente>Orégano</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar el provolone en una fuente.</Paso>
+      <Paso>Añadir orégano y un chorrito de aceite.</Paso>
+      <Paso>Hornear hasta fundir.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Tartar de salmón</Nombre_Receta>
+    <Descripcion_corta>Dados de salmón marinado con cítricos.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Salmón fresco</Ingrediente>
+      <Ingrediente>Aguacate</Ingrediente>
+      <Ingrediente>Limón o lima</Ingrediente>
+      <Ingrediente>Salsa de soja</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cortar salmón y aguacate en dados.</Paso>
+      <Paso>Mezclar con limón, soja y aceite.</Paso>
+      <Paso>Reposar unos minutos antes de servir.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Antipasto mixto</Nombre_Receta>
+    <Descripcion_corta>Variedad de embutidos, quesos y encurtidos italianos.</Descripcion_corta>
+    <Tiempo_preparacion>10 minutos</Tiempo_preparacion>
+    <Categoria>Entrante</Categoria>
+    <Ingredientes>
+      <Ingrediente>Embutidos italianos</Ingrediente>
+      <Ingrediente>Quesos variados</Ingrediente>
+      <Ingrediente>Aceitunas</Ingrediente>
+      <Ingrediente>Alcachofas</Ingrediente>
+      <Ingrediente>Pimientos asados</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Disponer todos los ingredientes en una bandeja.</Paso>
+      <Paso>Añadir un toque de aceite de oliva.</Paso>
+      <Paso>Servir frío.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== PASTA ===================== -->
+
+  <receta>
+    <Nombre_Receta>Spaghetti Carbonara</Nombre_Receta>
+    <Descripcion_corta>Spaghetti con salsa de huevo, queso y panceta.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Spaghetti</Ingrediente>
+      <Ingrediente>Panceta</Ingrediente>
+      <Ingrediente>Huevo</Ingrediente>
+      <Ingrediente>Pecorino o parmesano</Ingrediente>
+      <Ingrediente>Pimienta negra</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Hervir los spaghetti.</Paso>
+      <Paso>Dorar la panceta.</Paso>
+      <Paso>Mezclar huevo y queso rallado.</Paso>
+      <Paso>Combinar todo fuera del fuego con pimienta.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Penne Arrabbiata</Nombre_Receta>
+    <Descripcion_corta>Penne con salsa de tomate picante.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Penne</Ingrediente>
+      <Ingrediente>Tomate triturado</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Guindilla</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer la pasta.</Paso>
+      <Paso>Sofreír ajo y guindilla.</Paso>
+      <Paso>Añadir tomate y cocinar.</Paso>
+      <Paso>Mezclar con la pasta.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Tagliatelle al pesto</Nombre_Receta>
+    <Descripcion_corta>Pasta fresca con salsa de albahaca y piñones.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Tagliatelle</Ingrediente>
+      <Ingrediente>Albahaca fresca</Ingrediente>
+      <Ingrediente>Piñones</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Queso parmesano</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer los tagliatelle.</Paso>
+      <Paso>Triturar albahaca, piñones, ajo y aceite.</Paso>
+      <Paso>Agregar el parmesano y mezclar con la pasta.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Lasagna boloñesa</Nombre_Receta>
+    <Descripcion_corta>Capas de pasta con carne boloñesa y bechamel.</Descripcion_corta>
+    <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Láminas de lasaña</Ingrediente>
+      <Ingrediente>Salsa boloñesa</Ingrediente>
+      <Ingrediente>Salsa bechamel</Ingrediente>
+      <Ingrediente>Queso mozzarella</Ingrediente>
+      <Ingrediente>Queso parmesano</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Montar capas de pasta, boloñesa y bechamel.</Paso>
+      <Paso>Añadir queso entre capas.</Paso>
+      <Paso>Hornear hasta gratinar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Ravioli de ricotta y espinacas</Nombre_Receta>
+    <Descripcion_corta>Pasta rellena de ricotta y espinacas con salsa suave.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Ravioli rellenos</Ingrediente>
+      <Ingrediente>Ricotta</Ingrediente>
+      <Ingrediente>Espinacas</Ingrediente>
+      <Ingrediente>Mantequilla</Ingrediente>
+      <Ingrediente>Salvia</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer los ravioli.</Paso>
+      <Paso>Fundir la mantequilla con salvia.</Paso>
+      <Paso>Servir los ravioli con la salsa.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Gnocchi a la sorrentina</Nombre_Receta>
+    <Descripcion_corta>Ñoquis horneados con tomate, albahaca y mozzarella.</Descripcion_corta>
+    <Tiempo_preparacion>22 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Gnocchi</Ingrediente>
+      <Ingrediente>Tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Albahaca</Ingrediente>
+      <Ingrediente>Parmesano</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer los gnocchi.</Paso>
+      <Paso>Mezclarlos con salsa de tomate.</Paso>
+      <Paso>Añadir queso y hornear.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Fettuccine Alfredo</Nombre_Receta>
+    <Descripcion_corta>Pasta cremosa con mantequilla y parmesano.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Fettuccine</Ingrediente>
+      <Ingrediente>Mantequilla</Ingrediente>
+      <Ingrediente>Nata o crema</Ingrediente>
+      <Ingrediente>Queso parmesano</Ingrediente>
+      <Ingrediente>Pimienta</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer la pasta.</Paso>
+      <Paso>Fundir mantequilla y añadir crema.</Paso>
+      <Paso>Agregar parmesano y mezclar con los fettuccine.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Tortellini panna e prosciutto</Nombre_Receta>
+    <Descripcion_corta>Tortellini con salsa de nata y jamón.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Tortellini rellenos</Ingrediente>
+      <Ingrediente>Nata</Ingrediente>
+      <Ingrediente>Jamón cocido</Ingrediente>
+      <Ingrediente>Parmesano</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer los tortellini.</Paso>
+      <Paso>Preparar salsa de nata y jamón.</Paso>
+      <Paso>Mezclar todo y servir con parmesano.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Spaghetti marinara</Nombre_Receta>
+    <Descripcion_corta>Pasta con salsa de tomate, ajo y hierbas.</Descripcion_corta>
+    <Tiempo_preparacion>16 minutos</Tiempo_preparacion>
+    <Categoria>Pasta</Categoria>
+    <Ingredientes>
+      <Ingrediente>Spaghetti</Ingrediente>
+      <Ingrediente>Tomate triturado</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Orégano</Ingrediente>
+      <Ingrediente>Albahaca</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer la pasta.</Paso>
+      <Paso>Sofreír ajo y añadir tomate.</Paso>
+      <Paso>Agregar hierbas y mezclar con los spaghetti.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== PIZZAS ===================== -->
+
+  <receta>
+    <Nombre_Receta>Pizza Margherita</Nombre_Receta>
+    <Descripcion_corta>Pizza clásica con tomate, mozzarella y albahaca.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Masa de pizza</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Albahaca fresca</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Extender la masa y cubrir con tomate.</Paso>
+      <Paso>Añadir mozzarella.</Paso>
+      <Paso>Hornear y agregar albahaca al servir.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Pepperoni</Nombre_Receta>
+    <Descripcion_corta>Pizza con pepperoni crujiente y mozzarella.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Masa de pizza</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Pepperoni</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar salsa de tomate sobre la masa.</Paso>
+      <Paso>Añadir mozzarella y pepperoni.</Paso>
+      <Paso>Hornear hasta dorar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Cuatro quesos</Nombre_Receta>
+    <Descripcion_corta>Pizza con mezcla de cuatro quesos italianos.</Descripcion_corta>
+    <Tiempo_preparacion>17 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Gorgonzola</Ingrediente>
+      <Ingrediente>Parmesano</Ingrediente>
+      <Ingrediente>Provolone</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Extender la masa.</Paso>
+      <Paso>Añadir la mezcla de quesos.</Paso>
+      <Paso>Hornear hasta fundir.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Hawaiana</Nombre_Receta>
+    <Descripcion_corta>Pizza con jamón dulce y piña.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Jamón cocido</Ingrediente>
+      <Ingrediente>Piña</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar salsa y mozzarella.</Paso>
+      <Paso>Añadir jamón y piña.</Paso>
+      <Paso>Hornear hasta dorar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>BBQ Pollo</Nombre_Receta>
+    <Descripcion_corta>Pizza con salsa barbacoa y pollo asado.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Salsa barbacoa</Ingrediente>
+      <Ingrediente>Pollo asado desmenuzado</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Cebolla morada</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cubrir la base con salsa BBQ.</Paso>
+      <Paso>Añadir pollo, mozzarella y cebolla.</Paso>
+      <Paso>Hornear hasta gratinar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Prosciutto e funghi</Nombre_Receta>
+    <Descripcion_corta>Pizza con jamón y champiñones.</Descripcion_corta>
+    <Tiempo_preparacion>16 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Jamón</Ingrediente>
+      <Ingrediente>Champiñones laminados</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar la salsa y el queso.</Paso>
+      <Paso>Añadir jamón y champiñones.</Paso>
+      <Paso>Hornear.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Vegetariana</Nombre_Receta>
+    <Descripcion_corta>Pizza con verduras frescas variadas.</Descripcion_corta>
+    <Tiempo_preparacion>17 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pimiento</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+      <Ingrediente>Calabacín</Ingrediente>
+      <Ingrediente>Champiñones</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar salsa y queso.</Paso>
+      <Paso>Añadir verduras laminadas.</Paso>
+      <Paso>Hornear.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Diavola</Nombre_Receta>
+    <Descripcion_corta>Pizza picante con salami y guindilla.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Salami picante</Ingrediente>
+      <Ingrediente>Guindilla</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Extender salsa y queso.</Paso>
+      <Paso>Añadir salami y guindilla.</Paso>
+      <Paso>Hornear hasta que esté crujiente.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Calzone clásico</Nombre_Receta>
+    <Descripcion_corta>Masa doblada rellena de tomate, queso y jamón.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Pizza</Categoria>
+    <Ingredientes>
+      <Ingrediente>Masa de pizza</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Mozzarella</Ingrediente>
+      <Ingrediente>Jamón cocido</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Rellenar la masa con los ingredientes.</Paso>
+      <Paso>Cerrar y sellar los bordes.</Paso>
+      <Paso>Hornear hasta dorar.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== PESCADOS ===================== -->
+
+  <receta>
+    <Nombre_Receta>Salmón a la plancha con limón</Nombre_Receta>
+    <Descripcion_corta>Salmón cocinado a la plancha con toque cítrico.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Filete de salmón</Ingrediente>
+      <Ingrediente>Limón</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+      <Ingrediente>Pimienta</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Salpimentar el salmón.</Paso>
+      <Paso>Cocinar en plancha caliente.</Paso>
+      <Paso>Agregar unas gotas de limón al servir.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Lubina al horno</Nombre_Receta>
+    <Descripcion_corta>Lubina horneada con hierbas mediterráneas.</Descripcion_corta>
+    <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Lubina entera</Ingrediente>
+      <Ingrediente>Limón</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Perejil</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Rellenar la lubina con ajo y perejil.</Paso>
+      <Paso>Rociar con aceite y limón.</Paso>
+      <Paso>Hornear hasta que esté tierna.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Bacalao con tomate</Nombre_Receta>
+    <Descripcion_corta>Bacalao en salsa casera de tomate.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Bacalao</Ingrediente>
+      <Ingrediente>Tomate triturado</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sofreír cebolla y ajo.</Paso>
+      <Paso>Añadir el tomate y cocinar.</Paso>
+      <Paso>Incorporar el bacalao y cocer unos minutos.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Atún a la parrilla</Nombre_Receta>
+    <Descripcion_corta>Atún marcado a la parrilla con especias.</Descripcion_corta>
+    <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Lomo de atún</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+      <Ingrediente>Pimienta</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Salpimentar el atún.</Paso>
+      <Paso>Marcarlo en parrilla muy caliente.</Paso>
+      <Paso>Servir jugoso al interior.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Merluza en salsa verde</Nombre_Receta>
+    <Descripcion_corta>Clásica merluza con salsa de perejil.</Descripcion_corta>
+    <Tiempo_preparacion>18 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Filetes de merluza</Ingrediente>
+      <Ingrediente>Perejil</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Vino blanco</Ingrediente>
+      <Ingrediente>Aceite</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sofreír ajo y perejil.</Paso>
+      <Paso>Añadir vino blanco.</Paso>
+      <Paso>Cocinar la merluza en la salsa.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Dorada a la espalda</Nombre_Receta>
+    <Descripcion_corta>Dorada abierta y cocinada con ajo y perejil.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Dorada abierta</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Perejil</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar la dorada en bandeja.</Paso>
+      <Paso>Añadir ajo, perejil y aceite.</Paso>
+      <Paso>Hornear hasta dorar ligeramente.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Pulpo a la brasa</Nombre_Receta>
+    <Descripcion_corta>Pulpo cocido y marcado a la brasa.</Descripcion_corta>
+    <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pulpo cocido</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Pimentón</Ingrediente>
+      <Ingrediente>Sal gruesa</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocer previamente el pulpo.</Paso>
+      <Paso>Marcar en brasa o sartén grill.</Paso>
+      <Paso>Aliñar con aceite y pimentón.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Calamares en su tinta</Nombre_Receta>
+    <Descripcion_corta>Calamares cocinados en una salsa de tinta negra.</Descripcion_corta>
+    <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Calamares</Ingrediente>
+      <Ingrediente>Tinta de calamar</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Vino blanco</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sofreír cebolla y ajo.</Paso>
+      <Paso>Añadir calamares y vino blanco.</Paso>
+      <Paso>Incorporar la tinta y cocinar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Fritura mixta de mar</Nombre_Receta>
+    <Descripcion_corta>Selección de mariscos y pescados fritos.</Descripcion_corta>
+    <Tiempo_preparacion>22 minutos</Tiempo_preparacion>
+    <Categoria>Pescado</Categoria>
+    <Ingredientes>
+      <Ingrediente>Calamares</Ingrediente>
+      <Ingrediente>Gambas</Ingrediente>
+      <Ingrediente>Pescaditos</Ingrediente>
+      <Ingrediente>Harina</Ingrediente>
+      <Ingrediente>Aceite</Ingrediente>
+      <Ingrediente>Limón</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Enharinar los mariscos.</Paso>
+      <Paso>Freír en aceite caliente.</Paso>
+      <Paso>Servir con limón.</Paso>
+    </Pasos>
+  </receta>
+
+  <!-- ===================== CARNES ===================== -->
+
+  <receta>
+    <Nombre_Receta>Pollo al ajillo</Nombre_Receta>
+    <Descripcion_corta>Pollo troceado cocinado con ajo y vino.</Descripcion_corta>
+    <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pollo troceado</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Vino blanco</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Dorar el pollo con los ajos.</Paso>
+      <Paso>Añadir vino blanco.</Paso>
+      <Paso>Cocinar hasta reducir la salsa.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Churrasco a la parrilla</Nombre_Receta>
+    <Descripcion_corta>Tiras de churrasco asadas con sal gruesa.</Descripcion_corta>
+    <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Churrasco</Ingrediente>
+      <Ingrediente>Sal gruesa</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sazonar el churrasco con sal gruesa.</Paso>
+      <Paso>Asar en parrilla caliente.</Paso>
+      <Paso>Servir jugoso.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Estofado de ternera</Nombre_Receta>
+    <Descripcion_corta>Clásico estofado de carne con verduras.</Descripcion_corta>
+    <Tiempo_preparacion>60 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Ternera en cubos</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+      <Ingrediente>Zanahoria</Ingrediente>
+      <Ingrediente>Patata</Ingrediente>
+      <Ingrediente>Caldo</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Dorar la carne.</Paso>
+      <Paso>Añadir verduras y caldo.</Paso>
+      <Paso>Cocinar hasta que esté tierno.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Chuletas de cerdo a la plancha</Nombre_Receta>
+    <Descripcion_corta>Chuletas sazonadas y cocinadas a la plancha.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Chuletas de cerdo</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+      <Ingrediente>Pimienta</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sazonar las chuletas.</Paso>
+      <Paso>Dorar en plancha caliente.</Paso>
+      <Paso>Servir calientes.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Albóndigas caseras</Nombre_Receta>
+    <Descripcion_corta>Albóndigas en salsa de tomate.</Descripcion_corta>
+    <Tiempo_preparacion>35 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Carne picada</Ingrediente>
+      <Ingrediente>Pan rallado</Ingrediente>
+      <Ingrediente>Huevo</Ingrediente>
+      <Ingrediente>Tomate triturado</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Formar las albóndigas.</Paso>
+      <Paso>Dorar y retirar.</Paso>
+      <Paso>Cocinar en salsa de tomate.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Cordero asado</Nombre_Receta>
+    <Descripcion_corta>Cordero al horno con ajo y romero.</Descripcion_corta>
+    <Tiempo_preparacion>90 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Paletilla de cordero</Ingrediente>
+      <Ingrediente>Ajo</Ingrediente>
+      <Ingrediente>Romero</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+      <Ingrediente>Aceite</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Preparar el cordero con sal y romero.</Paso>
+      <Paso>Hornear lentamente.</Paso>
+      <Paso>Servir jugoso y dorado.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Lasaña de carne</Nombre_Receta>
+    <Descripcion_corta>Lasaña rellena de carne y tomate.</Descripcion_corta>
+    <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Carne picada</Ingrediente>
+      <Ingrediente>Láminas de lasaña</Ingrediente>
+      <Ingrediente>Tomate frito</Ingrediente>
+      <Ingrediente>Queso rallado</Ingrediente>
+      <Ingrediente>Cebolla</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sofreír la carne con cebolla.</Paso>
+      <Paso>Armar capas de pasta y carne.</Paso>
+      <Paso>Hornear con queso.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Costillas BBQ</Nombre_Receta>
+    <Descripcion_corta>Costillas de cerdo glaseadas con salsa barbacoa.</Descripcion_corta>
+    <Tiempo_preparacion>50 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Costillas de cerdo</Ingrediente>
+      <Ingrediente>Salsa barbacoa</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Sazonar las costillas.</Paso>
+      <Paso>Hornear lentamente.</Paso>
+      <Paso>Glasear con salsa BBQ.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Pechuga de pollo a la plancha</Nombre_Receta>
+    <Descripcion_corta>Pechuga ligera y jugosa a la plancha.</Descripcion_corta>
+    <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
+    <Categoria>Carne</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pechuga de pollo</Ingrediente>
+      <Ingrediente>Sal</Ingrediente>
+      <Ingrediente>Pimienta</Ingrediente>
+      <Ingrediente>Aceite de oliva</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Salpimentar el pollo.</Paso>
+      <Paso>Cocinar en plancha caliente.</Paso>
+      <Paso>Servir con un chorrito de aceite.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== POSTRES ===================== -->
+
+  <receta>
+    <Nombre_Receta>Tiramisú clásico</Nombre_Receta>
+    <Descripcion_corta>Postre italiano con café, cacao y crema mascarpone.</Descripcion_corta>
+    <Tiempo_preparacion>25 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Bizcochos de soletilla</Ingrediente>
+      <Ingrediente>Café</Ingrediente>
+      <Ingrediente>Queso mascarpone</Ingrediente>
+      <Ingrediente>Cacao en polvo</Ingrediente>
+      <Ingrediente>Azúcar</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Preparar la crema de mascarpone.</Paso>
+      <Paso>Remojar los bizcochos en café.</Paso>
+      <Paso>Alternar capas y espolvorear cacao.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Panna cotta con frutos rojos</Nombre_Receta>
+    <Descripcion_corta>Delicada panna cotta acompañada de coulis de frutos rojos.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos + enfriado</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Nata</Ingrediente>
+      <Ingrediente>Azúcar</Ingrediente>
+      <Ingrediente>Vainilla</Ingrediente>
+      <Ingrediente>Gelatina</Ingrediente>
+      <Ingrediente>Frutos rojos</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Calentar la nata con azúcar y vainilla.</Paso>
+      <Paso>Añadir gelatina hidratada.</Paso>
+      <Paso>Verter en moldes y enfriar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Helado artesanal (2 bolas)</Nombre_Receta>
+    <Descripcion_corta>Dos bolas de helado elaborado artesanalmente.</Descripcion_corta>
+    <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Helado artesanal del sabor elegido</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir las bolas de helado en un cuenco.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Brownie con helado</Nombre_Receta>
+    <Descripcion_corta>Brownie de chocolate tibio con bola de helado.</Descripcion_corta>
+    <Tiempo_preparacion>20 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Brownie de chocolate</Ingrediente>
+      <Ingrediente>Helado de vainilla</Ingrediente>
+      <Ingrediente>Chocolate fundido</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Calentar el brownie.</Paso>
+      <Paso>Colocar helado encima.</Paso>
+      <Paso>Añadir chocolate fundido.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Tarta de queso al horno</Nombre_Receta>
+    <Descripcion_corta>Clásica tarta de queso cremosa horneada.</Descripcion_corta>
+    <Tiempo_preparacion>45 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Queso crema</Ingrediente>
+      <Ingrediente>Azúcar</Ingrediente>
+      <Ingrediente>Huevos</Ingrediente>
+      <Ingrediente>Nata</Ingrediente>
+      <Ingrediente>Galletas trituradas</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Preparar la base de galleta.</Paso>
+      <Paso>Mezclar el relleno de queso.</Paso>
+      <Paso>Hornear hasta cuajar.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Coulant de chocolate</Nombre_Receta>
+    <Descripcion_corta>Bizcocho de chocolate con centro fundente.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Chocolate negro</Ingrediente>
+      <Ingrediente>Mantequilla</Ingrediente>
+      <Ingrediente>Huevos</Ingrediente>
+      <Ingrediente>Azúcar</Ingrediente>
+      <Ingrediente>Harina</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Preparar mezcla de chocolate y mantequilla.</Paso>
+      <Paso>Añadir huevos y azúcar.</Paso>
+      <Paso>Hornear poco tiempo para mantener el centro líquido.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Fruta fresca de temporada</Nombre_Receta>
+    <Descripcion_corta>Selección de frutas frescas según temporada.</Descripcion_corta>
+    <Tiempo_preparacion>5 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Frutas variadas</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Lavar, cortar y servir la fruta.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Cannoli sicilianos</Nombre_Receta>
+    <Descripcion_corta>Dulces crujientes rellenos de crema de ricotta.</Descripcion_corta>
+    <Tiempo_preparacion>30 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Tubos de masa frita</Ingrediente>
+      <Ingrediente>Ricotta</Ingrediente>
+      <Ingrediente>Azúcar glas</Ingrediente>
+      <Ingrediente>Chocolate picado</Ingrediente>
+      <Ingrediente>Pistachos</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Mezclar la ricotta con azúcar.</Paso>
+      <Paso>Rellenar los cannoli.</Paso>
+      <Paso>Decorar con pistacho o chocolate.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Gelato affogato</Nombre_Receta>
+    <Descripcion_corta>Helado italiano bañado en espresso caliente.</Descripcion_corta>
+    <Tiempo_preparacion>3 minutos</Tiempo_preparacion>
+    <Categoria>Postre</Categoria>
+    <Ingredientes>
+      <Ingrediente>Helado de vainilla o crema</Ingrediente>
+      <Ingrediente>Café espresso caliente</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Colocar el helado en un vaso.</Paso>
+      <Paso>Verter el café encima justo al servir.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== MENÚ INFANTIL ===================== -->
+
+  <receta>
+    <Nombre_Receta>Mini hamburguesa con patatas, bebida y helado</Nombre_Receta>
+    <Descripcion_corta>Menú infantil completo con hamburguesa, patatas, bebida y helado.</Descripcion_corta>
+    <Tiempo_preparacion>15 minutos</Tiempo_preparacion>
+    <Categoria>Menú Infantil</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pan de hamburguesa pequeño</Ingrediente>
+      <Ingrediente>Carne de hamburguesa mini</Ingrediente>
+      <Ingrediente>Queso</Ingrediente>
+      <Ingrediente>Patatas fritas</Ingrediente>
+      <Ingrediente>Bebida</Ingrediente>
+      <Ingrediente>Helado</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Cocinar la mini hamburguesa.</Paso>
+      <Paso>Montar el bocadillo con pan y queso.</Paso>
+      <Paso>Servir con patatas, bebida y helado.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Pasta corta con tomate, bebida y fruta</Nombre_Receta>
+    <Descripcion_corta>Plato infantil de pasta suave con salsa de tomate acompañado de bebida y fruta.</Descripcion_corta>
+    <Tiempo_preparacion>12 minutos</Tiempo_preparacion>
+    <Categoria>Menú Infantil</Categoria>
+    <Ingredientes>
+      <Ingrediente>Pasta corta</Ingrediente>
+      <Ingrediente>Salsa de tomate</Ingrediente>
+      <Ingrediente>Bebida</Ingrediente>
+      <Ingrediente>Fruta fresca</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Hervir la pasta.</Paso>
+      <Paso>Mezclar con salsa de tomate.</Paso>
+      <Paso>Servir junto con fruta y una bebida.</Paso>
+    </Pasos>
+  </receta>
+
+
+  <!-- ===================== VINOS ===================== -->
+
+  <receta>
+    <Nombre_Receta>Rioja Crianza</Nombre_Receta>
+    <Descripcion_corta>Vino tinto con crianza en barrica, equilibrado y aromático.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva tempranillo</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir a temperatura recomendada (16-18°C).</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Albariño Rías Baixas</Nombre_Receta>
+    <Descripcion_corta>Vino blanco fresco y afrutado típico de Galicia.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva albariño</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir frío entre 8 y 10°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Chianti DOCG</Nombre_Receta>
+    <Descripcion_corta>Vino tinto italiano con carácter y acidez equilibrada.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva sangiovese</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir entre 16 y 18°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Ribera del Duero Crianza</Nombre_Receta>
+    <Descripcion_corta>Vino tinto con cuerpo y notas de madera.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva tempranillo</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir entre 16 y 18°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Godello sobre lías (Valdeorras)</Nombre_Receta>
+    <Descripcion_corta>Vino blanco con cuerpo y notas minerales.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva godello</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir frío entre 9 y 11°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Barolo joven (Piamonte)</Nombre_Receta>
+    <Descripcion_corta>Vino tinto intenso elaborado en Piamonte.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva nebbiolo</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir entre 18 y 20°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Ribera del Duero Reserva</Nombre_Receta>
+    <Descripcion_corta>Vino reserva con gran complejidad aromática.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva tempranillo</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir entre 17 y 18°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Chablis Premier Cru</Nombre_Receta>
+    <Descripcion_corta>Vino blanco francés mineral y elegante.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva chardonnay</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir frío entre 9 y 11°C.</Paso>
+    </Pasos>
+  </receta>
+
+  <receta>
+    <Nombre_Receta>Brunello di Montalcino</Nombre_Receta>
+    <Descripcion_corta>Prestigioso vino tinto italiano de largo envejecimiento.</Descripcion_corta>
+    <Tiempo_preparacion>0 minutos</Tiempo_preparacion>
+    <Categoria>Vino</Categoria>
+    <Ingredientes>
+      <Ingrediente>Uva sangiovese grosso</Ingrediente>
+    </Ingredientes>
+    <Pasos>
+      <Paso>Servir entre 18 y 20°C.</Paso>
+    </Pasos>
+  </receta>
+</menu>
