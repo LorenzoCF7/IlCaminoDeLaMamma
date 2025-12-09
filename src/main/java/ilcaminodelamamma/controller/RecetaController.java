@@ -149,6 +149,9 @@ public class RecetaController {
         
         setupEventHandlers();
         setupSidebarButtons();
+        
+        // Verificar y asignar imagen a receta ID 2 si es necesario
+        verificarYAsignarImagenRecetas();
     }
     
     private void configureTablaRecetas() {
@@ -170,7 +173,9 @@ public class RecetaController {
                 
                 btnEditar.setOnAction(e -> {
                     Receta receta = getTableView().getItems().get(getIndex());
-                    cargarRecetaParaEditar(receta);
+                    // Recargar la receta desde la BD para asegurar que la imagen esté cargada
+                    Receta recetaCompleta = recetaDAO.findById(receta.getId_receta());
+                    cargarRecetaParaEditar(recetaCompleta);
                 });
                 
                 btnEliminar.setOnAction(e -> {
@@ -221,6 +226,9 @@ public class RecetaController {
     }
     
     private void cargarRecetaParaEditar(Receta receta) {
+        System.out.println("🔍 Cargando receta para editar: " + receta.getNombre());
+        System.out.println("🔍 ID de receta: " + receta.getId_receta());
+        
         tfNombre.setText(receta.getNombre());
         taDescripcion.setText(receta.getDescripcion());
         tfTiempo.setText(receta.getTiempo_preparacion().toString());
@@ -252,17 +260,25 @@ public class RecetaController {
         }
         
         // Cargar imagen
+        System.out.println("🔍 Imagen es null: " + (receta.getImagen() == null));
+        if (receta.getImagen() != null) {
+            System.out.println("🔍 Tamaño de imagen: " + receta.getImagen().length + " bytes");
+        }
+        
         if (receta.getImagen() != null && receta.getImagen().length > 0) {
             imagenBytes = receta.getImagen();
             try {
                 Image img = new Image(new ByteArrayInputStream(imagenBytes));
                 imgReceta.setImage(img);
                 lblIconoImagen.setVisible(false);
+                System.out.println("✓ Imagen cargada correctamente");
             } catch (Exception e) {
-                System.out.println("Error cargando imagen: " + e.getMessage());
+                System.out.println("❌ Error cargando imagen: " + e.getMessage());
+                e.printStackTrace();
                 lblIconoImagen.setVisible(true);
             }
         } else {
+            System.out.println("⚠️ No hay imagen para cargar");
             imagenBytes = null;
             imgReceta.setImage(null);
             lblIconoImagen.setVisible(true);
@@ -370,48 +386,65 @@ public class RecetaController {
      */
     private byte[] comprimirImagen(Image imagen) {
         try {
-            // Crear BufferedImage redimensionado si es necesario
+            // Convertir directamente la imagen JavaFX a BufferedImage
+            int width = (int) imagen.getWidth();
+            int height = (int) imagen.getHeight();
+            
+            // Calcular nueva dimensión si es muy grande
             int maxWidth = 800;
             int maxHeight = 600;
             
-            double width = imagen.getWidth();
-            double height = imagen.getHeight();
-            
-            // Calcular nueva dimensión manteniendo proporción
             if (width > maxWidth || height > maxHeight) {
-                double ratio = Math.min(maxWidth / width, maxHeight / height);
-                width *= ratio;
-                height *= ratio;
+                double ratio = Math.min((double) maxWidth / width, (double) maxHeight / height);
+                width = (int) (width * ratio);
+                height = (int) (height * ratio);
             }
             
-            // Redimensionar imagen
-            javafx.scene.image.ImageView tempView = new javafx.scene.image.ImageView(imagen);
-            tempView.setFitWidth(width);
-            tempView.setFitHeight(height);
-            tempView.setPreserveRatio(true);
-            tempView.setSmooth(true);
-            
-            // Crear snapshot
-            javafx.scene.image.WritableImage writableImage = new javafx.scene.image.WritableImage((int)width, (int)height);
-            javafx.scene.SnapshotParameters params = new javafx.scene.SnapshotParameters();
-            params.setFill(javafx.scene.paint.Color.TRANSPARENT);
-            tempView.snapshot(params, writableImage);
-            
             // Convertir a BufferedImage
-            java.awt.image.BufferedImage buffered = javafx.embed.swing.SwingFXUtils.fromFXImage(writableImage, null);
+            java.awt.image.BufferedImage bufferedOriginal = javafx.embed.swing.SwingFXUtils.fromFXImage(imagen, null);
             
-            // Comprimir como JPEG
+            // Redimensionar si es necesario
+            java.awt.image.BufferedImage bufferedFinal;
+            if (width != imagen.getWidth() || height != imagen.getHeight()) {
+                bufferedFinal = new java.awt.image.BufferedImage(width, height, java.awt.image.BufferedImage.TYPE_INT_RGB);
+                java.awt.Graphics2D g2d = bufferedFinal.createGraphics();
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+                g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.drawImage(bufferedOriginal, 0, 0, width, height, null);
+                g2d.dispose();
+            } else {
+                // Si no se redimensiona, convertir a RGB para asegurar compatibilidad con JPEG
+                bufferedFinal = new java.awt.image.BufferedImage(width, height, java.awt.image.BufferedImage.TYPE_INT_RGB);
+                java.awt.Graphics2D g2d = bufferedFinal.createGraphics();
+                g2d.drawImage(bufferedOriginal, 0, 0, null);
+                g2d.dispose();
+            }
+            
+            // Comprimir como JPEG con calidad específica
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-            javax.imageio.ImageIO.write(buffered, "jpg", baos);
-            baos.flush();
+            
+            // Configurar calidad JPEG
+            javax.imageio.ImageWriter jpgWriter = javax.imageio.ImageIO.getImageWritersByFormatName("jpg").next();
+            javax.imageio.ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
+            jpgWriteParam.setCompressionMode(javax.imageio.ImageWriteParam.MODE_EXPLICIT);
+            jpgWriteParam.setCompressionQuality(0.85f); // 85% de calidad
+            
+            jpgWriter.setOutput(javax.imageio.ImageIO.createImageOutputStream(baos));
+            jpgWriter.write(null, new javax.imageio.IIOImage(bufferedFinal, null, null), jpgWriteParam);
+            jpgWriter.dispose();
+            
             byte[] comprimido = baos.toByteArray();
             baos.close();
             
-            System.out.println("✓ Imagen comprimida: " + comprimido.length + " bytes");
+            System.out.println("✓ Imagen comprimida: " + comprimido.length + " bytes (original: " + 
+                (int)imagen.getWidth() + "x" + (int)imagen.getHeight() + 
+                " -> final: " + width + "x" + height + ")");
             return comprimido;
             
         } catch (Exception e) {
-            System.err.println("Error comprimiendo imagen: " + e.getMessage());
+            System.err.println("❌ Error comprimiendo imagen: " + e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -477,6 +510,11 @@ public class RecetaController {
             if (recetaActual != null) {
                 byte[] imagenAGuardar = (imagenBytes != null && imagenBytes.length <= 1048576) ? imagenBytes : recetaActual.getImagen();
                 
+                System.out.println("💾 Guardando receta actualizada:");
+                System.out.println("  - imagenBytes: " + (imagenBytes != null ? imagenBytes.length + " bytes" : "null"));
+                System.out.println("  - imagen actual en BD: " + (recetaActual.getImagen() != null ? recetaActual.getImagen().length + " bytes" : "null"));
+                System.out.println("  - imagenAGuardar: " + (imagenAGuardar != null ? imagenAGuardar.length + " bytes" : "null"));
+                
                 recetaActual.setNombre(nombre);
                 recetaActual.setDescripcion(descripcion);
                 recetaActual.setTiempo_preparacion(tiempo);
@@ -504,6 +542,7 @@ public class RecetaController {
                 }
                 
                 recetaDAO.update(recetaActual);
+                System.out.println("✓ Receta actualizada en BD");
                 mostrarAlerta("Éxito", "Receta actualizada correctamente", Alert.AlertType.INFORMATION);
                 recetaActual = null;
                 btnAgregar.setText("Agregar Receta");
@@ -511,9 +550,15 @@ public class RecetaController {
                 // Crear nueva receta
                 byte[] imagenAGuardar = (imagenBytes != null && imagenBytes.length <= 1048576) ? imagenBytes : null;
                 
+                System.out.println("💾 Creando nueva receta:");
+                System.out.println("  - imagenBytes: " + (imagenBytes != null ? imagenBytes.length + " bytes" : "null"));
+                System.out.println("  - imagenAGuardar: " + (imagenAGuardar != null ? imagenAGuardar.length + " bytes" : "null"));
+                
                 Receta nuevaReceta = new Receta(nombre, descripcion, 0, tiempo, true, imagenAGuardar, categoria);
                 nuevaReceta.setPasos(pasos);
                 recetaDAO.create(nuevaReceta);
+                
+                System.out.println("✓ Nueva receta creada con ID: " + nuevaReceta.getId_receta());
                 
                 // Guardar las relaciones con ingredientes
                 for (RecetaIngrediente riTemp : ingredientesSeleccionados) {
@@ -765,6 +810,71 @@ public class RecetaController {
             System.out.println("Sesión cerrada correctamente");
         } catch (Exception e) {
             System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Verifica si la receta con ID 2 tiene imagen, y si no, le asigna la imagen de ensalada caprese
+     */
+    private void verificarYAsignarImagenRecetas() {
+        // Asignar imagen a la receta ID 2 si no tiene
+        asignarImagenSiNoTiene(2, "/img/entrantes/ensalada-caprese-receta-original-italiana.jpg");
+    }
+    
+    /**
+     * Asigna una imagen a una receta específica si no tiene imagen o está vacía
+     * @param idReceta El ID de la receta a la que se le asignará la imagen
+     * @param rutaImagen La ruta de la imagen en los recursos (ej: "/img/entrantes/imagen.jpg")
+     */
+    private void asignarImagenSiNoTiene(Integer idReceta, String rutaImagen) {
+        try {
+            Receta receta = recetaDAO.findById(idReceta);
+            
+            if (receta != null) {
+                System.out.println("📋 Verificando receta ID " + idReceta + ": " + receta.getNombre());
+                
+                // Verificar si no tiene imagen o tiene imagen vacía
+                if (receta.getImagen() == null || receta.getImagen().length == 0) {
+                    System.out.println("⚠️ Receta ID " + idReceta + " no tiene imagen. Asignando imagen desde: " + rutaImagen);
+                    
+                    // Cargar la imagen desde los recursos
+                    java.io.InputStream inputStream = getClass().getResourceAsStream(rutaImagen);
+                    
+                    if (inputStream != null) {
+                        // Leer los bytes de la imagen
+                        byte[] imagenBytes = inputStream.readAllBytes();
+                        inputStream.close();
+                        
+                        System.out.println("📷 Imagen cargada: " + imagenBytes.length + " bytes");
+                        
+                        // Comprimir la imagen si es necesario
+                        Image img = new Image(new java.io.ByteArrayInputStream(imagenBytes));
+                        byte[] imagenComprimida = comprimirImagen(img);
+                        
+                        if (imagenComprimida != null && imagenComprimida.length > 0) {
+                            // Asignar la imagen a la receta
+                            receta.setImagen(imagenComprimida);
+                            recetaDAO.update(receta);
+                            
+                            System.out.println("✅ Imagen asignada correctamente a receta ID " + idReceta);
+                            
+                            // Recargar la tabla para mostrar los cambios
+                            cargarRecetas();
+                        } else {
+                            System.err.println("❌ Error: La imagen comprimida está vacía");
+                        }
+                    } else {
+                        System.err.println("❌ No se pudo encontrar la imagen en: " + rutaImagen);
+                    }
+                } else {
+                    System.out.println("✓ Receta ID " + idReceta + " ya tiene imagen (" + receta.getImagen().length + " bytes)");
+                }
+            } else {
+                System.out.println("⚠️ No se encontró la receta con ID " + idReceta);
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Error verificando/asignando imagen a receta ID " + idReceta + ": " + e.getMessage());
             e.printStackTrace();
         }
     }

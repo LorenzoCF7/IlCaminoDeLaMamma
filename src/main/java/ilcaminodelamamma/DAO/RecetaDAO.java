@@ -58,10 +58,13 @@ public class RecetaDAO {
     public Receta update(Receta receta) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
-        session.merge(receta);
+        System.out.println("💾 Actualizando receta ID " + receta.getId_receta() + " en BD");
+        System.out.println("   - Imagen: " + (receta.getImagen() != null ? receta.getImagen().length + " bytes" : "null"));
+        Receta merged = session.merge(receta);
         tx.commit();
+        System.out.println("✅ Receta actualizada y commit realizado");
         session.close();
-        return receta;
+        return merged;
     }
 
     public boolean deleteById(Integer id) {
