@@ -28,6 +28,11 @@ module ilcaminodelamamma {
     // BCrypt para encriptación de contraseñas
     requires jbcrypt;
 
+    // iText para generación de PDFs
+    requires kernel;
+    requires layout;
+    requires io;
+
     // Exports & Opens
     opens ilcaminodelamamma to javafx.fxml;
     opens ilcaminodelamamma.controller to javafx.fxml;

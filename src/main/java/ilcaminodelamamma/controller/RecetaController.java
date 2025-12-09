@@ -58,6 +58,9 @@ public class RecetaController {
     private TextField tfTiempo;
     
     @FXML
+    private TextField tfPrecio;
+    
+    @FXML
     private ComboBox<String> cbCategoria;
     
     @FXML
@@ -224,6 +227,11 @@ public class RecetaController {
         tfNombre.setText(receta.getNombre());
         taDescripcion.setText(receta.getDescripcion());
         tfTiempo.setText(receta.getTiempo_preparacion().toString());
+        
+        // Convertir precio de centimos a euros para mostrar
+        double precioEuros = receta.getPrecio() != null ? receta.getPrecio() / 100.0 : 0.0;
+        tfPrecio.setText(String.format("%.2f", precioEuros));
+        
         cbCategoria.setValue(receta.getCategoria());
         taPasos.setText(receta.getPasos() != null ? receta.getPasos() : "");
         
@@ -462,16 +470,21 @@ public class RecetaController {
         String nombre = tfNombre.getText().trim();
         String descripcion = taDescripcion.getText().trim();
         String tiempoStr = tfTiempo.getText().trim();
+        String precioStr = tfPrecio.getText().trim();
         String categoria = cbCategoria.getValue();
         String pasos = taPasos.getText().trim();
         
-        if (nombre.isEmpty() || descripcion.isEmpty() || tiempoStr.isEmpty() || categoria == null || pasos.isEmpty() || ingredientesSeleccionados.isEmpty()) {
+        if (nombre.isEmpty() || descripcion.isEmpty() || tiempoStr.isEmpty() || precioStr.isEmpty() || categoria == null || pasos.isEmpty() || ingredientesSeleccionados.isEmpty()) {
             mostrarAlerta("Error", "Por favor completa todos los campos obligatorios", Alert.AlertType.ERROR);
             return;
         }
         
         try {
             Integer tiempo = Integer.parseInt(tiempoStr);
+            
+            // Convertir precio de euros a centimos (multiplicar por 100)
+            double precioEuros = Double.parseDouble(precioStr.replace(",", "."));
+            Integer precioCentimos = (int) Math.round(precioEuros * 100);
             
             // Si es edición (recetaActual != null)
             if (recetaActual != null) {
@@ -480,6 +493,7 @@ public class RecetaController {
                 recetaActual.setNombre(nombre);
                 recetaActual.setDescripcion(descripcion);
                 recetaActual.setTiempo_preparacion(tiempo);
+                recetaActual.setPrecio(precioCentimos);
                 recetaActual.setCategoria(categoria);
                 recetaActual.setPasos(pasos);
                 recetaActual.setImagen(imagenAGuardar);
@@ -511,7 +525,7 @@ public class RecetaController {
                 // Crear nueva receta
                 byte[] imagenAGuardar = (imagenBytes != null && imagenBytes.length <= 1048576) ? imagenBytes : null;
                 
-                Receta nuevaReceta = new Receta(nombre, descripcion, 0, tiempo, true, imagenAGuardar, categoria);
+                Receta nuevaReceta = new Receta(nombre, descripcion, precioCentimos, tiempo, true, imagenAGuardar, categoria);
                 nuevaReceta.setPasos(pasos);
                 recetaDAO.create(nuevaReceta);
                 
@@ -543,7 +557,7 @@ public class RecetaController {
             limpiarFormulario();
             
         } catch (NumberFormatException e) {
-            mostrarAlerta("Error", "Tiempo de preparación inválido", Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "Tiempo de preparación o precio inválido. El precio debe ser un número (Ej: 12.50)", Alert.AlertType.ERROR);
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo guardar la receta: " + e.getMessage(), Alert.AlertType.ERROR);
         }
@@ -567,6 +581,7 @@ public class RecetaController {
         tfNombre.clear();
         taDescripcion.clear();
         tfTiempo.clear();
+        tfPrecio.clear();
         cbCategoria.setValue(null);
         taPasos.clear();
         ingredientesLista.clear();

@@ -145,6 +145,11 @@
                             </HBox>
 
                             <HBox spacing="15" alignment="CENTER_LEFT">
+                                <Label text="Precio (€):" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
+                                <TextField fx:id="tfPrecio" promptText="Ejemplo: 12.50" style="-fx-background-color: white; -fx-background-radius: 5; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" />
+                            </HBox>
+
+                            <HBox spacing="15" alignment="CENTER_LEFT">
                                 <Label text="Categoría:" style="-fx-font-size: 13; -fx-text-fill: black;" minWidth="150" />
                                 <ComboBox fx:id="cbCategoria" promptText="∨" style="-fx-background-color: white; -fx-background-radius: 5;" HBox.hgrow="ALWAYS" />
                             </HBox>

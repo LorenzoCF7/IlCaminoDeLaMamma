@@ -137,88 +137,94 @@ INSERT INTO Ingrediente (nombre, unidad_medida, cantidad_stock) VALUES
 ('Vino tinto', 'ml', 2000);
 
 -- ---- RECETAS ----
--- Entrantes
+-- ENTRANTES (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Bruschetta al pomodoro', 'Pan tostado con tomate, ajo y aceite de oliva.', 5.00, 10, 'Entrante'),
-('Ensalada caprese', 'Tomate, mozzarella y albahaca con aceite de oliva.', 6.50, 10, 'Entrante');
+('Bruschetta clásica', 'Pan tostado con tomate, ajo y albahaca.', 650, 10, 'Entrante'),
+('Ensalada caprese', 'Tomate, mozzarella fresca y albahaca.', 890, 8, 'Entrante'),
+('Carpaccio de ternera', 'Láminas finas de ternera con rúcula y parmesano.', 1200, 12, 'Entrante'),
+('Tabla de quesos italianos', 'Selección de quesos tradicionales italianos.', 1450, 5, 'Entrante'),
+('Sopa minestrone', 'Sopa italiana de verduras con pasta.', 720, 35, 'Entrante'),
+('Calamares fritos', 'Calamares rebozados y fritos.', 1180, 20, 'Entrante'),
+('Provolone al horno', 'Queso provolone fundido con especias.', 950, 12, 'Entrante'),
+('Tartar de salmón', 'Dados de salmón marinado con cítricos.', 1390, 15, 'Entrante'),
+('Antipasto mixto', 'Variedad de embutidos, quesos y encurtidos italianos.', 1500, 10, 'Entrante');
 
--- Pastas
+-- PASTA (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Spaghetti al pomodoro', 'Pasta italiana con salsa de tomate natural.', 9.50, 20, 'Pasta'),
-('Penne al pesto', 'Pasta con salsa de albahaca, piñones y parmesano.', 10.00, 25, 'Pasta'),
-('Lasagna alla bolognese', 'Láminas de pasta con carne y bechamel.', 12.00, 35, 'Pasta');
+('Spaghetti Carbonara', 'Spaghetti con salsa de huevo, queso y panceta.', 1290, 20, 'Pasta'),
+('Penne Arrabbiata', 'Pasta corta con salsa de tomate picante.', 1150, 15, 'Pasta'),
+('Tagliatelle al pesto', 'Pasta con salsa de albahaca, piñones y parmesano.', 1320, 18, 'Pasta'),
+('Lasagna boloñesa', 'Láminas de pasta con carne y bechamel.', 1450, 45, 'Pasta'),
+('Ravioli de ricotta y espinacas', 'Raviolis rellenos con queso ricotta y espinacas.', 1380, 25, 'Pasta'),
+('Gnocchi a la sorrentina', 'Ñoquis de patata con salsa de tomate y mozzarella.', 1200, 30, 'Pasta'),
+('Fettuccine Alfredo', 'Pasta con salsa cremosa de mantequilla y parmesano.', 1390, 20, 'Pasta'),
+('Tortellini panna e prosciutto', 'Tortellini con nata y jamón.', 1400, 22, 'Pasta'),
+('Spaghetti marinara', 'Spaghetti con mariscos en salsa de tomate.', 1530, 30, 'Pasta');
 
--- Segundos platos
+-- PIZZA (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Pollo alla cacciatora', 'Pollo guisado con vino tinto y verduras.', 13.00, 40, 'Segundo'),
-('Bistecca alla fiorentina', 'Corte de carne de res a la parrilla.', 18.00, 30, 'Segundo');
+('Margherita', 'Tomate, mozzarella y albahaca fresca.', 900, 15, 'Pizza'),
+('Pepperoni', 'Tomate, mozzarella y salami picante.', 1150, 15, 'Pizza'),
+('Cuatro quesos', 'Mozzarella, gorgonzola, parmesano y fontina.', 1250, 15, 'Pizza'),
+('Hawaiana', 'Tomate, mozzarella, jamón y piña.', 1100, 15, 'Pizza'),
+('BBQ Pollo', 'Pollo marinado en salsa BBQ con cebolla y mozzarella.', 1320, 18, 'Pizza'),
+('Prosciutto e funghi', 'Jamón cocido, champiñones y mozzarella.', 1280, 15, 'Pizza'),
+('Vegetariana', 'Verduras asadas de temporada con mozzarella.', 1190, 15, 'Pizza'),
+('Diavola', 'Tomate, mozzarella y salami picante extra.', 1220, 15, 'Pizza'),
+('Calzone clásico', 'Pizza cerrada rellena de jamón, mozzarella y champiñones.', 1350, 20, 'Pizza');
 
--- Postres
+-- PESCADO (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Tiramisù', 'Postre italiano con café, cacao y mascarpone.', 6.00, 15, 'Postre'),
-('Panna cotta', 'Postre de nata con salsa de frutas.', 5.50, 20, 'Postre');
+('Salmón a la plancha con limón', 'Filete de salmón con aceite de oliva y limón.', 1790, 20, 'Pescado'),
+('Lubina al horno', 'Lubina entera al horno con hierbas aromáticas.', 1950, 35, 'Pescado'),
+('Bacalao con tomate', 'Bacalao en salsa de tomate casera.', 1680, 30, 'Pescado'),
+('Atún a la parrilla', 'Atún fresco a la parrilla con especias.', 2100, 15, 'Pescado'),
+('Merluza en salsa verde', 'Merluza con salsa de perejil y ajo.', 1590, 25, 'Pescado'),
+('Dorada a la espalda', 'Dorada asada con aceite y limón.', 1820, 30, 'Pescado'),
+('Pulpo a la brasa', 'Pulpo tierno a la brasa con pimentón.', 2250, 40, 'Pescado'),
+('Calamares en su tinta', 'Calamares guisados en su propia tinta.', 1580, 35, 'Pescado'),
+('Fritura mixta de mar', 'Selección de pescado y marisco frito.', 1750, 20, 'Pescado');
 
--- Bebidas
+-- CARNE (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Vino tinto', 'Copa de vino tinto italiano.', 3.50, 1, 'Bebida'),
-('Café espresso', 'Café italiano fuerte y corto.', 2.00, 2, 'Bebida');
+('Pollo a la parrilla con hierbas', 'Pechuga de pollo con hierbas mediterráneas.', 1450, 25, 'Carne'),
+('Solomillo de cerdo a la mostaza', 'Solomillo en salsa de mostaza y miel.', 1690, 30, 'Carne'),
+('Entrecot de ternera', 'Corte premium de ternera a la parrilla.', 2200, 20, 'Carne'),
+('Costillas BBQ', 'Costillas de cerdo con salsa barbacoa.', 1850, 45, 'Carne'),
+('Carrillera de ternera', 'Carrillera guisada en vino tinto.', 1920, 120, 'Carne'),
+('Albóndigas en salsa casera', 'Albóndigas de ternera en salsa de tomate.', 1350, 30, 'Carne'),
+('Filete de pollo empanado', 'Pechuga de pollo empanada y frita.', 1280, 20, 'Carne'),
+('Hamburguesa gourmet', 'Hamburguesa de carne premium con guarnición.', 1590, 15, 'Carne'),
+('Cordero asado', 'Pierna de cordero al horno con patatas.', 2300, 90, 'Carne');
 
--- ---- RECETA_INGREDIENTE ----
--- ENTRANTES
+-- POSTRES (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Bruschetta al pomodoro', 'Pan tostado con tomate, ajo, aceite de oliva y albahaca fresca.', 5.00, 10, 'Entrante'),
-('Ensalada caprese', 'Rodajas de tomate, mozzarella y albahaca con aceite de oliva virgen extra.', 6.50, 10, 'Entrante'),
-('Carpaccio di manzo', 'Finísimas láminas de ternera con parmesano, rúcula y limón.', 8.50, 15, 'Entrante'),
-('Antipasto misto', 'Selección italiana de embutidos, quesos y verduras marinadas.', 9.00, 15, 'Entrante');
+('Tiramisú clásico', 'Clásico italiano con café, mascarpone y cacao.', 650, 15, 'Postre'),
+('Panna cotta con frutos rojos', 'Postre de nata cocida con coulis de frutas.', 680, 20, 'Postre'),
+('Helado artesanal (2 bolas)', 'Helado artesanal de vainilla o pistacho.', 480, 5, 'Postre'),
+('Brownie con helado', 'Brownie de chocolate caliente con helado de vainilla.', 690, 10, 'Postre'),
+('Tarta de queso al horno', 'Cheesecake cremoso con base de galleta.', 670, 60, 'Postre'),
+('Coulant de chocolate', 'Bizcocho con centro de chocolate fundido.', 720, 12, 'Postre'),
+('Fruta fresca de temporada', 'Selección de frutas frescas de temporada.', 450, 5, 'Postre'),
+('Cannoli sicilianos', 'Dulce crujiente relleno de ricotta y frutas confitadas.', 580, 20, 'Postre'),
+('Gelato affogato', 'Helado de vainilla con espresso caliente.', 590, 3, 'Postre');
 
--- CARNES
+-- VINOS (9 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Pollo alla cacciatora', 'Pollo guisado con vino tinto, tomate, cebolla y hierbas.', 13.00, 40, 'Carne'),
-('Saltimbocca alla romana', 'Ternera con jamón y salvia en salsa de vino blanco.', 16.50, 35, 'Carne'),
-('Scaloppine al limone', 'Finas láminas de ternera en salsa de limón y mantequilla.', 15.00, 25, 'Carne'),
-('Filetto al pepe verde', 'Solomillo de ternera con salsa cremosa de pimienta verde.', 18.50, 35, 'Carne');
+('Rioja Crianza', 'Vino tinto Rioja con crianza en barrica.', 1800, 1, 'Vino'),
+('Albariño Rías Baixas', 'Vino blanco gallego aromático y fresco.', 1780, 1, 'Vino'),
+('Chianti DOCG', 'Vino tinto italiano de la Toscana.', 1890, 1, 'Vino'),
+('Ribera del Duero Crianza', 'Vino tinto con denominación de origen Ribera del Duero.', 2600, 1, 'Vino'),
+('Godello sobre lías (Valdeorras)', 'Vino blanco con crianza sobre lías.', 2450, 1, 'Vino'),
+('Barolo joven (Piamonte)', 'Vino tinto italiano premium del Piamonte.', 3200, 1, 'Vino'),
+('Ribera del Duero Reserva', 'Vino tinto reserva de Ribera del Duero.', 4500, 1, 'Vino'),
+('Chablis Premier Cru', 'Vino blanco francés de Borgoña.', 4800, 1, 'Vino'),
+('Brunello di Montalcino', 'Vino tinto italiano de alta gama.', 6200, 1, 'Vino');
 
--- PESCADOS
+-- MENÚ INFANTIL (2 recetas) - Precios en céntimos
 INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Branzino al forno', 'Lubina al horno con limón, vino blanco y hierbas aromáticas.', 17.00, 35, 'Pescado'),
-('Salmone alla griglia', 'Salmón a la parrilla con aceite de oliva y verduras asadas.', 16.50, 25, 'Pescado'),
-('Calamari ripieni', 'Calamares rellenos de pan rallado, ajo y perejil.', 15.50, 30, 'Pescado'),
-('Fritto misto di mare', 'Selección de mariscos y pescado frito al estilo italiano.', 18.00, 20, 'Pescado');
-
--- PASTAS
-INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Spaghetti alla carbonara', 'Pasta con salsa de huevo, guanciale, queso pecorino y pimienta.', 11.00, 20, 'Pasta'),
-('Penne al pesto', 'Pasta corta con salsa de albahaca, piñones y parmesano.', 10.00, 25, 'Pasta'),
-('Lasagna alla bolognese', 'Láminas de pasta con carne, tomate y bechamel gratinada.', 12.50, 35, 'Pasta'),
-('Ravioli ai funghi', 'Raviolis rellenos de setas con salsa cremosa de trufa.', 13.00, 30, 'Pasta');
-
--- PIZZAS
-INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Pizza Margherita', 'Tomate, mozzarella y albahaca fresca.', 8.50, 15, 'Pizza'),
-('Pizza Diavola', 'Tomate, mozzarella y salami picante.', 9.50, 15, 'Pizza'),
-('Pizza Quattro Formaggi', 'Mozzarella, gorgonzola, parmesano y fontina.', 10.50, 15, 'Pizza'),
-('Pizza Prosciutto e Funghi', 'Jamón cocido, champiñones y mozzarella.', 9.80, 15, 'Pizza');
-
--- MENÚ INFANTIL
-INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Mini pizza margherita', 'Pizza pequeña con tomate y mozzarella.', 6.00, 10, 'Menú infantil'),
-('Spaghetti al pomodoro', 'Pasta con salsa de tomate suave y parmesano rallado.', 6.50, 10, 'Menú infantil'),
-('Nuggets con patatas', 'Porción de pollo empanado con patatas fritas.', 7.00, 10, 'Menú infantil'),
-('Mini lasagna', 'Porción infantil de lasaña boloñesa casera.', 7.50, 15, 'Menú infantil');
-
--- POSTRES
-INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Tiramisù', 'Clásico italiano con café, mascarpone y cacao.', 6.00, 15, 'Postre'),
-('Panna cotta', 'Postre de nata cocida con coulis de frutas del bosque.', 5.50, 20, 'Postre'),
-('Cannoli siciliani', 'Dulce crujiente relleno de ricotta y frutas confitadas.', 6.50, 25, 'Postre'),
-('Gelato artigianale', 'Helado artesanal de vainilla o pistacho.', 4.50, 10, 'Postre');
-
--- BEBIDAS
-INSERT INTO Receta (nombre, descripcion, precio, tiempo_preparacion, categoria) VALUES
-('Vino tinto della casa', 'Copa de vino tinto italiano de la casa.', 3.50, 1, 'Bebida'),
-('Cerveza italiana', 'Cerveza artesanal italiana, 33 cl.', 3.00, 1, 'Bebida'),
-('Café espresso', 'Café italiano intenso y aromático.', 2.00, 2, 'Bebida'),
-('Agua mineral', 'Botella de agua sin gas 50 cl.', 1.50, 1, 'Bebida');
+('Mini hamburguesa + patatas + bebida + helado', 'Menú completo infantil con hamburguesa.', 990, 15, 'Menu Infantil'),
+('Pasta corta con tomate + bebida + fruta', 'Menú infantil con pasta y postre saludable.', 850, 12, 'Menu Infantil');
 
 -- ---- COMANDAS ----
 INSERT INTO Comanda (id_mesa, id_usuario, total) VALUES
