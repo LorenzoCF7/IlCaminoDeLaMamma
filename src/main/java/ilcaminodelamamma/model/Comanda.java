@@ -24,6 +24,10 @@ public class Comanda {
     
     private LocalDateTime fecha_hora;
     private Float total;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_comanda", nullable = false)
+    private EstadoComanda estadoComanda;
 
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<DetalleComanda> detalleComandas = new HashSet<>();
@@ -35,6 +39,15 @@ public class Comanda {
         this.mesa = mesa;
         this.fecha_hora = fecha_hora;
         this.total = total;
+        this.estadoComanda = EstadoComanda.POR_HACER;
+    }
+    
+    public Comanda(Usuario usuario, Mesa mesa, LocalDateTime fecha_hora, Float total, EstadoComanda estadoComanda) {
+        this.usuario = usuario;
+        this.mesa = mesa;
+        this.fecha_hora = fecha_hora;
+        this.total = total;
+        this.estadoComanda = estadoComanda;
     }
     
     public Integer getId_comanda() {
@@ -75,6 +88,14 @@ public class Comanda {
     
     public void setTotal(Float total) {
         this.total = total;
+    }
+    
+    public EstadoComanda getEstadoComanda() {
+        return estadoComanda;
+    }
+    
+    public void setEstadoComanda(EstadoComanda estadoComanda) {
+        this.estadoComanda = estadoComanda;
     }
     
     public Set<DetalleComanda> getDetalleComandas() {
