@@ -728,8 +728,6 @@ public class ComandaDetailController implements Initializable {
             comanda.setMesa(mesa);
             comanda.setFecha_hora(LocalDateTime.now());
             comanda.setTotal((float) total);
-            // Establecer el estado por defecto a "POR_HACER"
-            comanda.setEstadoComanda(ilcaminodelamamma.model.EstadoComanda.POR_HACER);
             
             // Crear los detalles de la comanda
             RecetaDAO recetaDAO = new RecetaDAO();

@@ -12,8 +12,6 @@ import java.util.ResourceBundle;
 import ilcaminodelamamma.DAO.ComandaDAO;
 import ilcaminodelamamma.DAO.RecetaDAO;
 import ilcaminodelamamma.model.Comanda;
-import ilcaminodelamamma.model.DetalleComanda;
-import ilcaminodelamamma.model.EstadoComanda;
 import ilcaminodelamamma.model.Receta;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -24,7 +22,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -32,8 +29,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -59,17 +54,6 @@ public class ChefViewController implements Initializable {
     @FXML private Button btnIngredientes;
     @FXML private Button btnLibros;
     @FXML private Button btnComandas;
-    
-    // Elementos de la sección de comandas
-    @FXML private VBox comandasSection;
-    @FXML private ComboBox<String> estadoComboBox;
-    @FXML private VBox comandasListPanel;
-    @FXML private VBox platosPanel;
-    @FXML private Label mesaLabel;
-    @FXML private Label horaLabel;
-    @FXML private Label totalLabel;
-    @FXML private Button btnCambiarEstado;
-    @FXML private Button btnVerDetalles;
 
     // Estado actual de la vista
     private String currentView = "categories";
@@ -144,12 +128,6 @@ public class ChefViewController implements Initializable {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 buscarRecetas(newValue);
             });
-        }
-        
-        // Inicializar ComboBox de estados
-        if (estadoComboBox != null) {
-            estadoComboBox.getItems().addAll("Todas", "Por hacer", "En preparación", "Preparado");
-            estadoComboBox.getSelectionModel().selectFirst();
         }
     }
 
@@ -679,12 +657,14 @@ public class ChefViewController implements Initializable {
         String name;
         String imageName;
         String description;
+        double price;
         byte[] imageBytes;
 
         DishItem(String name, String imageName, String description, double price) {
             this.name = name;
             this.imageName = imageName;
             this.description = description;
+            this.price = price;
             this.imageBytes = null;
         }
         
@@ -692,6 +672,7 @@ public class ChefViewController implements Initializable {
             this.name = name;
             this.imageName = imageName;
             this.description = description;
+            this.price = price;
             this.imageBytes = imageBytes;
         }
     }
@@ -836,7 +817,6 @@ public class ChefViewController implements Initializable {
      */
     private void mostrarComandas() {
         try {
-            currentView = "comandas";
             System.out.println("=== MOSTRANDO COMANDAS ACTIVAS ===");
             
             // Limpiar el grid actual
@@ -867,7 +847,6 @@ public class ChefViewController implements Initializable {
                 Comanda c = comandas.get(i);
                 System.out.println("  Comanda " + (i+1) + ": ID=" + c.getId_comanda() + 
                                  ", Mesa=" + (c.getMesa() != null ? c.getMesa().getId_mesa() : "null") +
-                                 ", Estado=" + (c.getEstadoComanda() != null ? c.getEstadoComanda().getDescripcion() : "null") +
                                  ", Detalles=" + (c.getDetalleComandas() != null ? c.getDetalleComandas().size() : "null"));
             }
             
@@ -908,7 +887,7 @@ public class ChefViewController implements Initializable {
     }
     
     /**
-     * Crea una tarjeta visual para mostrar una comanda con estado
+     * Crea una tarjeta visual para mostrar una comanda
      */
     private VBox createComandaCard(Comanda comanda) {
         VBox card = new VBox(10);
@@ -917,46 +896,18 @@ public class ChefViewController implements Initializable {
         card.setMinWidth(180);
         card.setPrefWidth(200);
         card.setMaxWidth(250);
-        card.setPrefHeight(200);
+        card.setPrefHeight(180);
         card.setPadding(new Insets(15));
-        
-        // Determinar color de fondo según el estado
-        final String bgColor;
-        final String borderColor;
-        if (comanda.getEstadoComanda() != null) {
-            switch (comanda.getEstadoComanda()) {
-                case POR_HACER:
-                    bgColor = "#ffe6e6";
-                    borderColor = "#dc3545";
-                    break;
-                case EN_PREPARACION:
-                    bgColor = "#fff3cd";
-                    borderColor = "#ffc107";
-                    break;
-                case PREPARADO:
-                    bgColor = "#e6ffe6";
-                    borderColor = "#28a745";
-                    break;
-                default:
-                    bgColor = "#ffffff";
-                    borderColor = "#D4A574";
-            }
-        } else {
-            bgColor = "#ffffff";
-            borderColor = "#D4A574";
-        }
-        
-        card.setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10; -fx-border-color: " + borderColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
         
         // Número de mesa
         Label lblMesa = new Label("Mesa " + (comanda.getMesa() != null ? comanda.getMesa().getId_mesa() : "N/A"));
         lblMesa.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
         
         // Estado
-        String estadoTexto = comanda.getEstadoComanda() != null ? 
-            comanda.getEstadoComanda().getDescripcion() : "Sin estado";
+        String estadoTexto = comanda.getMesa() != null ? comanda.getMesa().getEstado().toString() : "SIN MESA";
         Label lblEstado = new Label("Estado: " + estadoTexto);
-        lblEstado.setStyle("-fx-font-size: 14px; -fx-text-fill: #333; -fx-font-weight: bold;");
+        lblEstado.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
         
         // Número de platos
         int numPlatos = comanda.getDetalleComandas() != null ? comanda.getDetalleComandas().size() : 0;
@@ -967,384 +918,22 @@ public class ChefViewController implements Initializable {
         Label lblId = new Label("ID: " + comanda.getId_comanda());
         lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #999;");
         
-        // Hora
-        String horaTexto = comanda.getFecha_hora() != null ? 
-            comanda.getFecha_hora().toLocalTime().toString() : "N/A";
-        Label lblHora = new Label("Hora: " + horaTexto);
-        lblHora.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
-        
-        card.getChildren().addAll(lblMesa, lblEstado, lblPlatos, lblHora, lblId);
+        card.getChildren().addAll(lblMesa, lblEstado, lblPlatos, lblId);
         
         card.setOnMouseClicked(event -> {
-            System.out.println("Comanda seleccionada: ID " + comanda.getId_comanda() + ", Estado: " + 
-                (comanda.getEstadoComanda() != null ? comanda.getEstadoComanda().getDescripcion() : "Sin estado"));
-            mostrarOpcionesComanda(comanda);
+            System.out.println("Comanda seleccionada: ID " + comanda.getId_comanda());
+            // Aquí puedes agregar lógica para ver detalles de la comanda
         });
         
         card.setOnMouseEntered(e -> {
-            card.setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10; -fx-border-color: #8B7355; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 2, 2);");
+            card.setStyle("-fx-background-color: #F5E6D3; -fx-background-radius: 10; -fx-border-color: #8B7355; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
         });
         
         card.setOnMouseExited(e -> {
-            card.setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 10; -fx-border-color: " + borderColor + "; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+            card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
         });
         
         return card;
-    }
-    
-    /**
-     * Muestra detalles de la comanda en el área central
-     */
-    private void mostrarOpcionesComanda(Comanda comanda) {
-        try {
-            System.out.println("Mostrando detalles de comanda ID: " + comanda.getId_comanda());
-            
-            // Limpiar el grid y mostrar los detalles
-            categoryGrid.getChildren().clear();
-            
-            // Cambiar título
-            if (contentTitle != null) {
-                contentTitle.setText("Comanda #" + comanda.getId_comanda() + " - Mesa " + 
-                    (comanda.getMesa() != null ? comanda.getMesa().getId_mesa() : "N/A"));
-            }
-            
-            // Crear un contenedor vertical para todos los detalles
-            ScrollPane scrollPane = new ScrollPane();
-            scrollPane.setFitToWidth(true);
-            scrollPane.setPrefHeight(600);
-            
-            VBox mainContent = new VBox(20);
-            mainContent.setPadding(new Insets(20));
-            mainContent.setStyle("-fx-background-color: #f5f5f5;");
-            
-            // ============ SECCIÓN 1: INFORMACIÓN GENERAL ============
-            VBox infoSection = createInfoSection(comanda);
-            mainContent.getChildren().add(infoSection);
-            
-            // ============ SECCIÓN 2: CAMBIAR ESTADO ============
-            VBox estadoSection = createEstadoSection(comanda);
-            mainContent.getChildren().add(estadoSection);
-            
-            // ============ SECCIÓN 3: PLATOS DE LA COMANDA ============
-            VBox platosSection = createPlatosSection(comanda);
-            mainContent.getChildren().add(platosSection);
-            
-            // ============ BOTÓN VOLVER ============
-            HBox botonesBox = new HBox(10);
-            botonesBox.setAlignment(Pos.CENTER);
-            botonesBox.setPadding(new Insets(10, 0, 0, 0));
-            
-            Button btnVolver = new Button("← Volver a Comandas");
-            btnVolver.setStyle("-fx-font-size: 14px; -fx-padding: 10px 30px; -fx-cursor: hand;");
-            btnVolver.setOnAction(e -> mostrarComandas());
-            
-            botonesBox.getChildren().add(btnVolver);
-            mainContent.getChildren().add(botonesBox);
-            
-            scrollPane.setContent(mainContent);
-            
-            // Agregar el scroll al grid (en posición 0,0 con tamaño grande)
-            GridPane.setColumnSpan(scrollPane, 5);
-            GridPane.setRowSpan(scrollPane, 5);
-            categoryGrid.add(scrollPane, 0, 0);
-            
-        } catch (Exception e) {
-            System.err.println("Error al mostrar opciones: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-     * Crea la sección de información general de la comanda
-     */
-    private VBox createInfoSection(Comanda comanda) {
-        VBox section = new VBox(10);
-        section.setStyle("-fx-background-color: white; -fx-border-radius: 10; -fx-padding: 20; " +
-                        "-fx-border-color: #D4A574; -fx-border-width: 1;");
-        
-        Label titulo = new Label("📋 INFORMACIÓN DE LA COMANDA");
-        titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
-        
-        HBox infoRow1 = new HBox(30);
-        infoRow1.setPadding(new Insets(15, 0, 0, 0));
-        
-        VBox mesaBox = new VBox(5);
-        Label mesaTitulo = new Label("Mesa");
-        mesaTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
-        Label mesaValor = new Label(comanda.getMesa() != null ? 
-            String.valueOf(comanda.getMesa().getId_mesa()) : "N/A");
-        mesaValor.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
-        mesaBox.getChildren().addAll(mesaTitulo, mesaValor);
-        
-        VBox horaBox = new VBox(5);
-        Label horaTitulo = new Label("Hora de Creación");
-        horaTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
-        String horaTexto = comanda.getFecha_hora() != null ? 
-            comanda.getFecha_hora().toString() : "N/A";
-        Label horaValor = new Label(horaTexto);
-        horaValor.setStyle("-fx-font-size: 14px; -fx-text-fill: #2C1810;");
-        horaBox.getChildren().addAll(horaTitulo, horaValor);
-        
-        VBox totalBox = new VBox(5);
-        Label totalTitulo = new Label("Total");
-        totalTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
-        String totalTexto = comanda.getTotal() != null ? 
-            String.format("€%.2f", comanda.getTotal()) : "€0.00";
-        Label totalValor = new Label(totalTexto);
-        totalValor.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #28a745;");
-        totalBox.getChildren().addAll(totalTitulo, totalValor);
-        
-        VBox idBox = new VBox(5);
-        Label idTitulo = new Label("ID");
-        idTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");
-        Label idValor = new Label(String.valueOf(comanda.getId_comanda()));
-        idValor.setStyle("-fx-font-size: 14px; -fx-text-fill: #999;");
-        idBox.getChildren().addAll(idTitulo, idValor);
-        
-        infoRow1.getChildren().addAll(mesaBox, horaBox, totalBox, idBox);
-        
-        section.getChildren().addAll(titulo, infoRow1);
-        
-        return section;
-    }
-    
-    /**
-     * Crea la sección para cambiar el estado
-     */
-    private VBox createEstadoSection(Comanda comanda) {
-        VBox section = new VBox(10);
-        section.setStyle("-fx-background-color: white; -fx-border-radius: 10; -fx-padding: 20; " +
-                        "-fx-border-color: #D4A574; -fx-border-width: 1;");
-        
-        Label titulo = new Label("🔄 CAMBIAR ESTADO DE LA COMANDA");
-        titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
-        
-        // Estado actual
-        String estadoActual = comanda.getEstadoComanda() != null ? 
-            comanda.getEstadoComanda().getDescripcion() : "Sin estado";
-        String colorEstado = getColorEstado(comanda.getEstadoComanda());
-        
-        HBox estadoActualBox = new HBox(10);
-        estadoActualBox.setAlignment(Pos.CENTER_LEFT);
-        estadoActualBox.setPadding(new Insets(15, 0, 0, 0));
-        
-        Label estadoLabel = new Label("Estado Actual: ");
-        estadoLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
-        
-        Label estadoValor = new Label(estadoActual);
-        estadoValor.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 12; " +
-                            "-fx-background-color: " + colorEstado + "; -fx-text-fill: white; " +
-                            "-fx-border-radius: 5;");
-        
-        estadoActualBox.getChildren().addAll(estadoLabel, estadoValor);
-        
-        // Próximo estado
-        String proximoEstado = calcularProximoEstado(comanda.getEstadoComanda());
-        String colorProximo = getColorProximoEstado(comanda.getEstadoComanda());
-        
-        HBox proximoEstadoBox = new HBox(10);
-        proximoEstadoBox.setAlignment(Pos.CENTER_LEFT);
-        proximoEstadoBox.setPadding(new Insets(10, 0, 0, 0));
-        
-        Label proximoLabel = new Label("Cambiar a: ");
-        proximoLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
-        
-        Label proximoValor = new Label(proximoEstado);
-        proximoValor.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 8 12; " +
-                             "-fx-background-color: " + colorProximo + "; -fx-text-fill: white; " +
-                             "-fx-border-radius: 5;");
-        
-        proximoEstadoBox.getChildren().addAll(proximoLabel, proximoValor);
-        
-        // Botón para cambiar estado
-        Button btnCambiarEstado = new Button("✓ CAMBIAR ESTADO");
-        btnCambiarEstado.setStyle("-fx-font-size: 14px; -fx-padding: 12px 30px; -fx-cursor: hand; " +
-                                 "-fx-background-color: #2C1810; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnCambiarEstado.setPrefWidth(300);
-        
-        btnCambiarEstado.setOnAction(e -> {
-            cambiarEstadoComanda(comanda);
-        });
-        
-        HBox botonesBox = new HBox(10);
-        botonesBox.setAlignment(Pos.CENTER);
-        botonesBox.setPadding(new Insets(15, 0, 0, 0));
-        botonesBox.getChildren().add(btnCambiarEstado);
-        
-        section.getChildren().addAll(titulo, estadoActualBox, proximoEstadoBox, botonesBox);
-        
-        return section;
-    }
-    
-    /**
-     * Crea la sección de platos de la comanda
-     */
-    private VBox createPlatosSection(Comanda comanda) {
-        VBox section = new VBox(10);
-        section.setStyle("-fx-background-color: white; -fx-border-radius: 10; -fx-padding: 20; " +
-                        "-fx-border-color: #D4A574; -fx-border-width: 1;");
-        
-        Label titulo = new Label("🍽️ PLATOS A PREPARAR");
-        titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
-        
-        VBox platosContainer = new VBox(5);
-        platosContainer.setPadding(new Insets(15, 0, 0, 0));
-        
-        if (comanda.getDetalleComandas() != null && !comanda.getDetalleComandas().isEmpty()) {
-            int contador = 1;
-            for (DetalleComanda detalle : comanda.getDetalleComandas()) {
-                HBox platoItem = createPlatoItem(detalle, contador);
-                platosContainer.getChildren().add(platoItem);
-                contador++;
-            }
-        } else {
-            Label noPlatos = new Label("No hay platos en esta comanda");
-            noPlatos.setStyle("-fx-text-fill: #999; -fx-font-size: 14px;");
-            platosContainer.getChildren().add(noPlatos);
-        }
-        
-        section.getChildren().addAll(titulo, platosContainer);
-        
-        return section;
-    }
-    
-    /**
-     * Crea un item visual para un plato
-     */
-    private HBox createPlatoItem(DetalleComanda detalle, int numero) {
-        HBox item = new HBox(15);
-        item.setStyle("-fx-padding: 12; -fx-border-color: #E8D4B8; -fx-border-width: 0 0 1 0; " +
-                     "-fx-alignment: CENTER_LEFT;");
-        
-        Label numeroLabel = new Label(numero + ".");
-        numeroLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #D4A574; " +
-                            "-fx-min-width: 30;");
-        
-        Receta receta = detalle.getReceta();
-        String nombrePlato = receta != null ? receta.getNombre() : "Plato desconocido";
-        
-        VBox detallesBox = new VBox(3);
-        
-        Label nombreLabel = new Label(nombrePlato);
-        nombreLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
-        
-        String descripcion = receta != null ? receta.getDescripcion() : "Sin descripción";
-        Label descLabel = new Label(descripcion);
-        descLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
-        descLabel.setWrapText(true);
-        
-        detallesBox.getChildren().addAll(nombreLabel, descLabel);
-        
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        
-        VBox cantidadBox = new VBox(3);
-        cantidadBox.setAlignment(Pos.CENTER_RIGHT);
-        
-        Label cantidadTitulo = new Label("Cantidad");
-        cantidadTitulo.setStyle("-fx-font-size: 10px; -fx-text-fill: #999;");
-        
-        Label cantidadValor = new Label("x" + detalle.getCantidad());
-        cantidadValor.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #28a745;");
-        
-        cantidadBox.getChildren().addAll(cantidadTitulo, cantidadValor);
-        
-        item.getChildren().addAll(numeroLabel, detallesBox, spacer, cantidadBox);
-        
-        return item;
-    }
-    
-    /**
-     * Obtiene el color para el estado actual
-     */
-    private String getColorEstado(EstadoComanda estado) {
-        if (estado == null) return "#cccccc";
-        
-        switch (estado) {
-            case POR_HACER:
-                return "#dc3545";
-            case EN_PREPARACION:
-                return "#ffc107";
-            case PREPARADO:
-                return "#28a745";
-            default:
-                return "#cccccc";
-        }
-    }
-    
-    /**
-     * Obtiene el color para el próximo estado
-     */
-    private String getColorProximoEstado(EstadoComanda estado) {
-        if (estado == null) return "#ffc107";
-        
-        switch (estado) {
-            case POR_HACER:
-                return "#ffc107";
-            case EN_PREPARACION:
-                return "#28a745";
-            case PREPARADO:
-                return "#dc3545";
-            default:
-                return "#ffc107";
-        }
-    }
-    
-    /**
-     * Cambia el estado de la comanda al siguiente en el ciclo
-     */
-    private void cambiarEstadoComanda(Comanda comanda) {
-        try {
-            EstadoComanda estadoActual = comanda.getEstadoComanda();
-            EstadoComanda nuevoEstado;
-            
-            switch (estadoActual) {
-                case POR_HACER:
-                    nuevoEstado = EstadoComanda.EN_PREPARACION;
-                    break;
-                case EN_PREPARACION:
-                    nuevoEstado = EstadoComanda.PREPARADO;
-                    break;
-                case PREPARADO:
-                    nuevoEstado = EstadoComanda.POR_HACER;
-                    break;
-                default:
-                    nuevoEstado = EstadoComanda.POR_HACER;
-            }
-            
-            comanda.setEstadoComanda(nuevoEstado);
-            
-            // Guardar en BD
-            ComandaDAO comandaDAO = new ComandaDAO();
-            comandaDAO.update(comanda);
-            
-            System.out.println("Estado de comanda cambiado a: " + nuevoEstado.getDescripcion());
-            
-            // Recargar la lista
-            mostrarComandas();
-            
-        } catch (Exception e) {
-            System.err.println("Error al cambiar estado: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    
-    /**
-     * Calcula el próximo estado en el ciclo
-     */
-    private String calcularProximoEstado(EstadoComanda estadoActual) {
-        if (estadoActual == null) return EstadoComanda.EN_PREPARACION.getDescripcion();
-        
-        switch (estadoActual) {
-            case POR_HACER:
-                return EstadoComanda.EN_PREPARACION.getDescripcion();
-            case EN_PREPARACION:
-                return EstadoComanda.PREPARADO.getDescripcion();
-            case PREPARADO:
-                return EstadoComanda.POR_HACER.getDescripcion();
-            default:
-                return EstadoComanda.POR_HACER.getDescripcion();
-        }
     }
 }
 
