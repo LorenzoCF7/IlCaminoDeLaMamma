@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<VBox xmlns="http://javafx.com/javafx/20"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ilcaminodelamamma.view.chef.ComandaDetailController"
+      minWidth="600" minHeight="500" maxWidth="900"
+      stylesheets="@../../css/chef-view.css"
+      spacing="12">
+
+    <!-- Compact internal header (no logo, sits under the main chef header) -->
+    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding:8 12; -fx-border-color: transparent transparent #E0D5C7 transparent; -fx-border-width:0 0 1 0;">
+        <Button fx:id="btnVolver" text="← Volver" styleClass="back-button" onAction="#cerrar"/>
+        <Label fx:id="lblComandaTitle" text="Comanda" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Estado:" style="-fx-font-weight:bold; -fx-padding:0 8 0 0;"/>
+        <ComboBox fx:id="comboEstado" prefWidth="140"/>
+    </HBox>
+
+    <HBox spacing="0" style="-fx-padding: 0;">
+        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS" styleClass="scroll-pane" style="-fx-padding: 8;">
+            <VBox fx:id="platosContainer" spacing="8">
+                <padding>
+                    <Insets top="0" bottom="0" left="0" right="0"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+
+        <VBox spacing="8" prefWidth="200" minWidth="200" maxWidth="200" style="-fx-padding: 8; -fx-border-color: #E0D5C7 transparent transparent transparent; -fx-border-width: 0 0 0 1;">
+            <Label text="Información" style="-fx-font-size:13px; -fx-font-weight:bold;"/>
+            <Label fx:id="lblMesa" text="Mesa: --" style="-fx-font-size:11px;"/>
+            <Label fx:id="lblIdComanda" text="ID: --" style="-fx-font-size:11px;"/>
+            <Label fx:id="lblFecha" text="Fecha: --" style="-fx-font-size:11px;"/>
+            <Separator style="-fx-padding: 2 0;"/>
+            <Label text="Acciones" style="-fx-font-weight:bold; -fx-font-size:11px;"/>
+            <Button fx:id="btnMarcarPreparacion" text="En prep." maxWidth="Infinity" style="-fx-font-size:10px; -fx-padding: 4;"/>
+            <Button fx:id="btnMarcarTerminado" text="Terminado" maxWidth="Infinity" style="-fx-font-size:10px; -fx-padding: 4;"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button fx:id="btnCerrar" text="Cerrar" maxWidth="Infinity" onAction="#cerrar" style="-fx-font-size:10px; -fx-padding: 4;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

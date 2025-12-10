@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import ilcaminodelamamma.model.Receta;
 import ilcaminodelamamma.model.RecetaIngrediente;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 /**
  * Controlador para la vista de detalles de una receta
@@ -58,6 +59,7 @@ public class RecipeDetailController {
         if (receta == null) {
             return;
         }
+        System.out.println("DEBUG: RecipeDetailController.setReceta() -> " + (receta.getNombre() != null ? receta.getNombre() : "<sin-nombre>"));
 
         // Nombre
         if (recipeName != null) {
@@ -262,7 +264,21 @@ public class RecipeDetailController {
      * Cierra la ventana modal
      */
     private void cerrarVentana() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+        try {
+            // Cargar la vista del Chef y reemplazar solo el centro del BorderPane principal
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/chef-view.fxml"));
+            Parent chefRoot = loader.load();
+            if (closeButton.getScene() != null) {
+                javafx.scene.Parent sceneRoot = closeButton.getScene().getRoot();
+                if (sceneRoot instanceof javafx.scene.layout.BorderPane && chefRoot instanceof javafx.scene.layout.BorderPane) {
+                    javafx.scene.layout.BorderPane mainRoot = (javafx.scene.layout.BorderPane) sceneRoot;
+                    javafx.scene.layout.BorderPane newChefRoot = (javafx.scene.layout.BorderPane) chefRoot;
+                    mainRoot.setCenter(newChefRoot.getCenter());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al volver a la vista Chef: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
