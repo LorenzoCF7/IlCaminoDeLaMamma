@@ -2,20 +2,20 @@ module ilcaminodelamamma {
     // JavaFX modules
     requires javafx.controls;
     requires javafx.fxml;
-    requires javafx.graphics;
+    requires transitive javafx.graphics;
     requires javafx.swing;
+    requires javafx.base;
 
     // Spring Boot
     requires spring.boot;
     requires spring.boot.autoconfigure;
     requires spring.context;
 
-    // Hibernate
+    // Hibernate & Jakarta
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
     requires java.naming;
-
-    // MySQL
+    requires java.base;
     requires java.sql;
 
     // Jackson
@@ -24,6 +24,7 @@ module ilcaminodelamamma {
 
     // JAXB
     requires java.xml.bind;
+    requires java.xml;
 
     // BCrypt para encriptación de contraseñas
     requires jbcrypt;
@@ -41,8 +42,11 @@ module ilcaminodelamamma {
     opens ilcaminodelamamma.view.assistant to javafx.fxml;
     opens ilcaminodelamamma.view.waiter to javafx.fxml;
     opens ilcaminodelamamma.view.components to javafx.fxml;
+    opens ilcaminodelamamma.config to org.hibernate.orm.core;
 
-    opens ilcaminodelamamma.model to org.hibernate.orm.core;
+    opens ilcaminodelamamma.model to org.hibernate.orm.core, javafx.fxml;
+    opens ilcaminodelamamma.DAO to org.hibernate.orm.core;
+    opens ilcaminodelamamma.util to org.hibernate.orm.core;
 
     exports ilcaminodelamamma;
     exports ilcaminodelamamma.controller;

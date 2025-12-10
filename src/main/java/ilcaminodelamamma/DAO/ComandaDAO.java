@@ -61,6 +61,30 @@ public class ComandaDAO {
     }
 
     /**
+     * Carga una comanda por id junto con sus detalles y recetas (JOIN FETCH)
+     */
+    public Comanda findByIdWithDetails(Integer id) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try {
+            List<Comanda> list = session.createQuery(
+                "SELECT DISTINCT c FROM Comanda c " +
+                "LEFT JOIN FETCH c.mesa m " +
+                "LEFT JOIN FETCH c.usuario u " +
+                "LEFT JOIN FETCH c.detalleComandas d " +
+                "LEFT JOIN FETCH d.receta r " +
+                "LEFT JOIN FETCH r.recetaIngredientes ri " +
+                "LEFT JOIN FETCH ri.ingrediente ingr " +
+                "WHERE c.id_comanda = :id", Comanda.class)
+            .setParameter("id", id)
+            .list();
+
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            session.close();
+        }
+    }
+
+    /**
      * Busca la comanda más reciente de una mesa específica
      * @param mesa La mesa a buscar
      * @return La comanda más reciente o null si no hay comandas
@@ -74,6 +98,8 @@ public class ComandaDAO {
                 "LEFT JOIN FETCH c.usuario u " +
                 "LEFT JOIN FETCH c.detalleComandas d " +
                 "LEFT JOIN FETCH d.receta r " +
+                "LEFT JOIN FETCH r.recetaIngredientes ri " +
+                "LEFT JOIN FETCH ri.ingrediente ingr " +
                 "WHERE m.id_mesa = :mesaId " +
                 "ORDER BY c.fecha_hora DESC", 
                 Comanda.class

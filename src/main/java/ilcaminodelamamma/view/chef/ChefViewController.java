@@ -31,9 +31,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+
 
 /**
  * Controlador para la vista principal del Jefe de Cocina
@@ -617,25 +616,13 @@ public class ChefViewController implements Initializable {
             // Cargar el FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/recipe-detail.fxml"));
             Parent root = loader.load();
-            
+
             // Obtener el controlador y pasar la receta
             RecipeDetailController controller = loader.getController();
             controller.setReceta(recetaCompleta);
-            
-            // Crear la ventana modal
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initStyle(StageStyle.UNDECORATED);
-            modalStage.setTitle("Detalles de " + recetaCompleta.getNombre());
-            
-            Scene scene = new Scene(root, 900, 700);
-            modalStage.setScene(scene);
-            
-            // Centrar en la pantalla
-            modalStage.centerOnScreen();
-            
-            // Mostrar la ventana
-            modalStage.showAndWait();
+
+            // Reemplazar solo el centro del BorderPane principal para mantener header/sidebar/footer
+            setCenterWithPadding(root);
             
         } catch (Exception e) {
             System.err.println("Error al abrir detalles de receta: " + e.getMessage());
@@ -1016,7 +1003,22 @@ public class ChefViewController implements Initializable {
         
         card.setOnMouseClicked(event -> {
             System.out.println("Comanda seleccionada: ID " + comanda.getId_comanda());
-            // Aquí puedes agregar lógica para ver detalles de la comanda
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/comanda-detail.fxml"));
+                Parent root = loader.load();
+
+                // Obtener el controlador y pasar la comanda (cargar detalles desde DAO para evitar Lazy issues)
+                ilcaminodelamamma.DAO.ComandaDAO comandaDAO = new ilcaminodelamamma.DAO.ComandaDAO();
+                ilcaminodelamamma.model.Comanda comandaFull = comandaDAO.findByIdWithDetails(comanda.getId_comanda());
+                ilcaminodelamamma.view.chef.ComandaDetailController controller = loader.getController();
+                controller.setComanda(comandaFull != null ? comandaFull : comanda);
+                // Reemplazar solo el centro del BorderPane principal para mantener header/sidebar/footer
+                setCenterWithPadding(root);
+
+            } catch (Exception e) {
+                System.err.println("Error al abrir detalles de comanda: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
         
         card.setOnMouseEntered(e -> {
@@ -1028,6 +1030,20 @@ public class ChefViewController implements Initializable {
         });
         
         return card;
+    }
+
+    /**
+     * Helper: coloca el contenido dado en el centro del BorderPane principal
+     * envolviéndolo en un `StackPane` con padding para mantener el header/sidebar/footer.
+     */
+    private void setCenterWithPadding(javafx.scene.Parent content) {
+        if (centerArea == null || centerArea.getScene() == null) return;
+        javafx.scene.Parent sceneRoot = centerArea.getScene().getRoot();
+        if (!(sceneRoot instanceof javafx.scene.layout.BorderPane)) return;
+        javafx.scene.layout.BorderPane mainRoot = (javafx.scene.layout.BorderPane) sceneRoot;
+
+        // Just set the content directly on the center - let the BorderPane handle the space
+        mainRoot.setCenter(content);
     }
 }
 
