@@ -568,7 +568,6 @@ public class RecetaController {
                 System.out.println("  - imagenBytes: " + (imagenBytes != null ? imagenBytes.length + " bytes" : "null"));
                 System.out.println("  - imagenAGuardar: " + (imagenAGuardar != null ? imagenAGuardar.length + " bytes" : "null"));
                 
-                Receta nuevaReceta = new Receta(nombre, descripcion, 0, tiempo, true, imagenAGuardar, categoria);
                 Receta nuevaReceta = new Receta(nombre, descripcion, precioCentimos, tiempo, true, imagenAGuardar, categoria);
                 nuevaReceta.setPasos(pasos);
                 recetaDAO.create(nuevaReceta);
