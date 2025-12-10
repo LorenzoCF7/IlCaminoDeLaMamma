@@ -5,11 +5,14 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/20"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ilcaminodelamamma.view.chef.ChefViewController"
-            minWidth="900" minHeight="600"
-            stylesheets="@../../css/chef-view.css">
+<StackPane xmlns="http://javafx.com/javafx/20"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ilcaminodelamamma.view.chef.ChefViewController"
+           stylesheets="@../../css/chef-view.css"
+           fx:id="rootStackPane">
+           
+<BorderPane fx:id="mainBorderPane"
+            minWidth="900" minHeight="600">
 
     <!-- Barra Superior -->
     <top>
@@ -64,6 +67,9 @@
                         styleClass="sidebar-button"/>
                         
                 <Button fx:id="btnComandas" text="📋 Lista de Comandas" maxWidth="Infinity"
+                        styleClass="sidebar-button"/>
+                
+                <Button fx:id="btnComandasTerminadas" text="✅ Comandas Terminadas" maxWidth="Infinity"
                         styleClass="sidebar-button"/>
                         
                 <Button fx:id="btnIngredientes" text="🥬 Ingredientes" maxWidth="Infinity"
@@ -149,3 +155,13 @@
     </bottom>
 
 </BorderPane>
+
+<!-- Panel de overlay para detalles de receta (inicialmente oculto) -->
+<VBox fx:id="recipeDetailOverlay" visible="false" managed="false"
+      style="-fx-background-color: rgba(0,0,0,0.5);" alignment="CENTER">
+    <StackPane fx:id="recipeDetailContainer" maxWidth="900" maxHeight="700"
+               style="-fx-background-color: #F5F1ED; -fx-background-radius: 15;">
+    </StackPane>
+</VBox>
+
+</StackPane>

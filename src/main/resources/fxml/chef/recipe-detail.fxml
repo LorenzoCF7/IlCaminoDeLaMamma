@@ -122,9 +122,3 @@
     </ScrollPane>
 
 </VBox>
-                    </VBox>
-                </HBox>
-            </VBox>
-        </ScrollPane>
-    </center>
-</BorderPane>

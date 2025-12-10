@@ -808,8 +808,9 @@ public class ComandaDetailController implements Initializable {
                     detalle.setComanda(comanda);
                     detalle.setReceta(receta);
                     detalle.setCantidad(platoComanda.cantidad);
-                    detalle.setPrecio_unitario((float) platoComanda.plato.precio);
-                    detalle.setSubtotal((float) (platoComanda.plato.precio * platoComanda.cantidad));
+                    // Convertir de euros a céntimos para guardar en BD
+                    detalle.setPrecio_unitario((float) (platoComanda.plato.precio * 100));
+                    detalle.setSubtotal((float) (platoComanda.plato.precio * platoComanda.cantidad * 100));
                     
                     detalles.add(detalle);
                 } else {

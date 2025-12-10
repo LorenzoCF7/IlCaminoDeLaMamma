@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 
 import ilcaminodelamamma.config.HibernateUtil;
 import ilcaminodelamamma.model.Comanda;
+import ilcaminodelamamma.model.DetalleComanda;
 
 public class ComandaDAO {
     public Comanda create(Comanda comanda) {
@@ -66,19 +67,31 @@ public class ComandaDAO {
     public Comanda findByIdWithDetails(Integer id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            List<Comanda> list = session.createQuery(
+            // Primera consulta: cargar comanda con mesa, usuario y detalles+recetas
+            Comanda comanda = session.createQuery(
                 "SELECT DISTINCT c FROM Comanda c " +
-                "LEFT JOIN FETCH c.mesa m " +
-                "LEFT JOIN FETCH c.usuario u " +
+                "LEFT JOIN FETCH c.mesa " +
+                "LEFT JOIN FETCH c.usuario " +
                 "LEFT JOIN FETCH c.detalleComandas d " +
-                "LEFT JOIN FETCH d.receta r " +
-                "LEFT JOIN FETCH r.recetaIngredientes ri " +
-                "LEFT JOIN FETCH ri.ingrediente ingr " +
+                "LEFT JOIN FETCH d.receta " +
                 "WHERE c.id_comanda = :id", Comanda.class)
             .setParameter("id", id)
-            .list();
-
-            return list.isEmpty() ? null : list.get(0);
+            .uniqueResult();
+            
+            if (comanda == null) {
+                return null;
+            }
+            
+            // Inicializar las recetas para evitar LazyInitializationException
+            for (DetalleComanda det : comanda.getDetalleComandas()) {
+                if (det.getReceta() != null) {
+                    // Forzar la inicialización del ID
+                    det.getReceta().getId_receta();
+                    det.getReceta().getNombre();
+                }
+            }
+            
+            return comanda;
         } finally {
             session.close();
         }
@@ -95,11 +108,9 @@ public class ComandaDAO {
             List<Comanda> comandas = session.createQuery(
                 "SELECT DISTINCT c FROM Comanda c " +
                 "LEFT JOIN FETCH c.mesa m " +
-                "LEFT JOIN FETCH c.usuario u " +
+                "LEFT JOIN FETCH c.usuario " +
                 "LEFT JOIN FETCH c.detalleComandas d " +
-                "LEFT JOIN FETCH d.receta r " +
-                "LEFT JOIN FETCH r.recetaIngredientes ri " +
-                "LEFT JOIN FETCH ri.ingrediente ingr " +
+                "LEFT JOIN FETCH d.receta " +
                 "WHERE m.id_mesa = :mesaId " +
                 "ORDER BY c.fecha_hora DESC", 
                 Comanda.class
@@ -108,7 +119,18 @@ public class ComandaDAO {
             .setMaxResults(1)
             .list();
             
-            return comandas.isEmpty() ? null : comandas.get(0);
+            if (!comandas.isEmpty()) {
+                Comanda comanda = comandas.get(0);
+                // Inicializar las recetas
+                for (DetalleComanda det : comanda.getDetalleComandas()) {
+                    if (det.getReceta() != null) {
+                        det.getReceta().getId_receta();
+                        det.getReceta().getNombre();
+                    }
+                }
+                return comanda;
+            }
+            return null;
         } finally {
             session.close();
         }

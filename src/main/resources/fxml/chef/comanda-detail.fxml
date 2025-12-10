@@ -8,39 +8,123 @@
 <VBox xmlns="http://javafx.com/javafx/20"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ilcaminodelamamma.view.chef.ComandaDetailController"
-      minWidth="600" minHeight="500" maxWidth="900"
+      minWidth="700" minHeight="550" maxWidth="1000"
       stylesheets="@../../css/chef-view.css"
-      spacing="12">
+      spacing="0" style="-fx-background-color: #F5E6D3;">
 
-    <!-- Compact internal header (no logo, sits under the main chef header) -->
-    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding:8 12; -fx-border-color: transparent transparent #E0D5C7 transparent; -fx-border-width:0 0 1 0;">
+    <!-- Header mejorado -->
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="comanda-detail-header">
+        <padding>
+            <Insets top="15" bottom="15" left="20" right="20"/>
+        </padding>
         <Button fx:id="btnVolver" text="← Volver" styleClass="back-button" onAction="#cerrar"/>
-        <Label fx:id="lblComandaTitle" text="Comanda" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+        <VBox spacing="2">
+            <Label fx:id="lblComandaTitle" text="Comanda - Mesa 1" styleClass="comanda-detail-title"/>
+            <Label fx:id="lblFechaHeader" text="10/12/2025 15:30" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size: 12px;"/>
+        </VBox>
         <Region HBox.hgrow="ALWAYS"/>
-        <Label text="Estado:" style="-fx-font-weight:bold; -fx-padding:0 8 0 0;"/>
-        <ComboBox fx:id="comboEstado" prefWidth="140"/>
+        <VBox alignment="CENTER_RIGHT" spacing="5">
+            <Label text="Estado de la Comanda" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 11px;"/>
+            <ComboBox fx:id="comboEstado" prefWidth="160" style="-fx-font-size: 13px;"/>
+        </VBox>
     </HBox>
 
-    <HBox spacing="0" style="-fx-padding: 0;">
-        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS" styleClass="scroll-pane" style="-fx-padding: 8;">
-            <VBox fx:id="platosContainer" spacing="8">
-                <padding>
-                    <Insets top="0" bottom="0" left="0" right="0"/>
-                </padding>
-            </VBox>
-        </ScrollPane>
+    <!-- Contenido principal -->
+    <HBox spacing="0" VBox.vgrow="ALWAYS" style="-fx-background-color: #F5E6D3;">
+        
+        <!-- Panel izquierdo: Lista de platos -->
+        <VBox HBox.hgrow="ALWAYS" spacing="10" style="-fx-padding: 20;">
+            <Label text="🍽️ Platos de la Comanda" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+            
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane" 
+                       style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox fx:id="platosContainer" spacing="10" style="-fx-background-color: transparent;">
+                    <padding>
+                        <Insets top="5" bottom="10" left="5" right="10"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+            
+            <!-- Botones de acción para toda la comanda -->
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                <Button fx:id="btnEnProceso" text="📋 En Proceso" styleClass="btn-accion-comanda,btn-en-proceso" prefWidth="150"/>
+                <Button fx:id="btnFinalizar" text="✅ Finalizar Comanda" styleClass="btn-accion-comanda,btn-finalizar" prefWidth="180"/>
+            </HBox>
+        </VBox>
 
-        <VBox spacing="8" prefWidth="200" minWidth="200" maxWidth="200" style="-fx-padding: 8; -fx-border-color: #E0D5C7 transparent transparent transparent; -fx-border-width: 0 0 0 1;">
-            <Label text="Información" style="-fx-font-size:13px; -fx-font-weight:bold;"/>
-            <Label fx:id="lblMesa" text="Mesa: --" style="-fx-font-size:11px;"/>
-            <Label fx:id="lblIdComanda" text="ID: --" style="-fx-font-size:11px;"/>
-            <Label fx:id="lblFecha" text="Fecha: --" style="-fx-font-size:11px;"/>
-            <Separator style="-fx-padding: 2 0;"/>
-            <Label text="Acciones" style="-fx-font-weight:bold; -fx-font-size:11px;"/>
-            <Button fx:id="btnMarcarPreparacion" text="En prep." maxWidth="Infinity" style="-fx-font-size:10px; -fx-padding: 4;"/>
-            <Button fx:id="btnMarcarTerminado" text="Terminado" maxWidth="Infinity" style="-fx-font-size:10px; -fx-padding: 4;"/>
+        <!-- Panel derecho: Información y resumen -->
+        <VBox spacing="12" prefWidth="280" minWidth="260" maxWidth="300" 
+              style="-fx-padding: 20; -fx-background-color: #E8D4B8;">
+            
+            <!-- Info de la comanda -->
+            <VBox spacing="8" styleClass="comanda-info-panel">
+                <Label text="📋 Información" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                <Separator style="-fx-background-color: #D4A574;"/>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="🍽️" style="-fx-font-size: 16px;"/>
+                    <VBox spacing="2">
+                        <Label text="Mesa" style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                        <Label fx:id="lblMesa" text="Mesa 1" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="🔖" style="-fx-font-size: 16px;"/>
+                    <VBox spacing="2">
+                        <Label text="ID Comanda" style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                        <Label fx:id="lblIdComanda" text="#001" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="📅" style="-fx-font-size: 16px;"/>
+                    <VBox spacing="2">
+                        <Label text="Fecha y Hora" style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                        <Label fx:id="lblFecha" text="10/12/2025 15:30" style="-fx-font-size: 13px; -fx-text-fill: #2C1810;"/>
+                    </VBox>
+                </HBox>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="👤" style="-fx-font-size: 16px;"/>
+                    <VBox spacing="2">
+                        <Label text="Camarero" style="-fx-font-size: 11px; -fx-text-fill: #666;"/>
+                        <Label fx:id="lblCamarero" text="--" style="-fx-font-size: 13px; -fx-text-fill: #2C1810;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <!-- Resumen de platos -->
+            <VBox spacing="8" styleClass="comanda-info-panel">
+                <Label text="📊 Resumen" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2C1810;"/>
+                <Separator style="-fx-background-color: #D4A574;"/>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Por hacer:" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    <Label fx:id="lblPorHacer" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #E65100;"/>
+                </HBox>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="En cocina:" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    <Label fx:id="lblEnCocina" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #1565C0;"/>
+                </HBox>
+                
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Preparados:" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    <Label fx:id="lblPreparados" text="0" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Total -->
+            <VBox spacing="5" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #4CAF50; -fx-border-radius: 10; -fx-border-width: 2;">
+                <Label text="💰 Total Comanda" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                <Label fx:id="lblTotal" text="0,00 €" styleClass="total-caja"/>
+            </VBox>
+            
             <Region VBox.vgrow="ALWAYS"/>
-            <Button fx:id="btnCerrar" text="Cerrar" maxWidth="Infinity" onAction="#cerrar" style="-fx-font-size:10px; -fx-padding: 4;"/>
+            
+            <Button fx:id="btnCerrar" text="Cerrar" maxWidth="Infinity" onAction="#cerrar" 
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10; -fx-background-radius: 8;"/>
         </VBox>
     </HBox>
 

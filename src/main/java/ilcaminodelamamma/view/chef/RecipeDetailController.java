@@ -261,23 +261,37 @@ public class RecipeDetailController {
     }
 
     /**
-     * Cierra la ventana modal
+     * Cierra la ventana/overlay
      */
     private void cerrarVentana() {
         try {
-            // Cargar la vista del Chef y reemplazar solo el centro del BorderPane principal
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/chef-view.fxml"));
-            Parent chefRoot = loader.load();
-            if (closeButton.getScene() != null) {
+            // Intentar usar el ChefViewController para cerrar el overlay
+            ChefViewController chefController = ChefViewController.getInstance();
+            if (chefController != null) {
+                chefController.cerrarDetallesReceta();
+                System.out.println("✓ Overlay cerrado via ChefViewController");
+                return;
+            }
+            
+            // Fallback: intentar método antiguo
+            if (closeButton != null && closeButton.getScene() != null) {
                 javafx.scene.Parent sceneRoot = closeButton.getScene().getRoot();
-                if (sceneRoot instanceof javafx.scene.layout.BorderPane && chefRoot instanceof javafx.scene.layout.BorderPane) {
-                    javafx.scene.layout.BorderPane mainRoot = (javafx.scene.layout.BorderPane) sceneRoot;
-                    javafx.scene.layout.BorderPane newChefRoot = (javafx.scene.layout.BorderPane) chefRoot;
-                    mainRoot.setCenter(newChefRoot.getCenter());
+                
+                // Si el root es un StackPane (nueva estructura)
+                if (sceneRoot instanceof javafx.scene.layout.StackPane) {
+                    javafx.scene.layout.StackPane rootStack = (javafx.scene.layout.StackPane) sceneRoot;
+                    // Buscar y ocultar el overlay
+                    for (javafx.scene.Node child : rootStack.getChildren()) {
+                        if (child instanceof VBox && child.getId() != null && child.getId().equals("recipeDetailOverlay")) {
+                            child.setVisible(false);
+                            child.setManaged(false);
+                            return;
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error al volver a la vista Chef: " + e.getMessage());
+            System.err.println("Error al cerrar la vista de receta: " + e.getMessage());
             e.printStackTrace();
         }
     }

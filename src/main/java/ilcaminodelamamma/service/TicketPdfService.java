@@ -119,9 +119,10 @@ public class TicketPdfService {
             double subtotal = 0.0;
 
             for (DetalleComanda detalle : comanda.getDetalleComandas()) {
-                String nombreProducto = detalle.getReceta().getNombre();
-                int cantidad = detalle.getCantidad();
-                double precioUnitario = detalle.getPrecio_unitario();
+                String nombreProducto = detalle.getReceta() != null ? detalle.getReceta().getNombre() : "Producto";
+                int cantidad = detalle.getCantidad() != null ? detalle.getCantidad() : 1;
+                // El precio viene en centavos, convertir a euros
+                double precioUnitario = detalle.getPrecio_unitario() != null ? detalle.getPrecio_unitario() / 100.0 : 0.0;
                 double totalLinea = cantidad * precioUnitario;
                 subtotal += totalLinea;
 

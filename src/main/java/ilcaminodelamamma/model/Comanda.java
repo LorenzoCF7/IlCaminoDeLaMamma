@@ -1,29 +1,67 @@
 package ilcaminodelamamma.model;
 
-import jakarta.persistence.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name="comandas")
+@Table(name="Comanda")
 public class Comanda {
+    
+    // Enum para estados de comanda
+    public enum EstadoComanda {
+        POR_HACER("Por hacer"),
+        EN_PROCESO("En proceso"),
+        FINALIZADA("Finalizada");
+        
+        private final String descripcion;
+        
+        EstadoComanda(String descripcion) {
+            this.descripcion = descripcion;
+        }
+        
+        public String getDescripcion() {
+            return descripcion;
+        }
+        
+        @Override
+        public String toString() {
+            return descripcion;
+        }
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_comanda;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mesa_id", nullable = false)
+    @JoinColumn(name = "id_mesa", nullable = false)
     private Mesa mesa;
     
     private LocalDateTime fecha_hora;
     private Float total;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_comanda")
+    private EstadoComanda estadoComanda = EstadoComanda.POR_HACER;
 
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<DetalleComanda> detalleComandas = new HashSet<>();
@@ -83,5 +121,13 @@ public class Comanda {
     
     public void setDetalleComandas(Set<DetalleComanda> detalleComandas) {
         this.detalleComandas = detalleComandas;
+    }
+    
+    public EstadoComanda getEstadoComanda() {
+        return estadoComanda != null ? estadoComanda : EstadoComanda.POR_HACER;
+    }
+    
+    public void setEstadoComanda(EstadoComanda estadoComanda) {
+        this.estadoComanda = estadoComanda;
     }
 }

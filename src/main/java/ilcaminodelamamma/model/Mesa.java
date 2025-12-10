@@ -1,11 +1,21 @@
 package ilcaminodelamamma.model;
 
-import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name="mesas")
+@Table(name="Mesa")
 public class Mesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

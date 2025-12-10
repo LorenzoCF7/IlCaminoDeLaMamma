@@ -40,6 +40,18 @@ import javafx.stage.Stage;
  */
 public class ChefViewController implements Initializable {
 
+    // Instancia estática para acceso desde otros controladores
+    private static ChefViewController instance;
+    
+    public static ChefViewController getInstance() {
+        return instance;
+    }
+
+    @FXML private StackPane rootStackPane;
+    @FXML private javafx.scene.layout.BorderPane mainBorderPane;
+    @FXML private VBox recipeDetailOverlay;
+    @FXML private StackPane recipeDetailContainer;
+    
     @FXML private TextField searchField;
     @FXML private Button tabPlatos;
     @FXML private Button tabCategorias;
@@ -55,6 +67,7 @@ public class ChefViewController implements Initializable {
     @FXML private Button btnIngredientes;
     @FXML private Button btnLibros;
     @FXML private Button btnComandas;
+    @FXML private Button btnComandasTerminadas;
 
     // Estado actual de la vista
     private String currentView = "categories";
@@ -94,6 +107,10 @@ public class ChefViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Vista del Chef inicializada correctamente");
+        
+        // Guardar instancia para acceso estático
+        instance = this;
+        
         recetaDAO = new RecetaDAO();
         initializeImageMapping(); // Cargar mapeo de imágenes
         loadDynamicDishesFromDatabase(); // Cargar todos los platos desde BD
@@ -101,6 +118,9 @@ public class ChefViewController implements Initializable {
         loadRecentRecipes();
         setupTabButtons();
         setupResponsiveLayout();
+        
+        // Configurar overlay de detalles de receta
+        setupRecipeDetailOverlay();
         
         // Ocultar breadcrumb inicialmente
         if (breadcrumbBox != null) {
@@ -134,6 +154,11 @@ public class ChefViewController implements Initializable {
         // Configurar botón de comandas
         if (btnComandas != null) {
             btnComandas.setOnAction(e -> mostrarComandas());
+        }
+        
+        // Configurar botón de comandas terminadas
+        if (btnComandasTerminadas != null) {
+            btnComandasTerminadas.setOnAction(e -> mostrarComandasTerminadas());
         }
         
         // Configurar búsqueda de recetas
@@ -445,7 +470,7 @@ public class ChefViewController implements Initializable {
     /**
      * Vuelve a la vista de categorías
      */
-    private void goBackToCategories() {
+    public void goBackToCategories() {
         currentView = "categories";
         currentCategory = null;
         
@@ -596,37 +621,318 @@ public class ChefViewController implements Initializable {
     }
     
     /**
+     * Configura el overlay para mostrar detalles de recetas
+     */
+    private void setupRecipeDetailOverlay() {
+        if (recipeDetailOverlay != null) {
+            // Cerrar overlay al hacer clic fuera del contenedor
+            recipeDetailOverlay.setOnMouseClicked(event -> {
+                if (event.getTarget() == recipeDetailOverlay) {
+                    cerrarDetallesReceta();
+                }
+            });
+        }
+    }
+    
+    /**
+     * Abre el overlay con los detalles de la receta
+     * Método público estático para ser llamado desde cualquier controlador
+     */
+    public void mostrarDetallesReceta(Receta receta) {
+        abrirDetallesReceta(receta);
+    }
+    
+    /**
+     * Abre el overlay con los detalles de la receta por ID
+     * Método público para ser llamado desde otros controladores
+     */
+    public void mostrarDetallesRecetaPorId(Integer recetaId) {
+        if (recetaId == null) {
+            System.err.println("❌ ID de receta es null");
+            return;
+        }
+        Receta receta = recetaDAO.findById(recetaId);
+        if (receta != null) {
+            abrirDetallesReceta(receta);
+        } else {
+            System.err.println("❌ No se encontró receta con ID: " + recetaId);
+        }
+    }
+    
+    /**
+     * Cierra el overlay de detalles de receta
+     */
+    public void cerrarDetallesReceta() {
+        if (recipeDetailOverlay != null) {
+            recipeDetailOverlay.setVisible(false);
+            recipeDetailOverlay.setManaged(false);
+            if (recipeDetailContainer != null) {
+                recipeDetailContainer.getChildren().clear();
+            }
+            System.out.println("✓ Overlay de detalles cerrado");
+        }
+    }
+    
+    /**
      * Abre una ventana modal con los detalles completos de la receta
      */
     private void abrirDetallesReceta(Receta receta) {
         if (receta == null) {
-            System.err.println("No se puede abrir detalles: receta es null");
+            System.err.println("❌ No se puede abrir detalles: receta es null");
             return;
         }
+        
+        System.out.println("🔍 Abriendo detalles de receta: " + receta.getNombre() + " (ID: " + receta.getId_receta() + ")");
         
         try {
             // Cargar la receta completa con ingredientes desde la BD
             Receta recetaCompleta = recetaDAO.findById(receta.getId_receta());
             
             if (recetaCompleta == null) {
-                System.err.println("No se encontró la receta en la BD");
+                System.err.println("❌ No se encontró la receta en la BD con ID: " + receta.getId_receta());
                 return;
             }
             
-            // Cargar el FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/chef/recipe-detail.fxml"));
-            Parent root = loader.load();
-
-            // Obtener el controlador y pasar la receta
-            RecipeDetailController controller = loader.getController();
-            controller.setReceta(recetaCompleta);
-
-            // Reemplazar solo el centro del BorderPane principal para mantener header/sidebar/footer
-            setCenterWithPadding(root);
+            System.out.println("✓ Receta cargada de BD: " + recetaCompleta.getNombre());
+            
+            // Crear vista de detalle programáticamente (más robusto que FXML)
+            VBox detalleView = crearVistaDetalleReceta(recetaCompleta);
+            
+            // Mostrar en el overlay
+            if (recipeDetailContainer != null && recipeDetailOverlay != null) {
+                recipeDetailContainer.getChildren().clear();
+                recipeDetailContainer.getChildren().add(detalleView);
+                recipeDetailOverlay.setVisible(true);
+                recipeDetailOverlay.setManaged(true);
+                System.out.println("✓ Detalles mostrados en overlay");
+            } else {
+                System.err.println("⚠️ Overlay no disponible, intentando método alternativo...");
+                // Método alternativo: abrir en ventana separada
+                abrirDetallesEnVentana(recetaCompleta);
+            }
             
         } catch (Exception e) {
-            System.err.println("Error al abrir detalles de receta: " + e.getMessage());
+            System.err.println("❌ Error al abrir detalles de receta: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Crea la vista de detalle de receta programáticamente
+     */
+    private VBox crearVistaDetalleReceta(Receta receta) {
+        VBox container = new VBox(0);
+        container.setStyle("-fx-background-color: #F5F1ED; -fx-background-radius: 15;");
+        container.setMaxWidth(850);
+        container.setMaxHeight(650);
+        
+        // === HEADER con imagen ===
+        StackPane header = new StackPane();
+        header.setMinHeight(200);
+        header.setMaxHeight(200);
+        header.setStyle("-fx-background-color: #2C1810; -fx-background-radius: 15 15 0 0;");
+        
+        // Imagen de fondo
+        ImageView imgView = new ImageView();
+        imgView.setFitWidth(850);
+        imgView.setFitHeight(200);
+        imgView.setPreserveRatio(false);
+        if (receta.getImagen() != null && receta.getImagen().length > 0) {
+            try {
+                imgView.setImage(new Image(new ByteArrayInputStream(receta.getImagen())));
+            } catch (Exception e) {
+                cargarImagenCategoria(imgView, receta.getCategoria());
+            }
+        } else {
+            cargarImagenCategoria(imgView, receta.getCategoria());
+        }
+        
+        // Overlay oscuro para mejor legibilidad
+        VBox overlay = new VBox(5);
+        overlay.setAlignment(Pos.BOTTOM_LEFT);
+        overlay.setStyle("-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);");
+        overlay.setPadding(new Insets(20, 25, 20, 25));
+        
+        Label nombreLabel = new Label(receta.getNombre());
+        nombreLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;");
+        
+        HBox infoBox = new HBox(15);
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        
+        if (receta.getCategoria() != null) {
+            Label catLabel = new Label(receta.getCategoria());
+            catLabel.setStyle("-fx-background-color: rgba(255,255,255,0.9); -fx-text-fill: #2C1810; -fx-padding: 5 12; -fx-background-radius: 15; -fx-font-size: 12px; -fx-font-weight: bold;");
+            infoBox.getChildren().add(catLabel);
+        }
+        
+        if (receta.getTiempo_preparacion() != null && receta.getTiempo_preparacion() > 0) {
+            Label tiempoLabel = new Label("⏱ " + receta.getTiempo_preparacion() + " min");
+            tiempoLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;");
+            infoBox.getChildren().add(tiempoLabel);
+        }
+        
+        if (receta.getPrecio() != null && receta.getPrecio() > 0) {
+            Label precioLabel = new Label("💰 " + String.format("%.2f €", receta.getPrecio() / 100.0));
+            precioLabel.setStyle("-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;");
+            infoBox.getChildren().add(precioLabel);
+        }
+        
+        overlay.getChildren().addAll(nombreLabel, infoBox);
+        
+        // Botón cerrar
+        Button btnCerrar = new Button("✕");
+        btnCerrar.setStyle("-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 20; -fx-min-width: 40; -fx-min-height: 40; -fx-cursor: hand;");
+        btnCerrar.setOnAction(e -> cerrarDetallesReceta());
+        btnCerrar.setOnMouseEntered(e -> btnCerrar.setStyle("-fx-background-color: rgba(200,0,0,0.8); -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 20; -fx-min-width: 40; -fx-min-height: 40; -fx-cursor: hand;"));
+        btnCerrar.setOnMouseExited(e -> btnCerrar.setStyle("-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: white; -fx-font-size: 18px; -fx-background-radius: 20; -fx-min-width: 40; -fx-min-height: 40; -fx-cursor: hand;"));
+        StackPane.setAlignment(btnCerrar, Pos.TOP_RIGHT);
+        StackPane.setMargin(btnCerrar, new Insets(10, 10, 0, 0));
+        
+        header.getChildren().addAll(imgView, overlay, btnCerrar);
+        
+        // === CONTENIDO con scroll ===
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        VBox.setVgrow(scrollPane, javafx.scene.layout.Priority.ALWAYS);
+        
+        VBox contenido = new VBox(20);
+        contenido.setPadding(new Insets(20));
+        contenido.setStyle("-fx-background-color: #F5F1ED;");
+        
+        // Descripción
+        if (receta.getDescripcion() != null && !receta.getDescripcion().trim().isEmpty()) {
+            VBox descBox = new VBox(8);
+            Label descTitulo = new Label("📝 Descripción");
+            descTitulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+            Label descTexto = new Label(receta.getDescripcion());
+            descTexto.setWrapText(true);
+            descTexto.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+            descBox.getChildren().addAll(descTitulo, descTexto);
+            contenido.getChildren().add(descBox);
+        }
+        
+        // Grid con ingredientes y pasos
+        HBox gridBox = new HBox(20);
+        
+        // Ingredientes
+        VBox ingredientesBox = new VBox(10);
+        ingredientesBox.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;");
+        ingredientesBox.setMinWidth(250);
+        ingredientesBox.setPrefWidth(300);
+        
+        Label ingTitulo = new Label("🥕 Ingredientes");
+        ingTitulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+        ingredientesBox.getChildren().add(ingTitulo);
+        
+        if (receta.getRecetaIngredientes() != null && !receta.getRecetaIngredientes().isEmpty()) {
+            for (var ri : receta.getRecetaIngredientes()) {
+                if (ri.getIngrediente() != null) {
+                    String texto = "• " + ri.getIngrediente().getNombre();
+                    if (ri.getCantidad_usada() != null && ri.getCantidad_usada() > 0) {
+                        String unidad = ri.getIngrediente().getUnidad_medida() != null ? ri.getIngrediente().getUnidad_medida() : "";
+                        texto += " (" + ri.getCantidad_usada() + " " + unidad + ")";
+                    }
+                    Label ingLabel = new Label(texto);
+                    ingLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #333;");
+                    ingLabel.setWrapText(true);
+                    ingredientesBox.getChildren().add(ingLabel);
+                }
+            }
+        } else {
+            Label noIng = new Label("Sin ingredientes especificados");
+            noIng.setStyle("-fx-font-size: 13px; -fx-text-fill: #999; -fx-font-style: italic;");
+            ingredientesBox.getChildren().add(noIng);
+        }
+        
+        // Pasos
+        VBox pasosBox = new VBox(10);
+        pasosBox.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;");
+        HBox.setHgrow(pasosBox, javafx.scene.layout.Priority.ALWAYS);
+        
+        Label pasosTitulo = new Label("👨‍🍳 Preparación");
+        pasosTitulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+        pasosBox.getChildren().add(pasosTitulo);
+        
+        if (receta.getPasos() != null && !receta.getPasos().trim().isEmpty()) {
+            String[] lineas = receta.getPasos().split("\n");
+            int numPaso = 1;
+            for (String linea : lineas) {
+                linea = linea.trim();
+                if (linea.isEmpty()) continue;
+                
+                HBox pasoItem = new HBox(10);
+                pasoItem.setAlignment(Pos.TOP_LEFT);
+                
+                Label numLabel = new Label(String.valueOf(numPaso));
+                numLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: white; -fx-background-color: #8B7355; -fx-min-width: 28; -fx-min-height: 28; -fx-alignment: center; -fx-background-radius: 14;");
+                numLabel.setMinWidth(28);
+                numLabel.setAlignment(Pos.CENTER);
+                
+                String textoLimpio = linea.replaceFirst("^\\d+\\.?\\s*", "");
+                Label pasoLabel = new Label(textoLimpio);
+                pasoLabel.setWrapText(true);
+                pasoLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #333;");
+                HBox.setHgrow(pasoLabel, javafx.scene.layout.Priority.ALWAYS);
+                
+                pasoItem.getChildren().addAll(numLabel, pasoLabel);
+                pasosBox.getChildren().add(pasoItem);
+                numPaso++;
+            }
+        } else {
+            Label noPasos = new Label("Sin pasos de preparación especificados");
+            noPasos.setStyle("-fx-font-size: 13px; -fx-text-fill: #999; -fx-font-style: italic;");
+            pasosBox.getChildren().add(noPasos);
+        }
+        
+        gridBox.getChildren().addAll(ingredientesBox, pasosBox);
+        contenido.getChildren().add(gridBox);
+        
+        // Disponibilidad
+        Label dispLabel = new Label(receta.getDisponible() != null && receta.getDisponible() 
+            ? "✅ Disponible para servir" 
+            : "❌ No disponible actualmente");
+        dispLabel.setStyle(receta.getDisponible() != null && receta.getDisponible() 
+            ? "-fx-font-size: 14px; -fx-text-fill: #2E7D32; -fx-font-weight: bold;" 
+            : "-fx-font-size: 14px; -fx-text-fill: #C62828; -fx-font-weight: bold;");
+        contenido.getChildren().add(dispLabel);
+        
+        scrollPane.setContent(contenido);
+        container.getChildren().addAll(header, scrollPane);
+        
+        return container;
+    }
+    
+    /**
+     * Carga imagen de categoría por defecto
+     */
+    private void cargarImagenCategoria(ImageView imgView, String categoria) {
+        try {
+            String path = "/img/categorias/" + (categoria != null ? categoria : "default") + ".jpg";
+            var stream = getClass().getResourceAsStream(path);
+            if (stream != null) {
+                imgView.setImage(new Image(stream));
+            }
+        } catch (Exception e) {
+            // Ignorar
+        }
+    }
+    
+    /**
+     * Abre detalles en ventana separada como fallback
+     */
+    private void abrirDetallesEnVentana(Receta receta) {
+        try {
+            Stage stage = new Stage();
+            VBox detalleView = crearVistaDetalleReceta(receta);
+            Scene scene = new Scene(detalleView, 850, 650);
+            stage.setScene(scene);
+            stage.setTitle("Detalles: " + receta.getNombre());
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Error abriendo ventana de detalles: " + e.getMessage());
         }
     }
 
@@ -894,7 +1200,7 @@ public class ChefViewController implements Initializable {
     }
     
     /**
-     * Muestra la lista de comandas activas
+     * Muestra la lista de comandas activas (no finalizadas)
      */
     private void mostrarComandas() {
         try {
@@ -906,7 +1212,7 @@ public class ChefViewController implements Initializable {
             
             // Cambiar el título
             if (contentTitle != null) {
-                contentTitle.setText("Comandas Activas");
+                contentTitle.setText("📋 Comandas Activas");
                 System.out.println("Título cambiado a: Comandas Activas");
             }
             
@@ -920,21 +1226,22 @@ public class ChefViewController implements Initializable {
             System.out.println("Creando ComandaDAO...");
             ComandaDAO comandaDAO = new ComandaDAO();
             System.out.println("ComandaDAO creado. Cargando comandas...");
-            List<Comanda> comandas = comandaDAO.findAll();
-            System.out.println("Comandas recuperadas de BD: " + comandas.size());
+            List<Comanda> todasComandas = comandaDAO.findAll();
+            System.out.println("Comandas recuperadas de BD: " + todasComandas.size());
             
-            // Imprimir detalles de cada comanda
-            for (int i = 0; i < comandas.size(); i++) {
-                Comanda c = comandas.get(i);
-                System.out.println("  Comanda " + (i+1) + ": ID=" + c.getId_comanda() + 
-                                 ", Mesa=" + (c.getMesa() != null ? c.getMesa().getId_mesa() : "null") +
-                                 ", Detalles=" + (c.getDetalleComandas() != null ? c.getDetalleComandas().size() : "null"));
+            // Filtrar solo las activas (NO finalizadas)
+            List<Comanda> comandasActivas = new java.util.ArrayList<>();
+            for (Comanda c : todasComandas) {
+                if (c.getEstadoComanda() != Comanda.EstadoComanda.FINALIZADA) {
+                    comandasActivas.add(c);
+                }
             }
+            System.out.println("Comandas activas (no finalizadas): " + comandasActivas.size());
             
             int column = 0;
             int row = 0;
             
-            for (Comanda comanda : comandas) {
+            for (Comanda comanda : comandasActivas) {
                 System.out.println("Creando tarjeta para comanda ID: " + comanda.getId_comanda());
                 VBox comandaCard = createComandaCard(comanda);
                 categoryGrid.add(comandaCard, column, row);
@@ -947,14 +1254,14 @@ public class ChefViewController implements Initializable {
                 }
             }
             
-            if (comandas.isEmpty()) {
-                System.out.println("⚠️ NO HAY COMANDAS EN LA BASE DE DATOS");
-                Label noData = new Label("No hay comandas activas");
-                noData.setStyle("-fx-font-size: 18px; -fx-text-fill: #666;");
+            if (comandasActivas.isEmpty()) {
+                System.out.println("⚠️ NO HAY COMANDAS ACTIVAS");
+                Label noData = new Label("📭 No hay comandas activas en este momento");
+                noData.setStyle("-fx-font-size: 16px; -fx-text-fill: #666; -fx-font-style: italic;");
                 categoryGrid.add(noData, 0, 0);
             }
             
-            System.out.println("=== COMANDAS CARGADAS EXITOSAMENTE: " + comandas.size() + " ===");
+            System.out.println("=== COMANDAS ACTIVAS CARGADAS EXITOSAMENTE: " + comandasActivas.size() + " ===");
             
         } catch (Exception e) {
             System.err.println("❌ ERROR AL CARGAR COMANDAS: " + e.getMessage());
@@ -968,38 +1275,87 @@ public class ChefViewController implements Initializable {
     }
     
     /**
-     * Crea una tarjeta visual para mostrar una comanda
+     * Crea una tarjeta visual para mostrar una comanda - MEJORADA
      */
     private VBox createComandaCard(Comanda comanda) {
-        VBox card = new VBox(10);
-        card.getStyleClass().add("category-card");
-        card.setAlignment(Pos.TOP_CENTER);
-        card.setMinWidth(180);
-        card.setPrefWidth(200);
-        card.setMaxWidth(250);
-        card.setPrefHeight(180);
+        VBox card = new VBox(8);
+        card.getStyleClass().add("comanda-card");
+        card.setAlignment(Pos.TOP_LEFT);
+        card.setMinWidth(200);
+        card.setPrefWidth(230);
+        card.setMaxWidth(280);
+        card.setPrefHeight(200);
         card.setPadding(new Insets(15));
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
         
-        // Número de mesa
-        Label lblMesa = new Label("Mesa " + (comanda.getMesa() != null ? comanda.getMesa().getId_mesa() : "N/A"));
-        lblMesa.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+        // Estado de la comanda para el color
+        Comanda.EstadoComanda estadoComanda = comanda.getEstadoComanda();
+        String bgColor = "white";
+        String borderColor = "#D4A574";
+        String estadoTexto = estadoComanda != null ? estadoComanda.getDescripcion() : "Por hacer";
+        String estadoColor = "#E65100"; // Naranja por defecto
         
-        // Estado
-        String estadoTexto = comanda.getMesa() != null ? comanda.getMesa().getEstado().toString() : "SIN MESA";
-        Label lblEstado = new Label("Estado: " + estadoTexto);
-        lblEstado.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+        if (estadoComanda == Comanda.EstadoComanda.EN_PROCESO) {
+            borderColor = "#2196F3";
+            estadoColor = "#1565C0";
+        } else if (estadoComanda == Comanda.EstadoComanda.FINALIZADA) {
+            bgColor = "#E8F5E9";
+            borderColor = "#4CAF50";
+            estadoColor = "#2E7D32";
+        }
+        
+        final String finalBgColor = bgColor;
+        final String finalBorderColor = borderColor;
+        card.setStyle("-fx-background-color: " + bgColor + "; -fx-background-radius: 12; -fx-border-color: " + borderColor + "; -fx-border-width: 2; -fx-border-radius: 12; -fx-cursor: hand;");
+        
+        // Header: Mesa + Estado badge
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        Label lblMesa = new Label("🍽️ Mesa " + (comanda.getMesa() != null ? comanda.getMesa().getId_mesa() : "N/A"));
+        lblMesa.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C1810;");
+        
+        Label estadoBadge = new Label(estadoTexto);
+        estadoBadge.setStyle("-fx-background-color: " + estadoColor + "22; -fx-text-fill: " + estadoColor + "; -fx-padding: 3 8; -fx-background-radius: 10; -fx-font-size: 10px; -fx-font-weight: bold;");
+        
+        header.getChildren().addAll(lblMesa, estadoBadge);
+        
+        // Separador
+        javafx.scene.control.Separator sep = new javafx.scene.control.Separator();
+        sep.setStyle("-fx-background-color: #E0D5C7;");
         
         // Número de platos
         int numPlatos = comanda.getDetalleComandas() != null ? comanda.getDetalleComandas().size() : 0;
-        Label lblPlatos = new Label(numPlatos + " plato(s)");
-        lblPlatos.setStyle("-fx-font-size: 14px; -fx-text-fill: #28a745; -fx-font-weight: bold;");
+        Label lblPlatos = new Label("📋 " + numPlatos + " plato(s)");
+        lblPlatos.setStyle("-fx-font-size: 14px; -fx-text-fill: #555;");
+        
+        // Total de la comanda
+        float total = 0;
+        if (comanda.getDetalleComandas() != null) {
+            for (ilcaminodelamamma.model.DetalleComanda det : comanda.getDetalleComandas()) {
+                if (det.getSubtotal() != null) {
+                    total += det.getSubtotal();
+                } else if (det.getPrecio_unitario() != null && det.getCantidad() != null) {
+                    total += det.getPrecio_unitario() * det.getCantidad();
+                }
+            }
+        }
+        // Convertir de céntimos a euros para mostrar
+        Label lblTotal = new Label("💰 " + String.format("%.2f €", total / 100.0));
+        lblTotal.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;");
+        
+        // Fecha/hora
+        String fechaTexto = "--";
+        if (comanda.getFecha_hora() != null) {
+            fechaTexto = comanda.getFecha_hora().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"));
+        }
+        Label lblFecha = new Label("🕐 " + fechaTexto);
+        lblFecha.setStyle("-fx-font-size: 12px; -fx-text-fill: #888;");
         
         // ID de comanda
-        Label lblId = new Label("ID: " + comanda.getId_comanda());
-        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #999;");
+        Label lblId = new Label("#" + comanda.getId_comanda());
+        lblId.setStyle("-fx-font-size: 11px; -fx-text-fill: #aaa;");
         
-        card.getChildren().addAll(lblMesa, lblEstado, lblPlatos, lblId);
+        card.getChildren().addAll(header, sep, lblPlatos, lblTotal, lblFecha, lblId);
         
         card.setOnMouseClicked(event -> {
             System.out.println("Comanda seleccionada: ID " + comanda.getId_comanda());
@@ -1022,14 +1378,311 @@ public class ChefViewController implements Initializable {
         });
         
         card.setOnMouseEntered(e -> {
-            card.setStyle("-fx-background-color: #F5E6D3; -fx-background-radius: 10; -fx-border-color: #8B7355; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+            card.setStyle("-fx-background-color: #FDF8F3; -fx-background-radius: 12; -fx-border-color: #8B7355; -fx-border-width: 2; -fx-border-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);");
         });
         
         card.setOnMouseExited(e -> {
-            card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-border-color: #D4A574; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;");
+            card.setStyle("-fx-background-color: " + finalBgColor + "; -fx-background-radius: 12; -fx-border-color: " + finalBorderColor + "; -fx-border-width: 2; -fx-border-radius: 12; -fx-cursor: hand;");
         });
         
         return card;
+    }
+    
+    /**
+     * Muestra las comandas finalizadas con el total de caja
+     */
+    private void mostrarComandasTerminadas() {
+        try {
+            System.out.println("=== MOSTRANDO COMANDAS TERMINADAS ===");
+            
+            // Limpiar el grid actual
+            categoryGrid.getChildren().clear();
+            
+            // Cambiar el título
+            if (contentTitle != null) {
+                contentTitle.setText("✅ Comandas Terminadas");
+            }
+            
+            // Ocultar breadcrumb
+            if (breadcrumbBox != null) {
+                breadcrumbBox.setVisible(false);
+                breadcrumbBox.setManaged(false);
+            }
+            
+            // Cargar comandas finalizadas desde la base de datos
+            ComandaDAO comandaDAO = new ComandaDAO();
+            List<Comanda> todasComandas = comandaDAO.findAll();
+            
+            // Filtrar solo las finalizadas
+            List<Comanda> comandasTerminadas = new java.util.ArrayList<>();
+            float totalCaja = 0;
+            
+            for (Comanda c : todasComandas) {
+                if (c.getEstadoComanda() == Comanda.EstadoComanda.FINALIZADA) {
+                    comandasTerminadas.add(c);
+                    // Calcular total de esta comanda
+                    if (c.getDetalleComandas() != null) {
+                        for (ilcaminodelamamma.model.DetalleComanda det : c.getDetalleComandas()) {
+                            if (det.getSubtotal() != null) {
+                                totalCaja += det.getSubtotal();
+                            } else if (det.getPrecio_unitario() != null && det.getCantidad() != null) {
+                                totalCaja += det.getPrecio_unitario() * det.getCantidad();
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Crear panel de resumen de caja
+            VBox panelCaja = new VBox(12);
+            panelCaja.setAlignment(Pos.CENTER);
+            panelCaja.setPadding(new Insets(20));
+            panelCaja.setStyle("-fx-background-color: linear-gradient(to bottom, #E8F5E9 0%, #C8E6C9 100%); -fx-background-radius: 15; -fx-border-color: #81C784; -fx-border-radius: 15; -fx-border-width: 2;");
+            panelCaja.setMinWidth(250);
+            panelCaja.setPrefWidth(280);
+            panelCaja.setMaxWidth(320);
+            
+            Label lblIconCaja = new Label("💰");
+            lblIconCaja.setStyle("-fx-font-size: 40px;");
+            
+            Label lblTituloCaja = new Label("Total en Caja");
+            lblTituloCaja.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2E7D32;");
+            
+            // Convertir de céntimos a euros para mostrar
+            final float totalCajaFinal = totalCaja;
+            Label lblTotalCaja = new Label(String.format("%.2f €", totalCaja / 100.0));
+            lblTotalCaja.setStyle("-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #1B5E20;");
+            
+            Label lblNumComandas = new Label(comandasTerminadas.size() + " comandas completadas");
+            lblNumComandas.setStyle("-fx-font-size: 12px; -fx-text-fill: #558B2F;");
+            
+            // Botón de vaciar caja
+            Button btnVaciarCaja = new Button("🧾 Vaciar Caja");
+            btnVaciarCaja.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;");
+            btnVaciarCaja.setOnMouseEntered(e -> btnVaciarCaja.setStyle("-fx-background-color: #B71C1C; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"));
+            btnVaciarCaja.setOnMouseExited(e -> btnVaciarCaja.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"));
+            
+            // Deshabilitar si no hay comandas
+            if (comandasTerminadas.isEmpty()) {
+                btnVaciarCaja.setDisable(true);
+                btnVaciarCaja.setStyle("-fx-background-color: #BDBDBD; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8;");
+            }
+            
+            // Guardar lista de comandas para el closure
+            final List<Comanda> comandasParaExportar = new java.util.ArrayList<>(comandasTerminadas);
+            
+            btnVaciarCaja.setOnAction(e -> vaciarCaja(comandasParaExportar, totalCajaFinal));
+            
+            panelCaja.getChildren().addAll(lblIconCaja, lblTituloCaja, lblTotalCaja, lblNumComandas, btnVaciarCaja);
+            
+            // Añadir panel de caja en la primera posición
+            categoryGrid.add(panelCaja, 0, 0);
+            
+            // Mostrar comandas terminadas
+            int column = 1;
+            int row = 0;
+            
+            for (Comanda comanda : comandasTerminadas) {
+                VBox comandaCard = createComandaCard(comanda);
+                categoryGrid.add(comandaCard, column, row);
+                
+                column++;
+                if (column >= currentColumns) {
+                    column = 0;
+                    row++;
+                }
+            }
+            
+            if (comandasTerminadas.isEmpty()) {
+                Label noData = new Label("📭 No hay comandas terminadas aún");
+                noData.setStyle("-fx-font-size: 16px; -fx-text-fill: #666; -fx-font-style: italic;");
+                categoryGrid.add(noData, 1, 0);
+            }
+            
+            System.out.println("=== COMANDAS TERMINADAS CARGADAS: " + comandasTerminadas.size() + " - Total: " + totalCaja + " € ===");
+            
+        } catch (Exception e) {
+            System.err.println("❌ ERROR AL CARGAR COMANDAS TERMINADAS: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Vacía la caja: exporta un JSON con las comandas terminadas y el total, 
+     * luego elimina las comandas finalizadas de la BD
+     */
+    private void vaciarCaja(List<Comanda> comandasTerminadas, float totalCaja) {
+        // Confirmar acción
+        javafx.scene.control.Alert confirmacion = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Vaciar Caja");
+        confirmacion.setHeaderText("¿Está seguro de vaciar la caja?");
+        confirmacion.setContentText("Se exportará un archivo JSON con el resumen de " + comandasTerminadas.size() + 
+                                   " comandas y un total de " + String.format("%.2f €", totalCaja / 100.0) + 
+                                   ".\n\nLas comandas finalizadas serán eliminadas de la base de datos.");
+        
+        java.util.Optional<javafx.scene.control.ButtonType> resultado = confirmacion.showAndWait();
+        
+        if (resultado.isPresent() && resultado.get() == javafx.scene.control.ButtonType.OK) {
+            try {
+                // Recargar comandas con sesión activa para evitar LazyInitializationException
+                ComandaDAO comandaDAO = new ComandaDAO();
+                List<Integer> idsComandas = new java.util.ArrayList<>();
+                for (Comanda c : comandasTerminadas) {
+                    idsComandas.add(c.getId_comanda());
+                }
+                
+                // Crear el JSON
+                StringBuilder json = new StringBuilder();
+                json.append("{\n");
+                json.append("  \"fecha_cierre\": \"").append(java.time.LocalDateTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).append("\",\n");
+                json.append("  \"total_caja_euros\": ").append(String.format(java.util.Locale.US, "%.2f", totalCaja / 100.0)).append(",\n");
+                json.append("  \"numero_comandas\": ").append(idsComandas.size()).append(",\n");
+                json.append("  \"comandas\": [\n");
+                
+                for (int i = 0; i < idsComandas.size(); i++) {
+                    Integer idComanda = idsComandas.get(i);
+                    
+                    // Cargar comanda con detalles (sesión activa)
+                    Comanda c = comandaDAO.findByIdWithDetails(idComanda);
+                    if (c == null) continue;
+                    
+                    // Calcular total de esta comanda
+                    float totalComanda = 0;
+                    int numPlatos = 0;
+                    
+                    // Extraer datos mientras la sesión está activa
+                    Integer mesaId = c.getMesa() != null ? c.getMesa().getId_mesa() : null;
+                    String camarero = "N/A";
+                    try {
+                        if (c.getUsuario() != null) {
+                            camarero = c.getUsuario().getNombre();
+                        }
+                    } catch (Exception ex) {
+                        camarero = "N/A";
+                    }
+                    String fechaHora = c.getFecha_hora() != null ? 
+                        c.getFecha_hora().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "N/A";
+                    
+                    json.append("    {\n");
+                    json.append("      \"id_comanda\": ").append(idComanda).append(",\n");
+                    json.append("      \"mesa\": ").append(mesaId != null ? mesaId : "null").append(",\n");
+                    json.append("      \"camarero\": \"").append(camarero).append("\",\n");
+                    json.append("      \"fecha_hora\": \"").append(fechaHora).append("\",\n");
+                    
+                    // Procesar platos
+                    StringBuilder platosJson = new StringBuilder();
+                    platosJson.append("      \"platos\": [\n");
+                    
+                    if (c.getDetalleComandas() != null && !c.getDetalleComandas().isEmpty()) {
+                        numPlatos = c.getDetalleComandas().size();
+                        int j = 0;
+                        for (ilcaminodelamamma.model.DetalleComanda det : c.getDetalleComandas()) {
+                            // Calcular subtotal
+                            float subtotal = 0;
+                            if (det.getSubtotal() != null) {
+                                subtotal = det.getSubtotal();
+                                totalComanda += subtotal;
+                            } else if (det.getPrecio_unitario() != null && det.getCantidad() != null) {
+                                subtotal = det.getPrecio_unitario() * det.getCantidad();
+                                totalComanda += subtotal;
+                            }
+                            
+                            String nombrePlato = "N/A";
+                            try {
+                                if (det.getReceta() != null) {
+                                    nombrePlato = det.getReceta().getNombre();
+                                }
+                            } catch (Exception ex) {
+                                nombrePlato = "N/A";
+                            }
+                            
+                            platosJson.append("        {\n");
+                            platosJson.append("          \"nombre\": \"").append(nombrePlato).append("\",\n");
+                            platosJson.append("          \"cantidad\": ").append(det.getCantidad() != null ? det.getCantidad() : 0).append(",\n");
+                            platosJson.append("          \"precio_unitario_euros\": ").append(String.format(java.util.Locale.US, "%.2f", 
+                                det.getPrecio_unitario() != null ? det.getPrecio_unitario() / 100.0 : 0)).append(",\n");
+                            platosJson.append("          \"subtotal_euros\": ").append(String.format(java.util.Locale.US, "%.2f", subtotal / 100.0)).append("\n");
+                            platosJson.append("        }");
+                            if (j < numPlatos - 1) platosJson.append(",");
+                            platosJson.append("\n");
+                            j++;
+                        }
+                    }
+                    platosJson.append("      ]\n");
+                    
+                    json.append("      \"num_platos\": ").append(numPlatos).append(",\n");
+                    json.append("      \"total_euros\": ").append(String.format(java.util.Locale.US, "%.2f", totalComanda / 100.0)).append(",\n");
+                    json.append(platosJson);
+                    
+                    json.append("    }");
+                    if (i < idsComandas.size() - 1) json.append(",");
+                    json.append("\n");
+                }
+                
+                json.append("  ]\n");
+                json.append("}\n");
+                
+                // Guardar archivo JSON
+                String nombreArchivo = "cierre_caja_" + java.time.LocalDateTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".json";
+                
+                // Usar FileChooser para que el usuario elija dónde guardar
+                javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+                fileChooser.setTitle("Guardar Cierre de Caja");
+                fileChooser.setInitialFileName(nombreArchivo);
+                fileChooser.getExtensionFilters().add(
+                    new javafx.stage.FileChooser.ExtensionFilter("Archivo JSON", "*.json"));
+                
+                // Obtener la ventana actual
+                javafx.stage.Window window = categoryGrid.getScene().getWindow();
+                java.io.File archivo = fileChooser.showSaveDialog(window);
+                
+                if (archivo != null) {
+                    // Escribir el JSON
+                    try (java.io.FileWriter writer = new java.io.FileWriter(archivo)) {
+                        writer.write(json.toString());
+                    }
+                    
+                    System.out.println("✅ JSON exportado a: " + archivo.getAbsolutePath());
+                    
+                    // Eliminar las comandas finalizadas de la BD
+                    int eliminadas = 0;
+                    for (Integer id : idsComandas) {
+                        try {
+                            comandaDAO.deleteById(id);
+                            eliminadas++;
+                        } catch (Exception ex) {
+                            System.err.println("Error eliminando comanda " + id + ": " + ex.getMessage());
+                        }
+                    }
+                    
+                    System.out.println("✅ " + eliminadas + " comandas eliminadas de la BD");
+                    
+                    // Mostrar mensaje de éxito
+                    javafx.scene.control.Alert exito = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    exito.setTitle("Caja Vaciada");
+                    exito.setHeaderText("✅ Cierre de caja completado");
+                    exito.setContentText("Se ha exportado el archivo:\n" + archivo.getName() + 
+                                        "\n\nTotal facturado: " + String.format("%.2f €", totalCaja / 100.0) +
+                                        "\nComandas procesadas: " + eliminadas);
+                    exito.showAndWait();
+                    
+                    // Recargar la vista de comandas terminadas
+                    mostrarComandasTerminadas();
+                }
+                
+            } catch (Exception e) {
+                System.err.println("❌ Error al vaciar caja: " + e.getMessage());
+                e.printStackTrace();
+                
+                javafx.scene.control.Alert error = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                error.setTitle("Error");
+                error.setHeaderText("Error al vaciar la caja");
+                error.setContentText("No se pudo completar el cierre de caja:\n" + e.getMessage());
+                error.showAndWait();
+            }
+        }
     }
 
     /**
@@ -1037,13 +1690,52 @@ public class ChefViewController implements Initializable {
      * envolviéndolo en un `StackPane` con padding para mantener el header/sidebar/footer.
      */
     private void setCenterWithPadding(javafx.scene.Parent content) {
-        if (centerArea == null || centerArea.getScene() == null) return;
+        System.out.println("📍 setCenterWithPadding llamado");
+        
+        // Método 1: Usar directamente el mainBorderPane si está disponible
+        if (mainBorderPane != null) {
+            mainBorderPane.setCenter(content);
+            System.out.println("✓ Contenido establecido en mainBorderPane directamente");
+            return;
+        }
+        
+        // Método 2: Buscar el BorderPane en la estructura de la escena
+        if (centerArea == null) {
+            System.err.println("❌ centerArea es null");
+            return;
+        }
+        if (centerArea.getScene() == null) {
+            System.err.println("❌ centerArea.getScene() es null");
+            return;
+        }
+        
         javafx.scene.Parent sceneRoot = centerArea.getScene().getRoot();
-        if (!(sceneRoot instanceof javafx.scene.layout.BorderPane)) return;
-        javafx.scene.layout.BorderPane mainRoot = (javafx.scene.layout.BorderPane) sceneRoot;
-
-        // Just set the content directly on the center - let the BorderPane handle the space
-        mainRoot.setCenter(content);
+        System.out.println("📍 sceneRoot: " + sceneRoot.getClass().getName());
+        
+        // Si la raíz es un StackPane, buscar el BorderPane dentro
+        if (sceneRoot instanceof javafx.scene.layout.StackPane) {
+            javafx.scene.layout.StackPane rootStack = (javafx.scene.layout.StackPane) sceneRoot;
+            for (javafx.scene.Node child : rootStack.getChildren()) {
+                if (child instanceof javafx.scene.layout.BorderPane) {
+                    javafx.scene.layout.BorderPane borderPane = (javafx.scene.layout.BorderPane) child;
+                    borderPane.setCenter(content);
+                    System.out.println("✓ Contenido establecido en BorderPane (dentro de StackPane)");
+                    return;
+                }
+            }
+            System.err.println("❌ No se encontró BorderPane dentro del StackPane");
+            return;
+        }
+        
+        // Si la raíz es directamente un BorderPane
+        if (sceneRoot instanceof javafx.scene.layout.BorderPane) {
+            javafx.scene.layout.BorderPane mainRoot = (javafx.scene.layout.BorderPane) sceneRoot;
+            mainRoot.setCenter(content);
+            System.out.println("✓ Contenido establecido en el centro del BorderPane");
+            return;
+        }
+        
+        System.err.println("❌ sceneRoot no es BorderPane ni StackPane, es: " + sceneRoot.getClass().getName());
     }
 }
 

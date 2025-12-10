@@ -26,7 +26,7 @@
     -fx-pref-height: 2px;
 }
 
-/* Botones del sidebar */
+/* Botones del sidebar - MEJORADOS con transiciones suaves */
 .sidebar-button {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-text-fill: white;
@@ -38,42 +38,57 @@
     -fx-alignment: center-left;
     -fx-border-width: 1;
     -fx-border-color: transparent;
+    -fx-effect: none;
 }
 
 .sidebar-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: rgba(255, 255, 255, 0.4);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 10, 0, 0, 0);
 }
 
 .sidebar-button:pressed {
-    -fx-background-color: rgba(255, 255, 255, 0.15);
-    -fx-scale-x: 0.98;
-    -fx-scale-y: 0.98;
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
-/* Botón primario (Nueva Receta) */
+.sidebar-button:focused {
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-width: 2;
+}
+
+/* Botón primario (Nueva Receta) - MEJORADO */
 .primary-button {
-    -fx-background-color: #D4A574;
+    -fx-background-color: linear-gradient(to bottom, #E5B685 0%, #D4A574 100%);
     -fx-font-weight: bold;
-    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
 }
 
 .primary-button:hover {
-    -fx-background-color: #E5B685;
-    -fx-effect: dropshadow(gaussian, rgba(212, 165, 116, 0.6), 12, 0, 0, 3);
+    -fx-background-color: linear-gradient(to bottom, #F0C796 0%, #E5B685 100%);
+    -fx-effect: dropshadow(gaussian, rgba(212, 165, 116, 0.6), 15, 0, 0, 4);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Botón de cerrar sesión */
+.primary-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #D4A574 0%, #C49464 100%);
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+}
+
+/* Botón de cerrar sesión - MEJORADO */
 .logout-button {
-    -fx-background-color: rgba(220, 53, 69, 0.8);
+    -fx-background-color: linear-gradient(to bottom, #dc3545 0%, #c82333 100%);
 }
 
 .logout-button:hover {
-    -fx-background-color: rgba(220, 53, 69, 1);
-    -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.5), 10, 0, 0, 2);
+    -fx-background-color: linear-gradient(to bottom, #e4606d 0%, #dc3545 100%);
+    -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.6), 12, 0, 0, 3);
+}
+
+.logout-button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #c82333 0%, #bd2130 100%);
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
 }
 
 /* === Barra superior === */
@@ -298,4 +313,227 @@
     -fx-min-width: 160;
     -fx-pref-width: 180;
     -fx-max-width: 220;
+}
+
+/* === Estilos para Comandas === */
+.comanda-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #D4A574;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+.comanda-card:hover {
+    -fx-background-color: #FDF8F3;
+    -fx-border-color: #8B7355;
+    -fx-effect: dropshadow(gaussian, rgba(139, 115, 85, 0.4), 15, 0, 0, 5);
+}
+
+.comanda-card-finalizada {
+    -fx-background-color: #E8F5E9;
+    -fx-border-color: #4CAF50;
+}
+
+.comanda-card-finalizada:hover {
+    -fx-background-color: #C8E6C9;
+    -fx-border-color: #388E3C;
+}
+
+/* === Estados de Platos === */
+.estado-badge {
+    -fx-padding: 4 10;
+    -fx-background-radius: 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.estado-por-hacer {
+    -fx-background-color: #FFF3E0;
+    -fx-text-fill: #E65100;
+    -fx-border-color: #FFB74D;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.estado-en-cocina {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: #1565C0;
+    -fx-border-color: #64B5F6;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.estado-preparado {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #2E7D32;
+    -fx-border-color: #81C784;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+/* === Botones de Estado de Plato === */
+.btn-estado-plato {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #495057;
+    -fx-font-size: 10px;
+    -fx-padding: 3 8;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.btn-estado-plato:hover {
+    -fx-background-color: #e9ecef;
+    -fx-border-color: #adb5bd;
+}
+
+.btn-estado-plato-activo {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-border-color: #0056b3;
+}
+
+/* === Vista Detalle Comanda Mejorada === */
+.comanda-detail-header {
+    -fx-background-color: linear-gradient(to right, #8B7355 0%, #A67C52 100%);
+    -fx-padding: 15 20;
+}
+
+.comanda-detail-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.comanda-info-panel {
+    -fx-background-color: #FDF8F3;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #E8D4B8;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.plato-item-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-border-color: #E0D5C7;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);
+}
+
+.plato-item-card:hover {
+    -fx-background-color: #FAFAFA;
+    -fx-border-color: #D4A574;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 3);
+}
+
+.plato-nombre {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C1810;
+    -fx-cursor: hand;
+}
+
+.plato-nombre:hover {
+    -fx-text-fill: #8B7355;
+    -fx-underline: true;
+}
+
+.plato-precio {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+}
+
+.plato-cantidad {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666;
+    -fx-font-style: italic;
+}
+
+/* === Botones de Acción de Comanda === */
+.btn-accion-comanda {
+    -fx-padding: 10 20;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+}
+
+.btn-en-proceso {
+    -fx-background-color: linear-gradient(to bottom, #2196F3 0%, #1976D2 100%);
+    -fx-text-fill: white;
+    -fx-border-color: #1565C0;
+    -fx-border-width: 1;
+}
+
+.btn-en-proceso:hover {
+    -fx-background-color: linear-gradient(to bottom, #42A5F5 0%, #2196F3 100%);
+    -fx-effect: dropshadow(gaussian, rgba(33, 150, 243, 0.5), 10, 0, 0, 3);
+}
+
+.btn-finalizar {
+    -fx-background-color: linear-gradient(to bottom, #4CAF50 0%, #388E3C 100%);
+    -fx-text-fill: white;
+    -fx-border-color: #2E7D32;
+    -fx-border-width: 1;
+}
+
+.btn-finalizar:hover {
+    -fx-background-color: linear-gradient(to bottom, #66BB6A 0%, #4CAF50 100%);
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.5), 10, 0, 0, 3);
+}
+
+/* === Sección Comandas Terminadas === */
+.comandas-terminadas-panel {
+    -fx-background-color: #F0F4E8;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-border-color: #C5E1A5;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.total-caja {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E7D32;
+}
+
+.total-caja-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #558B2F;
+    -fx-font-weight: bold;
+}
+
+/* === Back Button mejorado === */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8B7355;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #D4A574;
+    -fx-border-width: 1;
+}
+
+.back-button:hover {
+    -fx-background-color: #F5E6D3;
+    -fx-border-color: #8B7355;
+}
+
+.back-button:pressed {
+    -fx-background-color: #E8D4B8;
 }

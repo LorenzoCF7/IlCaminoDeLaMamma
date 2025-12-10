@@ -11,8 +11,8 @@ public class DemoDataInitializer {
     public static void ensureDefaultUsers() {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-        createIfMissing(usuarioDAO, "chef", "1234", RolEnum.JEFE);
-        createIfMissing(usuarioDAO, "assistant", "1234", RolEnum.ADMIN);
+        createIfMissing(usuarioDAO, "chef", "1234", RolEnum.COCINERO);
+        createIfMissing(usuarioDAO, "assistant", "1234", RolEnum.ADMINISTRADOR);
         createIfMissing(usuarioDAO, "waiter", "1234", RolEnum.CAMARERO);
     }
 

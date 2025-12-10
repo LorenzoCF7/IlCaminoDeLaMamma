@@ -54,9 +54,9 @@ public class LoginController {
             u = new Usuario();
             u.setNombre(usuarioLower);
             if (usuarioLower.equals("chef")) {
-                u.setRol(ilcaminodelamamma.model.RolEnum.JEFE);
+                u.setRol(ilcaminodelamamma.model.RolEnum.COCINERO);
             } else if (usuarioLower.equals("assistant") || usuarioLower.equals("admin")) {
-                u.setRol(ilcaminodelamamma.model.RolEnum.ADMIN);
+                u.setRol(ilcaminodelamamma.model.RolEnum.ADMINISTRADOR);
             } else { // waiter o camarero
                 u.setRol(ilcaminodelamamma.model.RolEnum.CAMARERO);
             }
@@ -97,10 +97,10 @@ public class LoginController {
             // cargar vista según rol
             String fxmlPath;
             switch (u.getRol()) {
-                case JEFE:
+                case COCINERO:
                     fxmlPath = "/fxml/chef/chef-view.fxml";
                     break;
-                case ADMIN:
+                case ADMINISTRADOR:
                     fxmlPath = "/fxml/assistant/assistant-view.fxml";
                     break;
                 case CAMARERO:
