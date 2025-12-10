@@ -48,6 +48,9 @@ public class DataInitializer {
                 }
             }
             
+            // Verificar si es la primera vez (no hay recetas en BD)
+            boolean esPrimeraVez = recetasExistentes.isEmpty();
+            
             System.out.println("\n🔄 Cargando recetas e ingredientes desde XML...");
             
             // Cargar datos del XML (crea nuevas o actualiza existentes)
@@ -60,8 +63,13 @@ public class DataInitializer {
                 System.out.println("\n⚠️  No se procesaron recetas. Verifica que el archivo Recetas.xml exista en resources/");
             }
             
-            // Cargar imágenes de ejemplo
-            cargarImagenesEjemplo();
+            // Cargar imágenes de ejemplo SOLO si es la primera vez
+            if (esPrimeraVez && procesadas > 0) {
+                System.out.println("\n🎨 Primera importación detectada - Cargando imágenes...");
+                cargarImagenesEjemplo();
+            } else if (!esPrimeraVez) {
+                System.out.println("\n⏭️  Importación posterior - Omitiendo carga de imágenes");
+            }
             
         } catch (Exception e) {
             System.err.println("❌ Error durante la inicialización de datos: " + e.getMessage());
