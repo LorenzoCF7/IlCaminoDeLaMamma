@@ -57,5 +57,4 @@ module ilcaminodelamamma {
     exports ilcaminodelamamma.view.components;
     exports ilcaminodelamamma.model;
     exports ilcaminodelamamma.service;
-    exports ilcaminodelamamma.repository;
 }
